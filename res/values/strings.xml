@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">半半公益</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="cont_descrip">Picture</string>
+    <string name="zan">赞</string>
+
+    <!-- 客户端主Tab页面 -->
+    <string name="bb_tab_random_buy">随机抢</string>
+    <string name="bb_tab_specific_buy">特定抢</string>
+    <string name="bb_tab_public_welfare">公益众筹</string>
+    <string name="bb_tab_my_account">我的账号</string>
+    <string name="bb_tab_more_info">更多</string>
+    <string name="sortlistview_search_hint">请输入关键字</string>
+    <string name="beijing">北京</string>
+
+    <!-- 菜单 -->
+    <string name="bb_menu_category">类别</string>
+
+    <!-- 随机抢页面 -->
+    <string name="bb_random_buy">随机抢</string>
+    <string name="bb_random_buy_success">抢购成功！</string>
+    <string name="bb_random_buy_failed">抢购失败！</string>
+    <string name="bb_random_buy_got_chances">今天还有 0 次机会</string>
+    <string name="bb_random_buy_sorry_info">很遗憾，没抢到</string>
+    <string name="bb_random_buy_no_chance">今天的机会已经用完了\n明天再来吧！</string>
+    <string name="bb_zero">0</string>
+    <string name="bb_product_name">Thrall（萨满）</string>
+    <string name="bb_product_price">&#165; 0.99</string>
+    <string name="bb_store_name">Blizzard Corporation</string>
+
+    <!-- 特定抢页面 -->
+    <string name="bb_searchview_hint">搜索商家</string>
+    <string name="bb_spinner_all_category">全部分类</string>
+    <string name="bb_spiiner_all_city">全城</string>
+    <string name="bb_spinner_smart_choose">智能选择</string>
+    <string name="bb_distance">0.5km</string>
+
+    <!-- 特定抢页面  - 商家页面 -->
+    <string name="bb_store_product">待抢商品</string>
+    <string name="bb_store_info">商家信息</string>
+    <string name="bb_store_reviews">评价</string>
+    <string name="bb_zhao">赵灵儿画像</string>
+    <string name="bb_remains">剩余2314个</string>
+    <string name="bb_address">地址：</string>
+    <string name="bb_address_panyu">广州市番禺区大学城至善园</string>
+    <string name="bb_phone">电话：</string>
+    <string name="bb_phone_num">233333333</string>
+    <string name="bb_store_detail">商家详情</string>
+    <string name="bb_store_detail_zhishan">至善园就是一幢普通的宿舍楼，就坐落在中山大学东校区的生活区入口位置。至善园一共一到十楼，住着从大一到研三的所有年级的学生</string>
+    <string name="bb_nickname">我是用户，我是上帝</string>
+    <string name="bb_review_time">2008/08/08 20:00</string>
+    <string name="bb_text">这里是正文里的非正文部分，所以不是真正的正文</string>
+    <string name="bb_write_reviews">写评价</string>
+    <string name="bb_rating">评分</string>
+    <string name="bb_post_photo">上传照片</string>
+    <string name="bb_publish">发布</string>
+    <string name="bb_origin_price">原价 &#165;34,222</string>
+    <string name="bb_current_price">现价 &#165;60,000</string>
+    <string name="bb_fund">将获得22,312公益资金</string>
+    <string name="bb_buy">抢</string>
+
+    <!-- 公益众筹页面 -->
+    <string name="bb_tab_newest">最新</string>
+    <string name="bb_tab_hit">最热</string>
+    <string name="bb_tab_recommend">推荐</string>
+    <string name="bb_tab_success">成功</string>
+    <string name="bb_project_name">项目名称</string>
+    <string name="bb_project_goal">目标30天 &#165;22,232</string>
+    <string name="bb_achieve">230%\n已达</string>
+    <string name="bb_accumulation">&#165;22.233\n已筹资</string>
+    <string name="bb_project_name1">项目名称</string>
+    <string name="bb_project_goal1">目标： &#165;11,232</string>
+    <string name="bb_achieve1">已筹资：&#165;10,000</string>
+    <string name="bb_accumulation1">达成：60%</string>
+    <string name="bb_remaining_days">20天\n剩余时间</string>
+
+    <!-- 公益众筹 特定某公益项目 -->
+    <string name="bb_pw_detial">详情</string>
+    <string name="bb_pw_support">支持</string>
+    <string name="bb_pw_supporter">支持者</string>
+    <string name="bb_support_btn">投入公益资金</string>
+    <string name="bb_support_fund">已投入公益资金：44,444元</string>
+    <string name="bb_support_feedback">投入反馈说明</string>
+    <string name="bb_support_feedback_descp">其实我没有什么反馈，这只是测试而已</string>
+
+    <!-- supporter -->
+    <string name="bb_supporter_nickname">不是我？</string>
+    <string name="bb_supporter_date">2015/2/31</string>
+    <string name="bb_supporter_money">支持了&#165;10,000,000</string>
+    <string name="bb_supporter_project_num">我一共支持了1个项目</string>
+
+    <!-- 我的账户 -->
+    <string name="bb_store_collected">收藏的商家</string>
+    <string name="bb_project_collected">收藏的项目</string>
+    <string name="bb_user_focused">我关注的人</string>
+    <string name="bb_fans">我的粉丝</string>
+    <string name="bb_donation_sum">累计捐款</string>
+    <string name="bb_donation_num">22,222</string>
+    <string name="bb_fund_remains">剩余公益资金</string>
+    <string name="bb_fund_sum">44,444</string>
+    <string name="bb_pw_project">公益项目</string>
+    <string name="bb_shopping_car">购物车</string>
+    <string name="bb_share_product">分享商品</string>
+    <string name="bb_shorename">商家名称</string>
+    <string name="bb_shopping_code">消费码：3154&#8211;3414&#8211;4424&#8211;1342</string>
+    <string name="bb_share">分享出去</string>
+    <string name="bb_giveup">放弃该商品</string>
+
+    <!-- 更多 -->
+    <string name="bb_more_guest">游客2312</string>
+    <string name="bb_more_login">登录</string>
+    <string name="bb_more_register_account">注册账号 ></string>
+    <string name="bb_more_about_banban">关于公益</string>
+    <string name="bb_more_invite_friends">邀请好友使用半半</string>
+    <string name="bb_more_feedback">意见反馈</string>
+    <string name="bb_more_remind">消息提醒</string>
+    <string name="bb_more_pay_assist">支付帮助</string>
+    <string name="bb_more_clear_cache">清除缓存</string>
+    <string name="bb_more_check_update">检查更新</string>
+    <string name="bb_more_version">当前版本：v1.0</string>
+    <string name="bb_more_logout">退出账号</string>
+    
+    <!-- 注册和登录 -->
+    <string name="bb_login">登录</string>
+    <string name="bb_hint_cellphone">手机号</string>
+    <string name="bb_hint_password">密码</string>
+    <string name="bb_forget_passwd">忘记密码</string>
+    <string name="bb_register_account">注册账号</string>
+    <string name="bb_register">注册</string>
+    <string name="bb_hint_confirm_passwd">再次输入密码</string>
+    <string name="bb_go_to_login">已有账号，去登录 ></string>
+
+</resources>

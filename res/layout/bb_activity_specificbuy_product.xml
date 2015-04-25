@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/img_product"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp"
+        android:contentDescription="@string/cont_descrip"
+        android:scaleType="fitXY"
+        android:src="@drawable/bb_store_zhao_big" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" >
+
+        <TextView
+            android:id="@+id/tv_zan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="@string/zan"
+            android:textColor="#777"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/img_like"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toStartOf="@id/tv_zan"
+            android:contentDescription="@string/cont_descrip"
+            android:src="@drawable/bb_like" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="70dp" >
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="@string/bb_zhao"
+            android:textColor="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_origin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_product_name"
+            android:layout_margin="3dp"
+            android:text="@string/bb_origin_price"
+            android:textColor="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_current_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_product_name"
+            android:layout_margin="3dp"
+            android:layout_toEndOf="@id/tv_origin_price"
+            android:text="@string/bb_current_price"
+            android:textColor="#ccc" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/bb_buy" />
+
+        <TextView
+            android:id="@+id/tv_remains"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/bb_remains" />
+
+        <TextView
+            android:id="@+id/tv_fund"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tv_remains"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:text="@string/bb_fund" />
+    </RelativeLayout>
+
+</RelativeLayout>

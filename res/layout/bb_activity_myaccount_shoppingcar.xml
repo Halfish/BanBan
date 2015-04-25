@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <!-- 上面部分 商品图片信息 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp" >
+
+        <ImageView
+            android:id="@+id/img_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="fitXY"
+            android:src="@drawable/bb_valeera_sanguinar" />
+
+        <!-- 赞 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" >
+
+            <TextView
+                android:id="@+id/tv_zan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/bb_zero"
+                android:textColor="#777"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/img_like"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toStartOf="@id/tv_zan"
+                android:contentDescription="@string/cont_descrip"
+                android:src="@drawable/bb_like" />
+        </RelativeLayout>
+
+        <!-- 底下信息部分 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bb_zhao"
+                android:textColor="@color/text_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tv_origin_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bb_origin_price"
+                    android:textColor="@color/text_gray" />
+
+                <TextView
+                    android:id="@+id/tv_current_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bb_current_price"
+                    android:textColor="@color/text_gray" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_fund"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bb_fund"
+                android:textColor="@color/text_gray" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 下面部分 功能条 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:divider="@drawable/bb_divider"
+        android:dividerPadding="2dp"
+        android:orientation="vertical"
+        android:showDividers="middle" >
+
+        <Button
+            android:id="@+id/btn_store_name"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/bb_shorename"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_shopping_code"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/bb_shopping_code"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_share"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/bb_share"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_giveup"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="@string/bb_giveup"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

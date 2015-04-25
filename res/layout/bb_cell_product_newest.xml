@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <!-- 图片 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/img_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="fitXY"
+            android:src="@drawable/bb_valeera_sanguinar" />
+
+        <!-- 点赞图标和点赞数 -->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_margin="10dp" >
+
+            <ImageView
+                android:id="@+id/img_like"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/cont_descrip"
+                android:src="@drawable/bb_like" />
+
+            <TextView
+                android:id="@+id/tv_like_number"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@id/img_like"
+                android:gravity="center"
+                android:text="@string/bb_zero"
+                android:textColor="#777"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_project_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:text="@string/bb_project_name"
+            android:textColor="#777" />
+
+        <TextView
+            android:id="@+id/tv_goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:text="@string/bb_project_goal"
+            android:textColor="#777" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:id="@+id/tv_achieve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#777"
+            android:textSize="12sp"
+            android:text="@string/bb_achieve" />
+
+        <TextView
+            android:id="@+id/tv_accumulation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#777"
+            android:textSize="12sp"
+            android:text="@string/bb_accumulation" />
+
+        <TextView
+            android:id="@+id/tv_remaining_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#777"
+            android:textSize="12sp"
+            android:text="@string/bb_remaining_days" />
+    </LinearLayout>
+
+</LinearLayout>

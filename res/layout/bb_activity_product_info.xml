@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/img_product"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cont_descrip"
+        android:scaleType="fitXY"
+        android:src="@drawable/heartstone_thrall" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_margin="20dp" >
+
+        <ImageView
+            android:id="@+id/img_like"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/cont_descrip"
+            android:src="@drawable/bb_like" />
+
+        <TextView
+            android:id="@+id/tv_like_number"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/img_like"
+            android:gravity="center"
+            android:text="@string/bb_zero"
+            android:textColor="#777"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bb_product_name"
+            android:textColor="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bb_product_price"
+            android:textColor="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_store_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bb_store_name"
+            android:textColor="#ccc" />
+    </LinearLayout>
+
+</RelativeLayout>

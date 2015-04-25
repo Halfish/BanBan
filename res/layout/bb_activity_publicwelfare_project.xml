@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <!-- 公益项目-上面部分 -->
+
+    <LinearLayout
+        android:id="@+id/project_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/img_product"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="fitXY"
+            android:src="@drawable/bb_valeera_sanguinar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:gravity="start|center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/bb_project_name1" />
+
+            <TextView
+                android:id="@+id/tv_goal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/bb_project_goal1" />
+            
+            <TextView
+                android:id="@+id/tv_achieve"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/bb_achieve1" />
+
+            <TextView
+                android:id="@+id/tv_accumulation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/bb_accumulation1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 商家界面 - 下面可滑动部分 -->
+
+    <LinearLayout
+        android:id="@+id/lly_store_info_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_guid1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/bb_pw_detial"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_guid2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/bb_pw_support"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_guid3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="@string/bb_pw_supporter"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/cursor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="matrix"
+            android:src="@drawable/bb_cursor"
+            android:visibility="invisible" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:flipInterval="30"
+            android:persistentDrawingCache="animation" />
+    </LinearLayout>
+
+</LinearLayout>

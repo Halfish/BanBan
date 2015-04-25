@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <SearchView
+        android:id="@+id/sv_store"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp" >
+        
+    </SearchView>
+
+    <LinearLayout
+        android:id="@+id/lly_spinners"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/sp_all_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/city_area"
+            android:prompt="@string/bb_spinner_all_category"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/sp_all_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/city_place"
+            android:prompt="@string/bb_spiiner_all_city"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/sp_smart_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/smart_order"
+            android:prompt="@string/bb_spinner_smart_choose"
+            android:layout_weight="1" />
+    </LinearLayout>
+    
+    <ListView 
+        android:id="@+id/lv_stores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+    </ListView>
+
+</LinearLayout>

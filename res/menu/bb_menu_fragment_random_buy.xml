@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.banban.BBMainActivity" >
+
+    <item
+        android:id="@+id/menu_category"
+        android:orderInCategory="100"
+        android:showAsAction="never|withText"
+        android:title="@string/bb_menu_category"/>
+
+</menu>

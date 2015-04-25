@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp" >
+
+        <ImageView
+            android:id="@+id/img_head"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:contentDescription="@string/cont_descrip"
+            android:src="@drawable/sysu" />
+
+        <TextView
+            android:id="@+id/tv_guest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/img_head"
+            android:text="@string/bb_more_guest" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_register"
+            android:text="@string/bb_more_login" />
+
+        <Button
+            android:id="@+id/btn_register"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/bb_more_register_account" />
+    </RelativeLayout>
+
+    <!-- 下面部分 功能条 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/bb_divider"
+        android:dividerPadding="2dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:showDividers="middle|end" >
+
+        <Button
+            android:id="@+id/btn_about_banban"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_about_banban"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_invite"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_invite_friends"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_feedback"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_feedback"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_remind"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_remind"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_pay_assist"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_pay_assist"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_clear_cache"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/bb_more_clear_cache"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_check_update"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:text="@string/bb_more_check_update"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bb_more_version"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bb_more_logout"
+        android:layout_margin="10dp" />
+
+</LinearLayout>
