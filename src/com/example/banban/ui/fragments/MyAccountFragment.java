@@ -1,8 +1,8 @@
 package com.example.banban.ui.fragments;
 
 /*
- * @author: Bruce
- * @description: 我的账户 主界面
+ * @author: BruceZhang
+ * @description: 我的账户 fragment
  */
 
 import java.util.ArrayList;

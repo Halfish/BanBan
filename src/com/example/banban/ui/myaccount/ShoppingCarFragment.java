@@ -1,5 +1,10 @@
 package com.example.banban.ui.myaccount;
 
+/*
+ * @author: BruceZhang
+ * @description: 我的账户 第二个Tab选项卡 购物车
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

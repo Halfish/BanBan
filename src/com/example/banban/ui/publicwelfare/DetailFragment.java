@@ -1,5 +1,10 @@
 package com.example.banban.ui.publicwelfare;
 
+/*
+ * @author: BruceZhang
+ * @description: 公益众筹中PWProject的第一个Tab选项卡 公益项目的详情
+ */
+
 import com.example.banban.R;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 

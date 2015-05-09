@@ -1,5 +1,10 @@
 package com.example.banban.ui.myaccount;
 
+/*
+ * @author: BruceZhang
+ * @description: 我的账户 购物车Tab选项卡中的某一项点击后，进入此项商品的特定界面
+ */
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -10,7 +15,7 @@ import android.widget.Button;
 
 import com.example.banban.R;
 import com.example.banban.ui.BaseActionBarActivity;
-import com.example.banban.ui.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreInfoActivity;
 
 public class ShoppingCarActivity extends BaseActionBarActivity {
 

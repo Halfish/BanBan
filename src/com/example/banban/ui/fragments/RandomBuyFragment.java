@@ -1,5 +1,11 @@
 package com.example.banban.ui.fragments;
 
+/*
+ * @author: BruceZhang
+ * @description: 随机抢 fragment
+ */
+
+
 import com.example.banban.R;
 import com.example.banban.ui.ProductInfoActivity;
 import com.example.sortlistview.AlphabetaContactActicity;

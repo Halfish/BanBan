@@ -1,5 +1,10 @@
 package com.example.banban.ui;
 
+/*
+ * @author: BruceZhang
+ * @description: 随机抢 抢到的某商品，不可再抢，只是静态展示没有功能
+ */
+
 import com.example.banban.R;
 
 import android.app.Activity;

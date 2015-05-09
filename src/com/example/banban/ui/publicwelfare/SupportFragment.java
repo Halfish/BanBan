@@ -1,5 +1,11 @@
 package com.example.banban.ui.publicwelfare;
 
+/*
+ * @author: BruceZhang
+ * @description: 公益众筹中PWProject的第二个Tab选项卡 支持
+ * 用户可以在这里投入公益资金
+ */
+
 import com.example.banban.R;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 

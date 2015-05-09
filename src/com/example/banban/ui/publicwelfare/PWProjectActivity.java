@@ -1,8 +1,9 @@
 package com.example.banban.ui.publicwelfare;
 
 /*
- * @author: Bruce
- * @description: 公益众筹中的某一个特定的公益项目详情
+ * @author: BruceZhang
+ * @description: 公益众筹中的某一个特定的公益项目详情，含有三个选项卡
+ * 我的账户中的公益项目，点击某一项，也可以跳转到此界面
  */
 
 import java.util.ArrayList;

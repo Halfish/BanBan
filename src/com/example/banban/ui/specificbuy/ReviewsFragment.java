@@ -1,7 +1,12 @@
 package com.example.banban.ui.specificbuy;
 
+/*
+ * @author: BruceZhang
+ * @description: 商家页面 第三个Tab选项 对该商家的评价，
+ * 可以跳到评价界面
+ */
+
 import com.example.banban.R;
-import com.example.banban.ui.WritingReviewActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

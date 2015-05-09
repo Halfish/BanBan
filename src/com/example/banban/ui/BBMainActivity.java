@@ -1,5 +1,10 @@
 package com.example.banban.ui;
 
+/*
+ * @author: BruceZhang
+ * @description: APP入口，主界面。包含五个Fragment选项卡
+ */
+
 import com.example.banban.R;
 import com.example.banban.ui.fragments.MoreInfoFragment;
 import com.example.banban.ui.fragments.MyAccountFragment;

@@ -2,7 +2,7 @@ package com.example.banban.ui.publicwelfare;
 
 /*
  * @author: BruceZhang
- * @description: 公益众筹 第一个Tab选项卡 最新
+ * @description: 公益众筹 第三个Tab选项卡 推荐
  */
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NewestFragment extends BaseActionBarFragment {
+public class RecommendedFragment extends BaseActionBarFragment {
 
 	private Activity m_activity;
 	private GridView m_gridView;

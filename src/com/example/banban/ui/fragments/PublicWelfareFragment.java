@@ -1,5 +1,11 @@
 package com.example.banban.ui.fragments;
 
+/*
+ * @author: BruceZhang
+ * @description: 公益众筹 fragment
+ */
+
+
 import java.util.ArrayList;
 
 import com.example.banban.R;

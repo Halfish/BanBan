@@ -1,5 +1,10 @@
 package com.example.banban.ui.myaccount;
 
+/*
+ * @author: BruceZhang
+ * @description: 我的账户 第三个Tab选项卡 分享商品
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +56,7 @@ public class ShareProductFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						Intent intent = new Intent(getActivity(), ShareActivity.class);
+						Intent intent = new Intent(getActivity(), ShareProductActivity.class);
 						startActivity(intent);
 					}
 				});

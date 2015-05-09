@@ -1,5 +1,11 @@
 package com.example.banban.ui.specificbuy;
 
+/*
+ * @author: BruceZhang
+ * @description: 商家页面 第一个Tab选项 列出该商家的所有待抢商品
+ */
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

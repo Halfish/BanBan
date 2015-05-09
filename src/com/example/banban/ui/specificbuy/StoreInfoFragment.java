@@ -1,5 +1,10 @@
 package com.example.banban.ui.specificbuy;
 
+/*
+ * @author: BruceZhang
+ * @description: 商家页面 第二个Tab选项 该商家的信息
+ */
+
 import com.example.banban.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

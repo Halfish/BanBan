@@ -1,16 +1,13 @@
-package com.example.banban.ui;
+package com.example.banban.ui.specificbuy;
 
 /*
- * @author: Bruce
- * @description: 商家页面
+ * @author: BruceZhang
+ * @description: 某商家页面 可用于特定抢
  */
 
 import java.util.ArrayList;
 
 import com.example.banban.R;
-import com.example.banban.ui.specificbuy.ProductFragment;
-import com.example.banban.ui.specificbuy.ReviewsFragment;
-import com.example.banban.ui.specificbuy.StoreInfoFragment;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;

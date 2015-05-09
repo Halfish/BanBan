@@ -1,5 +1,10 @@
 package com.example.banban.ui.publicwelfare;
 
+/*
+ * @author: BruceZhang
+ * @description: 公益众筹中PWProject的第 三个Tab选项卡 支持者
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

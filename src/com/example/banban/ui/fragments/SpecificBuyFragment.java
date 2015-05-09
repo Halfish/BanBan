@@ -1,12 +1,18 @@
 package com.example.banban.ui.fragments;
 
+/*
+ * @author: BruceZhang
+ * @description: 特定抢 fragment
+ */
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.example.banban.R;
-import com.example.banban.ui.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreInfoActivity;
 
 import android.app.Activity;
 import android.content.Intent;

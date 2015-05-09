@@ -1,5 +1,11 @@
 package com.example.banban.ui.fragments;
 
+/*
+ * @author: BruceZhang
+ * @description: 更多信息 fragment
+ */
+
+
 import com.example.banban.R;
 
 import android.os.Bundle;

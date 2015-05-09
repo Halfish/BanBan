@@ -25,8 +25,8 @@
         
         <activity android:name=".ui.ProductInfoActivity"></activity>
         <activity android:name="com.example.sortlistview.AlphabetaContactActicity"></activity>
-    	<activity android:name=".ui.StoreInfoActivity"></activity>
-    	<activity android:name=".ui.WritingReviewActivity"></activity>
+    	<activity android:name="com.example.banban.ui.specificbuy.StoreInfoActivity"></activity>
+    	<activity android:name="com.example.banban.ui.specificbuy.WritingReviewActivity"></activity>
     	<activity android:name=".ui.specificbuy.ProductActivity"></activity>
     	<activity android:name=".ui.publicwelfare.PWProjectActivity"></activity>
     	<activity android:name=".ui.myaccount.ShoppingCarActivity"></activity>
