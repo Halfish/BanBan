@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,8 +130,6 @@ public class NewestFragment extends BaseActionBarFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			Log.e("getView", "getView function called");
 			
 			ViewHolder viewHolder;
 			if (convertView == null) {

@@ -8,13 +8,17 @@
         android:minSdkVersion="17"
         android:targetSdkVersion="21" />
 
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" android:supportsRtl="true">
         <activity
-            android:name=".ui.BBMainActivity"
+            android:name="com.example.newuser.StartUpActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,17 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".ui.ProductInfoActivity"></activity>
-        <activity android:name="com.example.sortlistview.AlphabetaContactActicity"></activity>
-    	<activity android:name="com.example.banban.ui.specificbuy.StoreInfoActivity"></activity>
-    	<activity android:name="com.example.banban.ui.specificbuy.WritingReviewActivity"></activity>
-    	<activity android:name=".ui.specificbuy.ProductActivity"></activity>
-    	<activity android:name=".ui.publicwelfare.PWProjectActivity"></activity>
-    	<activity android:name=".ui.myaccount.ShoppingCarActivity"></activity>
-    	<activity android:name=".ui.myaccount.ShareActivity"></activity>
-    	<activity android:name="com.example.newuser.LoginActivity"></activity>
-    	<activity android:name="com.example.newuser.RegisterActivity"></activity>
+        <activity android:name="com.example.newuser.LoginActivity" />
+        <activity android:name="com.example.newuser.RegisterActivity" />
+        <activity android:name=".ui.BBMainActivity" />
+        <activity android:name=".ui.ProductInfoActivity" />
+        <activity android:name="com.example.sortlistview.AlphabetaContactActicity" />
+    	<activity android:name=".ui.specificbuy.StoreInfoActivity" />
+    	<activity android:name=".ui.specificbuy.WritingReviewActivity" />
+    	<activity android:name=".ui.specificbuy.ProductActivity" />
+    	<activity android:name=".ui.publicwelfare.PWProjectActivity" />
+    	<activity android:name=".ui.myaccount.ShoppingCarActivity" />
+    	<activity android:name=".ui.myaccount.ShareActivity" />
+    	
     </application>
 
 </manifest>

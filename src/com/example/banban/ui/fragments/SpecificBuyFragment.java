@@ -5,21 +5,30 @@ package com.example.banban.ui.fragments;
  * @description: 特定抢 fragment
  */
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.specificbuy.StoreInfoActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,34 +40,100 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class SpecificBuyFragment extends Fragment implements
+public class SpecificBuyFragment extends BaseActionBarFragment implements
 		OnQueryTextListener {
 	private Activity m_activity;
 	private SearchView m_searchView;
-//	private Spinner m_allCateSpinner;
-//	private Spinner m_allCitySpinner;
-//	private Spinner m_smartOrderSpinner;
+	// private Spinner m_allCateSpinner;
+	// private Spinner m_allCitySpinner;
+	// private Spinner m_smartOrderSpinner;
 
 	private ListView m_listView;
 	private StoreBaseAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
 	private Map<String, Object> item;
+	private RequestQueue m_queue;
+	private Handler m_handler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		initListViewData();
+		m_actionBar = m_activity.getActionBar();
+		initHandler();
+		beginDataRequest();
+	}
+
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					updataDataFromServer(response);
+					Log.v("SpecificBuyFragment", response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(m_activity);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/products/show/spec",
+				m_handler, m_queue);
+	}
+
+	private void updataDataFromServer(JSONObject jsonObject) {
+		m_listItems = new ArrayList<Map<String, Object>>();
+		JSONArray jsonArray = null;
+		try {
+			jsonArray = jsonObject.getJSONArray("products");
+			if (jsonArray == null) {
+				return;
+			}
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject object = jsonArray.getJSONObject(i);
+				addItem(object);
+			}
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void addItem(JSONObject object) throws JSONException {
+		//int donate = object.getInt("donate");
+		int favorite = object.getInt("favorite");
+		//int price = object.getInt("price");
+		//int product_id = object.getInt("product_id");
+		String product_name = object.getString("product_name");
+
+		item = new HashMap<String, Object>();
+		item.put("store_img",
+				getResources().getDrawable(R.drawable.bb_store_zhao));
+		item.put("store_name", product_name);
+		item.put("like_number", favorite + "");
+		item.put("distance", "1578.6km");
+		m_listItems.add(item);
+		m_adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		m_activity.getActionBar().hide();
-		
+
 		View view = inflater.inflate(R.layout.bb_fragment_specfic_buy,
 				container, false);
-
+		//setActionBarCenterTitle(R.string.bb_tab_specific_buy);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setDisplayUseLogoEnabled(false);
+		m_actionBar.setDisplayShowHomeEnabled(false);
+		
 		m_searchView = (SearchView) view.findViewById(R.id.sv_store);
 		m_searchView.setIconifiedByDefault(false);
 		m_searchView.setOnQueryTextListener(this);
@@ -67,75 +142,40 @@ public class SpecificBuyFragment extends Fragment implements
 				R.string.bb_searchview_hint);
 		m_searchView.setQueryHint(hintString);
 
-//		m_allCateSpinner = (Spinner) view.findViewById(R.id.sp_all_category);
-//		m_allCitySpinner = (Spinner) view.findViewById(R.id.sp_all_city);
-//		m_smartOrderSpinner = (Spinner) view.findViewById(R.id.sp_smart_order);
+		// m_allCateSpinner = (Spinner) view.findViewById(R.id.sp_all_category);
+		// m_allCitySpinner = (Spinner) view.findViewById(R.id.sp_all_city);
+		// m_smartOrderSpinner = (Spinner)
+		// view.findViewById(R.id.sp_smart_order);
 
 		m_listView = (ListView) view.findViewById(R.id.lv_stores);
-		m_adapter = new StoreBaseAdapter();
-		m_listView.setAdapter(m_adapter);		
-		m_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Intent intent = new Intent(m_activity, StoreInfoActivity.class);
-				startActivity(intent);
-			}
-		});
+		m_adapter = new StoreBaseAdapter();
+		m_listView.setAdapter(m_adapter);
+		m_listView
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						Intent intent = new Intent(m_activity,
+								StoreInfoActivity.class);
+						startActivity(intent);
+					}
+				});
+
 		return view;
 	}
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		
+
 		return false;
-	}
-
-	private void initListViewData() {
-		m_listItems = new ArrayList<Map<String, Object>>();
-
-		item = new HashMap<String, Object>();
-		item.put("store_img", getResources().getDrawable(R.drawable.bb_store_zhao));
-		item.put("store_name", "暴雪公司");
-		item.put("like_number", "34,334");
-		item.put("distance", "1578.6km");
-		m_listItems.add(item);
-
-		item = new HashMap<String, Object>();
-		item.put("store_img", getResources().getDrawable(R.drawable.bb_store_zhao));
-		item.put("store_name", "网易游戏");
-		item.put("like_number", "4,017");
-		item.put("distance", "15.2km");
-		m_listItems.add(item);
-		
-		item = new HashMap<String, Object>();
-		item.put("store_img", getResources().getDrawable(R.drawable.bb_store_zhao));
-		item.put("store_name", "暴雪公司");
-		item.put("like_number", "34,334");
-		item.put("distance", "1578.6km");
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		
 	}
 
 	private static class ViewHolder {
@@ -195,12 +235,16 @@ public class SpecificBuyFragment extends Fragment implements
 				 */
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			
-			Drawable storeImg = (Drawable)m_listItems.get(position).get("store_img");
-			String storeName = (String)m_listItems.get(position).get("store_name");
-			String likeNumber = (String)m_listItems.get(position).get("like_number");
-			String distance = (String)m_listItems.get(position).get("distance");
-			
+
+			Drawable storeImg = (Drawable) m_listItems.get(position).get(
+					"store_img");
+			String storeName = (String) m_listItems.get(position).get(
+					"store_name");
+			String likeNumber = (String) m_listItems.get(position).get(
+					"like_number");
+			String distance = (String) m_listItems.get(position)
+					.get("distance");
+
 			viewHolder.storeImg.setImageDrawable(storeImg);
 			viewHolder.storeNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);

@@ -9,8 +9,13 @@ package com.example.banban.ui.fragments;
 import java.util.ArrayList;
 
 import com.example.banban.R;
+import com.example.banban.ui.publicwelfare.HotestFragment;
 import com.example.banban.ui.publicwelfare.NewestFragment;
+import com.example.banban.ui.publicwelfare.RecommendedFragment;
+import com.example.banban.ui.publicwelfare.SuccessfulFragment;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -29,7 +34,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PublicWelfareFragment extends Fragment {
+public class PublicWelfareFragment extends BaseActionBarFragment {
 
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -38,7 +43,17 @@ public class PublicWelfareFragment extends Fragment {
 	private int currIndex;// 当前页卡编号
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
+	
+	private Activity m_activity;
+	private ActionBar m_actionBar;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		m_activity = getActivity();
+		m_actionBar = m_activity.getActionBar();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,6 +61,11 @@ public class PublicWelfareFragment extends Fragment {
 		View view = inflater.inflate(R.layout.bb_fragment_public_welfare,
 				container, false);
 
+		//setActionBarCenterTitle(R.string.bb_tab_public_welfare);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setDisplayUseLogoEnabled(false);
+		m_actionBar.setDisplayShowHomeEnabled(false);
+		
 		InitTextView(view);
 		InitImage(view);
 		InitViewPager(view);
@@ -95,9 +115,9 @@ public class PublicWelfareFragment extends Fragment {
 		mPager = (ViewPager) view.findViewById(R.id.viewpager);
 		fragmentList = new ArrayList<Fragment>();
 		fragmentList.add(new NewestFragment());
-		fragmentList.add(new NewestFragment());
-		fragmentList.add(new NewestFragment());
-		fragmentList.add(new NewestFragment());
+		fragmentList.add(new HotestFragment());
+		fragmentList.add(new RecommendedFragment());
+		fragmentList.add(new SuccessfulFragment());
 
 		// 给ViewPager设置适配器
 		mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(),

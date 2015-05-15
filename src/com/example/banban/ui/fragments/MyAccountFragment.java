@@ -11,6 +11,9 @@ import com.example.banban.R;
 import com.example.banban.ui.myaccount.ProjectFragment;
 import com.example.banban.ui.myaccount.ShareProductFragment;
 import com.example.banban.ui.myaccount.ShoppingCarFragment;
+
+import android.app.ActionBar;
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -29,7 +32,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MyAccountFragment extends Fragment {
+public class MyAccountFragment extends BaseActionBarFragment {
 	
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -39,9 +42,24 @@ public class MyAccountFragment extends Fragment {
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
 	
+	private Activity m_activity;
+	private ActionBar m_actionBar;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		m_activity = getActivity();
+		m_actionBar = m_activity.getActionBar();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		
+		//setActionBarCenterTitle(R.string.bb_tab_my_account);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setDisplayUseLogoEnabled(false);
+		m_actionBar.setDisplayShowHomeEnabled(false);
 		
 		View view = inflater.inflate(R.layout.bb_fragment_my_account,
 				container, false);

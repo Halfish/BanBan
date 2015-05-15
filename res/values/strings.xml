@@ -23,7 +23,7 @@
     <string name="bb_random_buy">随机抢</string>
     <string name="bb_random_buy_success">抢购成功！</string>
     <string name="bb_random_buy_failed">抢购失败！</string>
-    <string name="bb_random_buy_got_chances">今天还有 0 次机会</string>
+    <string name="bb_random_buy_got_chances">今天还有 3 次机会</string>
     <string name="bb_random_buy_sorry_info">很遗憾，没抢到</string>
     <string name="bb_random_buy_no_chance">今天的机会已经用完了\n明天再来吧！</string>
     <string name="bb_zero">0</string>
