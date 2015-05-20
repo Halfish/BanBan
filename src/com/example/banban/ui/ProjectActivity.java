@@ -1,4 +1,4 @@
-package com.example.banban.ui.publicwelfare;
+package com.example.banban.ui;
 
 /*
  * @author: BruceZhang
@@ -8,9 +8,14 @@ package com.example.banban.ui.publicwelfare;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,16 +23,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.publicwelfare.DetailFragment;
+import com.example.banban.ui.publicwelfare.SupportFragment;
+import com.example.banban.ui.publicwelfare.SupporterFragment;
 
-public class PWProjectActivity extends FragmentActivity {
-	
+public class ProjectActivity extends FragmentActivity {
+
+	private static final String LOG_TAG = ProjectActivity.class.getName();
+
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView image;
@@ -36,14 +52,90 @@ public class PWProjectActivity extends FragmentActivity {
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
 
+	public int m_projectId;
+	private TextView m_projectName; // 项目名称
+	private TextView m_goal; // 目标：元
+	private TextView m_achieve; // 已经筹资：元
+	private TextView m_accumulate; // 达成：100%
+
+	private Handler m_handler;
+	private RequestQueue m_queue;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_publicwelfare_project);
 
+		m_projectId = getIntent().getIntExtra("projectId", -1); // TODO
+		initWidgets();
+		initHandler();
+
 		InitTextView();
 		InitImage();
 		InitViewPager();
+		beginDataGetRequest();
+	}
+
+	private void initWidgets() {
+		m_projectName = (TextView) findViewById(R.id.tv_project_name);
+		m_goal = (TextView) findViewById(R.id.tv_goal);
+		m_achieve = (TextView) findViewById(R.id.tv_achieve);
+		m_accumulate = (TextView) findViewById(R.id.tv_accumulation);
+	}
+
+	private void beginDataGetRequest() {
+		m_queue = Volley.newRequestQueue(this);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/projects/detail/"
+				+ m_projectId, m_handler, m_queue);
+	}
+
+	private void initHandler() {
+		m_handler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						parseDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+				case HttpUtil.FAILURE_CODE:
+					Log.v(LOG_TAG, "failed");
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void parseDataFromServer(JSONObject response) throws JSONException {
+		int ret_code = response.getInt("ret_code");
+		if (ret_code == 1) {
+			Toast.makeText(this, "Project does not exist!", Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
+
+		// else ret_code == 0
+		String name = response.getString("name");
+		// String image = response.getString("image");
+		int total_support = response.getInt("total_support");
+		int expect = response.getInt("expect");
+		int percentage = response.getInt("percentage");
+		// String description = response.getString("description");
+		// String feedback = response.getString("");
+
+		m_projectName.setText("项目名称：" + name);
+		m_goal.setText("目标：" + expect + "元");
+		m_achieve.setText("已筹资：" + total_support + "元");
+		m_accumulate.setText("达成：" + percentage + "%");
+
 	}
 
 	/*

@@ -46,21 +46,21 @@
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_product_name"
+            android:text=""
             android:textColor="#ccc" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_product_price"
+            android:text=""
             android:textColor="#ccc" />
 
         <TextView
             android:id="@+id/tv_store_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_store_name"
+            android:text=""
             android:textColor="#ccc" />
     </LinearLayout>
 

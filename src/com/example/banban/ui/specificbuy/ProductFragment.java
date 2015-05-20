@@ -11,14 +11,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,20 +38,92 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProductFragment extends Fragment {
 
+	protected static final String LOG_TAG = "ProductFragment";
 	private Activity m_activity;
 	private GridView m_gridView;
 	private StoreInfoAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
 	private Map<String, Object> item;
+	private Handler m_handler;
+	private RequestQueue m_queue;
+	private int m_storeId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		initListViewData();
+		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); //TODO
+		initHandler();
+	}
+	
+	private void initHandler() {
+		m_handler = new Handler(getActivity().getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void updataDataFromServer(JSONObject response) throws JSONException {
+		int ret_code = response.getInt("ret_code");
+		if(ret_code == 1) {
+			Toast.makeText(m_activity, "Store not exist", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		// else ret_code == 0
+		m_listItems = new ArrayList<Map<String, Object>>();
+		JSONArray jsonArray = response.getJSONArray("products");
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			addItem(jsonObject);
+		}
+	}
+	
+	private void addItem(JSONObject jsonObject) throws JSONException {
+		
+		//String image = jsonObject.getString("image");
+		int price = jsonObject.getInt("price");
+		//int product_id = jsonObject.getInt("product_id");
+		//int original_price = jsonObject.getInt("original_price");
+		String name = jsonObject.getString("name");
+		int favorites = jsonObject.getInt("favorites");
+		int amount_spec = jsonObject.getInt("amount_spec");
+		
+		item = new HashMap<String, Object>();
+		item.put("product_img",
+				getResources().getDrawable(R.drawable.bb_store_zhao_big));
+		item.put("product_name", name);
+		item.put("like_number", favorites + "");
+		item.put("price", price + "");
+		item.put("remains", amount_spec + "");
+		m_listItems.add(item);
+
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(getActivity());
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/products/"
+				+ m_storeId, m_handler, m_queue);
 	}
 
 	@Override
@@ -62,37 +145,10 @@ public class ProductFragment extends Fragment {
 						startActivity(intent);
 					}
 				});
-
+		
+		beginDataRequest();
+		
 		return rootView;
-	}
-
-	private void initListViewData() {
-		m_listItems = new ArrayList<Map<String, Object>>();
-
-		item = new HashMap<String, Object>();
-		item.put("product_img",
-				getResources().getDrawable(R.drawable.bb_store_zhao_big));
-		item.put("product_name", "赵灵儿");
-		item.put("like_number", "34,334");
-		item.put("price", "0.99 元");
-		item.put("remains", "2333");
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-
 	}
 
 	private static class ViewHolder {

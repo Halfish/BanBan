@@ -10,15 +10,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.ui.publicwelfare.PWProjectActivity;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.ProjectActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +41,96 @@ import android.widget.TextView;
 
 public class ProjectFragment extends Fragment {
 
+	private static final String LOG_TAG = ProjectFragment.class.getName();
 	private Activity m_activity;
 	private GridView m_gridView;
-	private StoreInfoAdapter m_adapter;
+	private ProjectInfoAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
 	private Map<String, Object> item;
+
+	private Handler m_handler;
+	private RequestQueue m_queue;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		initListViewData();
+		m_listItems = new ArrayList<Map<String, Object>>();
+		initHandler();
+	}
+
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(m_activity);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/users/supports/history", m_handler, m_queue);
+	}
+
+	private void updataDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG, "wrong retCode");
+			return;
+		}
+
+		// else retCode == 0
+		m_listItems = new ArrayList<Map<String, Object>>();
+		JSONArray jsonArray = jsonObject.getJSONArray("projects");
+		if (jsonArray == null) {
+			return;
+		}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject object = jsonArray.getJSONObject(i);
+			addItem(object);
+		}
+	}
+
+	private void addItem(JSONObject object) throws JSONException {
+
+		int project_id = object.getInt("project_id");
+		String name = object.getString("name");
+		int expect_length = object.getInt("expect_length");
+		int remaining_days = object.getInt("remaining_days");
+		int expect = object.getInt("expect");
+		int total_support = object.getInt("total_support");
+		int percentage = object.getInt("percentage");
+
+		item = new HashMap<String, Object>();
+		item.put("project_id", project_id + "");
+		item.put("project_img",
+				getResources().getDrawable(R.drawable.bb_valeera_sanguinar));
+		item.put("project_name", name);
+		item.put("like_number", "34,334");
+		item.put("goal", "目标 " + expect_length + "天" + expect + "元");
+		item.put("achieved", percentage + "%\n已达");
+		item.put("accumulation", total_support + "元\n已融资");
+		item.put("remain", remaining_days + "天\n剩余时间");
+		m_listItems.add(item);
+
+		m_adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -50,7 +140,7 @@ public class ProjectFragment extends Fragment {
 				R.layout.bb_fragment_specificbuy_product, container, false);
 
 		m_gridView = (GridView) rootView.findViewById(R.id.gv_product);
-		m_adapter = new StoreInfoAdapter();
+		m_adapter = new ProjectInfoAdapter();
 		m_gridView.setAdapter(m_adapter);
 		m_gridView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,52 +148,31 @@ public class ProjectFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						Intent intent = new Intent(getActivity(), PWProjectActivity.class);
+						String project_id = (String) m_listItems.get(position)
+								.get("project_id");
+						Intent intent = new Intent(getActivity(),
+								ProjectActivity.class);
+						intent.putExtra("projectId",
+								Integer.parseInt(project_id));
 						startActivity(intent);
 					}
 				});
 
+		beginDataRequest();
 		return rootView;
 	}
 
-	private void initListViewData() {
-		m_listItems = new ArrayList<Map<String, Object>>();
-
-		item = new HashMap<String, Object>();
-		item.put("product_img",
-				getResources().getDrawable(R.drawable.bb_store_zhao_big));
-		item.put("product_name", "赵灵儿");
-		item.put("like_number", "34,334");
-		item.put("price", "0.99 元");
-		item.put("remains", "2333");
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-
-	}
-
 	private static class ViewHolder {
-		ImageView productImg;
-		TextView productNameTV;
-		TextView likeNumberTV;
-		TextView priceTV;
-		TextView remainsTV;
+		ImageView projectImg;
+		TextView projectName;
+		TextView likeNumber;
+		TextView goal;
+		TextView achieved;
+		TextView accumulation;
+		TextView remain;
 	}
 
-	private class StoreInfoAdapter extends BaseAdapter {
+	private class ProjectInfoAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
@@ -129,49 +198,59 @@ public class ProjectFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+
 			ViewHolder viewHolder;
 			if (convertView == null) {
 				convertView = m_activity.getLayoutInflater().inflate(
-						R.layout.bb_cell_product, parent, false);
+						R.layout.bb_cell_project, parent, false);
 				/*
 				 * initialize viewHolder;
 				 */
 				viewHolder = new ViewHolder();
-				viewHolder.productImg = (ImageView) convertView
-						.findViewById(R.id.img_product);
-				viewHolder.productNameTV = (TextView) convertView
-						.findViewById(R.id.tv_product_name);
-				viewHolder.likeNumberTV = (TextView) convertView
+				viewHolder.projectImg = (ImageView) convertView
+						.findViewById(R.id.img_project);
+				viewHolder.projectName = (TextView) convertView
+						.findViewById(R.id.tv_project_name);
+				viewHolder.likeNumber = (TextView) convertView
 						.findViewById(R.id.tv_like_number);
-				viewHolder.priceTV = (TextView) convertView
-						.findViewById(R.id.tv_product_price);
-				viewHolder.remainsTV = (TextView) convertView
-						.findViewById(R.id.tv_remains);
+				viewHolder.goal = (TextView) convertView
+						.findViewById(R.id.tv_goal);
+				viewHolder.achieved = (TextView) convertView
+						.findViewById(R.id.tv_achieve);
+				viewHolder.accumulation = (TextView) convertView
+						.findViewById(R.id.tv_accumulation);
+				viewHolder.remain = (TextView) convertView
+						.findViewById(R.id.tv_remaining_days);
 
 				convertView.setTag(viewHolder);
 			} else {
+
 				/*
 				 * with viewHolder, we just avoid callingfindViewById every time
 				 */
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			Drawable storeImg = (Drawable) m_listItems.get(position).get(
-					"product_img");
-			String storeName = (String) m_listItems.get(position).get(
-					"product_name");
+			Drawable projectImg = (Drawable) m_listItems.get(position).get(
+					"project_img");
+			String projectName = (String) m_listItems.get(position).get(
+					"project_name");
 			String likeNumber = (String) m_listItems.get(position).get(
 					"like_number");
-			String distance = (String) m_listItems.get(position)
-					.get("price");
-			String remains = (String) m_listItems.get(position)
-					.get("remains");
+			String goal = (String) m_listItems.get(position).get("goal");
+			String achieved = (String) m_listItems.get(position)
+					.get("achieved");
+			String accumulation = (String) m_listItems.get(position).get(
+					"accumulation");
+			String remain = (String) m_listItems.get(position).get("remain");
 
-			viewHolder.productImg.setImageDrawable(storeImg);
-			viewHolder.productNameTV.setText(storeName);
-			viewHolder.likeNumberTV.setText(likeNumber);
-			viewHolder.priceTV.setText(distance);
-			viewHolder.remainsTV.setText(remains);
+			viewHolder.projectImg.setImageDrawable(projectImg);
+			viewHolder.projectName.setText(projectName);
+			viewHolder.likeNumber.setText(likeNumber);
+			viewHolder.goal.setText(goal);
+			viewHolder.achieved.setText(achieved);
+			viewHolder.accumulation.setText(accumulation);
+			viewHolder.remain.setText(remain);
 
 			return convertView;
 		}

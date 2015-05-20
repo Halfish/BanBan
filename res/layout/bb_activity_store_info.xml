@@ -37,10 +37,10 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/tv_product_price"
+                android:id="@+id/tv_total_donate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/bb_product_price"
+                android:text="@string/bb_total_donate"
                 android:textColor="#ccc" />
 
             <TextView
@@ -51,15 +51,26 @@
                 android:textColor="#ccc" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/img_like"
+        <ImageButton
+            android:id="@+id/img_collect"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_margin="10dp"
+            
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_like" />
+            android:background="@drawable/heart_white" />
+        
+        <ImageButton
+            android:id="@+id/img_like"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_toStartOf="@id/img_collect"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/cont_descrip"
+            android:background="@drawable/bb_like" />
     </RelativeLayout>
 
     <!-- 商家界面 - 下面可滑动部分 -->

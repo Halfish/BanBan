@@ -28,7 +28,7 @@
     <string name="bb_random_buy_no_chance">今天的机会已经用完了\n明天再来吧！</string>
     <string name="bb_zero">0</string>
     <string name="bb_product_name">Thrall（萨满）</string>
-    <string name="bb_product_price">&#165; 0.99</string>
+    <string name="bb_total_donate">累计捐款 99 元</string>
     <string name="bb_store_name">Blizzard Corporation</string>
 
     <!-- 特定抢页面 -->
@@ -61,6 +61,7 @@
     <string name="bb_current_price">现价 &#165;60,000</string>
     <string name="bb_fund">将获得22,312公益资金</string>
     <string name="bb_buy">抢</string>
+    <string name="bb_product_price"> &#165;34,222</string>
 
     <!-- 公益众筹页面 -->
     <string name="bb_tab_newest">最新</string>

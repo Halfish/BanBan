@@ -6,8 +6,18 @@ package com.example.banban.ui.fragments;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.myaccount.ProjectFragment;
 import com.example.banban.ui.myaccount.ShareProductFragment;
 import com.example.banban.ui.myaccount.ShoppingCarFragment;
@@ -17,13 +27,17 @@ import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +48,7 @@ import android.widget.TextView;
 
 public class MyAccountFragment extends BaseActionBarFragment {
 	
+	protected static final String LOG_TAG = MyAccountFragment.class.getName();
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView image;
@@ -45,12 +60,60 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private Activity m_activity;
 	private ActionBar m_actionBar;
 
+	private Handler m_handler;
+	private RequestQueue m_queue;
+	private Map<String, Object> item;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
+		initHandler();
+		//beginDataRequest();
 	}
+
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+//					try {
+//						updataDataFromServer(response);
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+//	private void beginDataRequest() {
+//		m_queue = Volley.newRequestQueue(m_activity);
+//		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+//				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
+//	}
+//
+//	private void updataDataFromServer(JSONObject jsonObject)
+//			throws JSONException {
+//		int retCode = jsonObject.getInt("ret_code");
+//		if (retCode == 1) {
+//			Log.v(LOG_TAG, "Missing order condition");
+//			return;
+//		}
+//
+//		// else retCode == 0
+//	}
+
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,

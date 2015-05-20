@@ -54,6 +54,7 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 		m_actionBar = m_activity.getActionBar();
 	}
 	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

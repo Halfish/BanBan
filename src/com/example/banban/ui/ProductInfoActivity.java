@@ -6,8 +6,6 @@ package com.example.banban.ui;
  */
 
 import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.TextureView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +40,7 @@ public class ProductInfoActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_product_info);
+		getActionBar().hide();
 		initWidgets();
 		initHandler();
 		beginDataRequest();
@@ -108,17 +106,21 @@ public class ProductInfoActivity extends Activity {
 	}
 
 	private void parseDataFromJson(JSONObject response) throws JSONException {
-		int product_id = response.getInt("product_name");
+		Log.v(LOG_TAG, "parseDataFromJson");
+		
+	//	int product_id = response.getInt("product_id");
 		String product_name = response.getString("product_name");
 		int original_price = response.getInt("original_price");
-		int donate = response.getInt("donate");
-		int favorite = response.getInt("favorite");
-		String image = response.getString("image");
+	//	int donate = response.getInt("donate");
+		int favorite = response.getInt("favorites");
+	//	String image = response.getString("image");
+	//	int store_id = response.getInt("store_id");
+		String store_name = response.getString("store_name");
 
-		m_likeNumberTV.setText(favorite);
-		m_nameTextView.setText(product_id);
-		m_priceTextView.setText(original_price);
-		m_storeNameTextView.setText("store name");
+		m_likeNumberTV.setText(favorite + "");
+		m_nameTextView.setText(product_name);
+		m_priceTextView.setText(original_price + "");
+		m_storeNameTextView.setText(store_name);
 
 	}
 }

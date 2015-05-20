@@ -42,6 +42,8 @@ import android.widget.SearchView.OnQueryTextListener;
 
 public class SpecificBuyFragment extends BaseActionBarFragment implements
 		OnQueryTextListener {
+	private static final String LOG_TAG = SpecificBuyFragment.class.getName();
+
 	private Activity m_activity;
 	private SearchView m_searchView;
 	// private Spinner m_allCateSpinner;
@@ -61,7 +63,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
 		initHandler();
-		beginDataRequest();
 	}
 
 	private void initHandler() {
@@ -71,8 +72,12 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-					updataDataFromServer(response);
-					Log.v("SpecificBuyFragment", response.toString());
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
 					break;
 
 				default:
@@ -85,38 +90,43 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(m_activity);
-		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/products/show/spec",
-				m_handler, m_queue);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/stores/list?order_by=" + "favorite", m_handler, m_queue);
+		Log.v(LOG_TAG, "beginDataRequest");
 	}
 
-	private void updataDataFromServer(JSONObject jsonObject) {
+	private void updataDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG,
+					"updateDataFromServer Missing order condition");
+			return;
+		}
+
+		// else retCode == 0
 		m_listItems = new ArrayList<Map<String, Object>>();
-		JSONArray jsonArray = null;
-		try {
-			jsonArray = jsonObject.getJSONArray("products");
-			if (jsonArray == null) {
-				return;
-			}
-			for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject object = jsonArray.getJSONObject(i);
-				addItem(object);
-			}
-		} catch (JSONException e1) {
-			e1.printStackTrace();
+		JSONArray jsonArray = jsonObject.getJSONArray("stores");
+		if (jsonArray == null) {
+			return;
+		}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject object = jsonArray.getJSONObject(i);
+			addItem(object);
 		}
 	}
 
 	private void addItem(JSONObject object) throws JSONException {
-		//int donate = object.getInt("donate");
-		int favorite = object.getInt("favorite");
-		//int price = object.getInt("price");
-		//int product_id = object.getInt("product_id");
-		String product_name = object.getString("product_name");
+		int favorite = object.getInt("favorites");
+		int id = object.getInt("id");
+		// String image = object.getString("image");
+		String name = object.getString("name");
 
 		item = new HashMap<String, Object>();
+		item.put("id", id);
 		item.put("store_img",
 				getResources().getDrawable(R.drawable.bb_store_zhao));
-		item.put("store_name", product_name);
+		item.put("store_name", name);
 		item.put("like_number", favorite + "");
 		item.put("distance", "1578.6km");
 		m_listItems.add(item);
@@ -129,11 +139,11 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 		View view = inflater.inflate(R.layout.bb_fragment_specfic_buy,
 				container, false);
-		//setActionBarCenterTitle(R.string.bb_tab_specific_buy);
+		// setActionBarCenterTitle(R.string.bb_tab_specific_buy);
 		m_actionBar.setDisplayShowTitleEnabled(false);
 		m_actionBar.setDisplayUseLogoEnabled(false);
 		m_actionBar.setDisplayShowHomeEnabled(false);
-		
+
 		m_searchView = (SearchView) view.findViewById(R.id.sv_store);
 		m_searchView.setIconifiedByDefault(false);
 		m_searchView.setOnQueryTextListener(this);
@@ -157,12 +167,17 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
+						int store_id = (Integer) m_listItems.get(position).get(
+								"id");
+
 						Intent intent = new Intent(m_activity,
 								StoreInfoActivity.class);
+						intent.putExtra("store_id", store_id);
 						startActivity(intent);
 					}
 				});
 
+		beginDataRequest();
 		return view;
 	}
 

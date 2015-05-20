@@ -10,12 +10,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.ProjectActivity;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,17 +40,95 @@ import android.widget.TextView;
 
 public class SuccessfulFragment extends BaseActionBarFragment {
 
+	private static final String LOG_TAG = RecommendedFragment.class.getName();
 	private Activity m_activity;
 	private GridView m_gridView;
 	private ProjectInfoAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
 	private Map<String, Object> item;
+	private Handler m_handler;
+	private RequestQueue m_queue;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		initListViewData();
+		m_listItems = new ArrayList<Map<String, Object>>();
+		initHandler();
+	}
+
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(m_activity);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/projects/list?order_by=" + "completion", m_handler, m_queue);
+	}
+
+	private void updataDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG, "Missing order condition");
+			return;
+		}
+
+		// else retCode == 0
+		m_listItems = new ArrayList<Map<String, Object>>();
+		JSONArray jsonArray = jsonObject.getJSONArray("projects");
+		if (jsonArray == null) {
+			return;
+		}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject object = jsonArray.getJSONObject(i);
+			addItem(object);
+		}
+	}
+
+	private void addItem(JSONObject object) throws JSONException {
+
+		int project_id = object.getInt("project_id");
+		String name = object.getString("name");
+		int expect_length = object.getInt("expect_length");
+		int remaining_days = object.getInt("remaining_days");
+		int expect = object.getInt("expect");
+		int total_support = object.getInt("total_support");
+		int percentage = object.getInt("percentage");
+
+		item = new HashMap<String, Object>();
+		item.put("project_id", project_id + "");
+		item.put("project_img",
+				getResources().getDrawable(R.drawable.bb_valeera_sanguinar));
+		item.put("project_name", name);
+		item.put("like_number", "34,334");
+		item.put("goal", "目标 " + expect_length + "天" + expect + "元");
+		item.put("achieved", percentage + "%\n已达");
+		item.put("accumulation", total_support + "元\n已融资");
+		item.put("remain", remaining_days + "天\n剩余时间");
+		m_listItems.add(item);
+		
+		m_adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -57,42 +146,15 @@ public class SuccessfulFragment extends BaseActionBarFragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						Intent intent = new Intent(getActivity(), PWProjectActivity.class);
+						String project_id = (String) m_listItems.get(position).get("project_id");
+						Intent intent = new Intent(getActivity(), ProjectActivity.class);
+						intent.putExtra("projectId", Integer.parseInt(project_id));
 						startActivity(intent);
 					}
 				});
 
+		beginDataRequest();
 		return rootView;
-	}
-
-	private void initListViewData() {
-		m_listItems = new ArrayList<Map<String, Object>>();
-
-		item = new HashMap<String, Object>();
-		item.put("project_img",
-				getResources().getDrawable(R.drawable.bb_valeera_sanguinar));
-		item.put("project_name", "瓦利拉");
-		item.put("like_number", "34,334");
-		item.put("goal", "目标 30天 78,999元");
-		item.put("achieved", "250%\n已达");
-		item.put("accumulation", "22,333元\n已融资");
-		item.put("remain", "20天\n剩余时间");
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
-		m_listItems.add(item);
 	}
 
 	private static class ViewHolder {
@@ -132,12 +194,10 @@ public class SuccessfulFragment extends BaseActionBarFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			
-			Log.e("getView", "getView function called");
-			
 			ViewHolder viewHolder;
 			if (convertView == null) {
 				convertView = m_activity.getLayoutInflater().inflate(
-						R.layout.bb_cell_product_newest, parent, false);
+						R.layout.bb_cell_project, parent, false);
 				/*
 				 * initialize viewHolder;
 				 */

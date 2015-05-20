@@ -10,13 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,19 +40,96 @@ import android.widget.TextView;
 
 public class ShoppingCarFragment extends Fragment {
 
+	private static final String LOG_TAG = ShoppingCarFragment.class.getName();
 	private Activity m_activity;
 	private GridView m_gridView;
 	private StoreInfoAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
 	private Map<String, Object> item;
 
+	private Handler m_handler;
+	private RequestQueue m_queue;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		initListViewData();
+		m_listItems = new ArrayList<Map<String, Object>>();
+		initHandler();
 	}
 
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(m_activity);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
+	}
+
+	private void updataDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG, "Missing order condition");
+			return;
+		}
+
+		// else retCode == 0
+		m_listItems = new ArrayList<Map<String, Object>>();
+		JSONArray jsonArray = jsonObject.getJSONArray("purchases");
+		if (jsonArray == null) {
+			return;
+		}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject object = jsonArray.getJSONObject(i);
+			addItem(object);
+		}
+	}
+
+	private void addItem(JSONObject object) throws JSONException {
+
+//		int purchase_id = object.getInt("purchase_id");
+		int product_id = object.getInt("product_id");
+		String product_name = object.getString("product_name");
+		
+		int price = object.getInt("price");
+//		String image = object.getString("image");
+		String amount_spec = object.getString("amount_spec");
+		int favorites = object.getInt("favorites");
+		
+		item = new HashMap<String, Object>();
+		item.put("product_img",
+				getResources().getDrawable(R.drawable.bb_store_zhao_big));
+		item.put("product_name", product_name);
+		item.put("like_number", favorites + "");
+		item.put("price", price + "");
+		item.put("remains", amount_spec);
+		m_listItems.add(item);
+
+		m_adapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,21 +150,8 @@ public class ShoppingCarFragment extends Fragment {
 					}
 				});
 
+		beginDataRequest();
 		return rootView;
-	}
-
-	private void initListViewData() {
-		m_listItems = new ArrayList<Map<String, Object>>();
-
-		item = new HashMap<String, Object>();
-		item.put("product_img",
-				getResources().getDrawable(R.drawable.bb_store_zhao_big));
-		item.put("product_name", "赵灵儿");
-		item.put("like_number", "34,334");
-		item.put("price", "0.99 元");
-		item.put("remains", "2333");
-		m_listItems.add(item);
-
 	}
 
 	private static class ViewHolder {

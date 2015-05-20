@@ -6,12 +6,20 @@ package com.example.banban.ui.specificbuy;
  */
 
 import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBConfigue;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,13 +27,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StoreInfoActivity extends FragmentActivity {
+
+	private static final String LOG_TAG = StoreInfoActivity.class.getName();
 
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -35,14 +47,90 @@ public class StoreInfoActivity extends FragmentActivity {
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
 
+	private int m_storeId;
+
+	private RequestQueue m_queue;
+	private Handler m_handler;
+
+	private TextView m_totalDonate;
+	private TextView m_storeName;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_store_info);
 
+		initWidgets();
+
+		m_storeId = getIntent().getIntExtra("store_id", -1);
+		Log.v(LOG_TAG, "m_storeId is: " + m_storeId);
+
+		initHandler();
+		beginDataRequest();
+
 		InitTextView();
 		InitImage();
 		InitViewPager();
+	}
+
+	private void initWidgets() {
+		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
+		m_storeName = (TextView) findViewById(R.id.tv_store_name);
+	}
+
+	private void initHandler() {
+		m_handler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(this);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/detail/"
+				+ m_storeId, m_handler, m_queue);
+	}
+
+	private void updataDataFromServer(JSONObject response) throws JSONException {
+		int retCode = response.getInt("ret_code");
+		switch (retCode) {
+		case 0:
+			parseDataFromJson(response);
+			break;
+
+		case 1:
+			Toast.makeText(this, "Store not exist", Toast.LENGTH_SHORT).show();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void parseDataFromJson(JSONObject response) throws JSONException {
+		Log.v(LOG_TAG, "parseDataFromJson");
+
+		int total_donate = response.getInt("total_donate");
+		//String image = response.getString("image");
+		String name = response.getString("name");
+		m_totalDonate.setText("累计捐款：" + total_donate + " 元");
+		m_storeName.setText(name);
 	}
 
 	/*
