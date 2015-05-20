@@ -15,8 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.specificbuy.StoreInfoActivity;
@@ -118,14 +121,13 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private void addItem(JSONObject object) throws JSONException {
 		int favorite = object.getInt("favorites");
 		int id = object.getInt("id");
-		// String image = object.getString("image");
+		String image = object.getString("image");
 		String name = object.getString("name");
 		double distance = object.getDouble("distance");
 
 		item = new HashMap<String, Object>();
 		item.put("id", id);
-		item.put("store_img",
-				getResources().getDrawable(R.drawable.bb_store_zhao));
+		item.put("store_img", image);
 		item.put("store_name", name);
 		item.put("like_number", favorite + "");
 		item.put("distance",
@@ -191,7 +193,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	}
 
 	private static class ViewHolder {
-		ImageView storeImg;
+		NetworkImageView storeImg;
 		TextView storeNameTV;
 		TextView likeNumberTV;
 		TextView distanceTV;
@@ -231,7 +233,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 				 * initialize viewHolder;
 				 */
 				viewHolder = new ViewHolder();
-				viewHolder.storeImg = (ImageView) convertView
+				viewHolder.storeImg = (NetworkImageView) convertView
 						.findViewById(R.id.img_store);
 				viewHolder.storeNameTV = (TextView) convertView
 						.findViewById(R.id.tv_store_name);
@@ -248,7 +250,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			Drawable storeImg = (Drawable) m_listItems.get(position).get(
+			String storeImg = (String) m_listItems.get(position).get(
 					"store_img");
 			String storeName = (String) m_listItems.get(position).get(
 					"store_name");
@@ -257,7 +259,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			String distance = (String) m_listItems.get(position)
 					.get("distance");
 
-			viewHolder.storeImg.setImageDrawable(storeImg);
+			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+			viewHolder.storeImg.setImageUrl(BBConfigue.SERVER_HTTP + storeImg, imageLoader);
+			
+			//viewHolder.storeImg.setImageDrawable(storeImg);
 			viewHolder.storeNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.distanceTV.setText(distance);
