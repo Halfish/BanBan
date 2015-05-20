@@ -36,19 +36,23 @@ public class HttpUtil {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Method.GET,
 				uri, null, new Response.Listener<JSONObject>() {
 					public void onResponse(JSONObject response) {
-						// 请求成功的相应
-						Message msg = new Message();
-						msg.what = SUCCESS_CODE;
-						msg.obj = response;
-						handler.sendMessage(msg);
+						if (handler != null) {
+							// 请求成功的相应
+							Message msg = new Message();
+							msg.what = SUCCESS_CODE;
+							msg.obj = response;
+							handler.sendMessage(msg);
+						}
 					}
 				}, new Response.ErrorListener() {
 					public void onErrorResponse(VolleyError error) {
 						Log.v("HttpUtil", error.toString());
-						// 请求失败的响应
-						Message msg = new Message();
-						msg.what = FAILURE_CODE;
-						handler.sendMessage(msg);
+						if (handler != null) {
+							// 请求失败的响应
+							Message msg = new Message();
+							msg.what = FAILURE_CODE;
+							handler.sendMessage(msg);
+						}
 					}
 				}) {
 			@Override
@@ -80,19 +84,23 @@ public class HttpUtil {
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						// 请求成功的相应
-						Message msg = new Message();
-						msg.what = SUCCESS_CODE;
-						msg.obj = response;
-						handler.sendMessage(msg);
+						if (handler != null) {
+							// 请求成功的相应
+							Message msg = new Message();
+							msg.what = SUCCESS_CODE;
+							msg.obj = response;
+							handler.sendMessage(msg);
+						}
 					}
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						// 请求失败的响应
-						Message msg = new Message();
-						msg.what = FAILURE_CODE;
-						handler.sendMessage(msg);
+						if(handler != null) {
+							// 请求失败的响应
+							Message msg = new Message();
+							msg.what = FAILURE_CODE;
+							handler.sendMessage(msg);
+						}
 					}
 				}, map);
 		requestQueue.add(normalPostRequest);

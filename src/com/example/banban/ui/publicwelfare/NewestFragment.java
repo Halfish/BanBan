@@ -15,8 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.ProjectActivity;
@@ -39,9 +42,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NewestFragment extends BaseActionBarFragment {
+	
+	public NewestFragment(String orderBy) {
+		super();
+		m_orderBy = orderBy;
+	}
 
 	private static final String LOG_TAG = NewestFragment.class.getName();
 
+	private String m_orderBy;
 	private Activity m_activity;
 	private GridView m_gridView;
 	private ProjectInfoAdapter m_adapter;
@@ -86,7 +95,7 @@ public class NewestFragment extends BaseActionBarFragment {
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
+				+ "/projects/list?order_by=" + m_orderBy, m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -118,11 +127,12 @@ public class NewestFragment extends BaseActionBarFragment {
 		int expect = object.getInt("expect");
 		int total_support = object.getInt("total_support");
 		int percentage = object.getInt("percentage");
+		String image = object.getString("image");
 
 		item = new HashMap<String, Object>();
 		item.put("project_id", project_id + "");
 		item.put("project_img",
-				getResources().getDrawable(R.drawable.bb_valeera_sanguinar));
+				image);
 		item.put("project_name", name);
 		item.put("like_number", "34,334");
 		item.put("goal", "目标 " + expect_length + "天" + expect + "元");
@@ -161,7 +171,7 @@ public class NewestFragment extends BaseActionBarFragment {
 	}
 
 	private static class ViewHolder {
-		ImageView projectImg;
+		NetworkImageView projectImg;
 		TextView projectName;
 		TextView likeNumber;
 		TextView goal;
@@ -205,7 +215,7 @@ public class NewestFragment extends BaseActionBarFragment {
 				 * initialize viewHolder;
 				 */
 				viewHolder = new ViewHolder();
-				viewHolder.projectImg = (ImageView) convertView
+				viewHolder.projectImg = (NetworkImageView) convertView
 						.findViewById(R.id.img_project);
 				viewHolder.projectName = (TextView) convertView
 						.findViewById(R.id.tv_project_name);
@@ -229,7 +239,7 @@ public class NewestFragment extends BaseActionBarFragment {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			Drawable projectImg = (Drawable) m_listItems.get(position).get(
+			String projectImg = (String) m_listItems.get(position).get(
 					"project_img");
 			String projectName = (String) m_listItems.get(position).get(
 					"project_name");
@@ -242,7 +252,10 @@ public class NewestFragment extends BaseActionBarFragment {
 					"accumulation");
 			String remain = (String) m_listItems.get(position).get("remain");
 
-			viewHolder.projectImg.setImageDrawable(projectImg);
+			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP + projectImg, imageLoader);
+			
+		//	viewHolder.projectImg.setImageDrawable(projectImg);
 			viewHolder.projectName.setText(projectName);
 			viewHolder.likeNumber.setText(likeNumber);
 			viewHolder.goal.setText(goal);

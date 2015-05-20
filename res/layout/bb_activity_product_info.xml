@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/cont_descrip"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/heartstone_thrall" />
 
     <RelativeLayout
@@ -16,12 +16,13 @@
         android:layout_height="32dp"
         android:layout_margin="20dp" >
 
-        <ImageView
+        <ImageButton
             android:id="@+id/img_like"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:scaleType="fitXY"
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_like" />
+            android:background="@drawable/bb_like" />
 
         <TextView
             android:id="@+id/tv_like_number"

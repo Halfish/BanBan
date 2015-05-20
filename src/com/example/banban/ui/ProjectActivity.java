@@ -32,8 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.publicwelfare.DetailFragment;
@@ -57,6 +60,7 @@ public class ProjectActivity extends FragmentActivity {
 	private TextView m_goal; // 目标：元
 	private TextView m_achieve; // 已经筹资：元
 	private TextView m_accumulate; // 达成：100%
+	private ImageView m_image;
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
@@ -81,6 +85,7 @@ public class ProjectActivity extends FragmentActivity {
 		m_goal = (TextView) findViewById(R.id.tv_goal);
 		m_achieve = (TextView) findViewById(R.id.tv_achieve);
 		m_accumulate = (TextView) findViewById(R.id.tv_accumulation);
+		m_image = (ImageView)findViewById(R.id.img_project);
 	}
 
 	private void beginDataGetRequest() {
@@ -124,7 +129,7 @@ public class ProjectActivity extends FragmentActivity {
 
 		// else ret_code == 0
 		String name = response.getString("name");
-		// String image = response.getString("image");
+		String imageUrl = response.getString("image");
 		int total_support = response.getInt("total_support");
 		int expect = response.getInt("expect");
 		int percentage = response.getInt("percentage");
@@ -135,6 +140,11 @@ public class ProjectActivity extends FragmentActivity {
 		m_goal.setText("目标：" + expect + "元");
 		m_achieve.setText("已筹资：" + total_support + "元");
 		m_accumulate.setText("达成：" + percentage + "%");
+		
+		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageListener listener = ImageLoader.getImageListener(m_image,
+				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
+		imageLoader.get(BBConfigue.SERVER_HTTP + imageUrl, listener);
 
 	}
 

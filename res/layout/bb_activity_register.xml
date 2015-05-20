@@ -27,11 +27,11 @@
             android:src="@drawable/bb_phone" />
 
         <EditText
-            android:id="@+id/et_phone"
+            android:id="@+id/et_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/bb_hint_cellphone"
-            android:inputType="phone" >
+            android:hint="@string/bb_hint_user"
+            android:inputType="text" >
 
             <requestFocus />
         </EditText>

@@ -53,7 +53,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void initWidgets() {
-		m_usernameEditText = (EditText) findViewById(R.id.et_phone);
+		m_usernameEditText = (EditText) findViewById(R.id.et_user);
 		m_passwordEditText = (EditText) findViewById(R.id.et_passwd);
 
 		m_loginButton = (Button) findViewById(R.id.btn_login);
@@ -65,7 +65,6 @@ public class LoginActivity extends Activity {
 				m_password = m_passwordEditText.getText().toString().trim();
 
 				beginDataRequest();
-				Toast.makeText(m_context, "heheda", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -137,6 +136,9 @@ public class LoginActivity extends Activity {
 
 			String token = response.getString("token");
 			BBConfigue.TOKEN = token;
+			
+			int userId = response.getInt("user_id");
+			BBConfigue.USER_ID = userId;
 
 			Intent intent = new Intent(LoginActivity.this, BBMainActivity.class);
 			startActivity(intent);

@@ -35,11 +35,6 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		//setActionBarCenterTitle(R.string.bb_tab_more_info);
-		m_actionBar.setDisplayShowTitleEnabled(false);
-		m_actionBar.setDisplayUseLogoEnabled(false);
-		m_actionBar.setDisplayShowHomeEnabled(false);
-		
 		View view = inflater.inflate(R.layout.bb_fragment_more_info,
 				container, false);
 		

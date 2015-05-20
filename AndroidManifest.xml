@@ -34,9 +34,9 @@
     	<activity android:name=".ui.specificbuy.StoreInfoActivity" />
     	<activity android:name=".ui.specificbuy.WritingReviewActivity" />
     	<activity android:name=".ui.specificbuy.ProductActivity" />
-    	<activity android:name=".ui.publicwelfare.PWProjectActivity" />
+    	<activity android:name="com.example.banban.ui.ProjectActivity" />
     	<activity android:name=".ui.myaccount.ShoppingCarActivity" />
-    	<activity android:name=".ui.myaccount.ShareActivity" />
+    	<activity android:name=".ui.myaccount.ShareProductActivity" />
     	
     </application>
 

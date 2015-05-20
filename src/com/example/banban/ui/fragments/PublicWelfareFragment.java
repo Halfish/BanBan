@@ -9,11 +9,7 @@ package com.example.banban.ui.fragments;
 import java.util.ArrayList;
 
 import com.example.banban.R;
-import com.example.banban.ui.publicwelfare.HotestFragment;
 import com.example.banban.ui.publicwelfare.NewestFragment;
-import com.example.banban.ui.publicwelfare.RecommendedFragment;
-import com.example.banban.ui.publicwelfare.SuccessfulFragment;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
@@ -62,11 +58,6 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 		View view = inflater.inflate(R.layout.bb_fragment_public_welfare,
 				container, false);
 
-		//setActionBarCenterTitle(R.string.bb_tab_public_welfare);
-		m_actionBar.setDisplayShowTitleEnabled(false);
-		m_actionBar.setDisplayUseLogoEnabled(false);
-		m_actionBar.setDisplayShowHomeEnabled(false);
-		
 		InitTextView(view);
 		InitImage(view);
 		InitViewPager(view);
@@ -115,10 +106,10 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 	private void InitViewPager(View view) {
 		mPager = (ViewPager) view.findViewById(R.id.viewpager);
 		fragmentList = new ArrayList<Fragment>();
-		fragmentList.add(new NewestFragment());
-		fragmentList.add(new HotestFragment());
-		fragmentList.add(new RecommendedFragment());
-		fragmentList.add(new SuccessfulFragment());
+		fragmentList.add(new NewestFragment("time"));
+		fragmentList.add(new NewestFragment("hot"));
+		fragmentList.add(new NewestFragment("completion"));
+		fragmentList.add(new NewestFragment("recommend"));
 
 		// 给ViewPager设置适配器
 		mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(),

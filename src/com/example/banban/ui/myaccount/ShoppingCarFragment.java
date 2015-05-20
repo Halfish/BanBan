@@ -15,8 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
@@ -49,6 +52,8 @@ public class ShoppingCarFragment extends Fragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	
+	private NetworkImageView m_image;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +89,7 @@ public class ShoppingCarFragment extends Fragment {
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
+				+ "/users/purchases/cart", m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -109,18 +114,19 @@ public class ShoppingCarFragment extends Fragment {
 
 	private void addItem(JSONObject object) throws JSONException {
 
-//		int purchase_id = object.getInt("purchase_id");
+		String purchase_code = object.getString("purchase_code");
 		int product_id = object.getInt("product_id");
 		String product_name = object.getString("product_name");
 		
 		int price = object.getInt("price");
-//		String image = object.getString("image");
+		String image = object.getString("image");
 		String amount_spec = object.getString("amount_spec");
 		int favorites = object.getInt("favorites");
 		
 		item = new HashMap<String, Object>();
-		item.put("product_img",
-				getResources().getDrawable(R.drawable.bb_store_zhao_big));
+		item.put("image", image);
+		item.put("purchase_code", purchase_code);
+		item.put("product_id", product_id);
 		item.put("product_name", product_name);
 		item.put("like_number", favorites + "");
 		item.put("price", price + "");
@@ -136,6 +142,7 @@ public class ShoppingCarFragment extends Fragment {
 		View rootView = inflater.inflate(
 				R.layout.bb_fragment_specificbuy_product, container, false);
 
+		m_image = (NetworkImageView)rootView.findViewById(R.id.img_product);
 		m_gridView = (GridView) rootView.findViewById(R.id.gv_product);
 		m_adapter = new StoreInfoAdapter();
 		m_gridView.setAdapter(m_adapter);
@@ -145,7 +152,11 @@ public class ShoppingCarFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
+						int product_id = (Integer) m_listItems.get(position).get("product_id");
+						String purchase_code = (String) m_listItems.get(position).get("purchase_code");
 						Intent intent = new Intent(getActivity(), ShoppingCarActivity.class);
+						intent.putExtra("product_id", product_id);
+						intent.putExtra("purchase_code", purchase_code);
 						startActivity(intent);
 					}
 				});
@@ -155,7 +166,7 @@ public class ShoppingCarFragment extends Fragment {
 	}
 
 	private static class ViewHolder {
-		ImageView productImg;
+		NetworkImageView productImg;
 		TextView productNameTV;
 		TextView likeNumberTV;
 		TextView priceTV;
@@ -196,7 +207,7 @@ public class ShoppingCarFragment extends Fragment {
 				 * initialize viewHolder;
 				 */
 				viewHolder = new ViewHolder();
-				viewHolder.productImg = (ImageView) convertView
+				viewHolder.productImg = (NetworkImageView) convertView
 						.findViewById(R.id.img_product);
 				viewHolder.productNameTV = (TextView) convertView
 						.findViewById(R.id.tv_product_name);
@@ -215,8 +226,6 @@ public class ShoppingCarFragment extends Fragment {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			Drawable storeImg = (Drawable) m_listItems.get(position).get(
-					"product_img");
 			String storeName = (String) m_listItems.get(position).get(
 					"product_name");
 			String likeNumber = (String) m_listItems.get(position).get(
@@ -225,12 +234,17 @@ public class ShoppingCarFragment extends Fragment {
 					.get("price");
 			String remains = (String) m_listItems.get(position)
 					.get("remains");
+			String image = (String) m_listItems.get(position).get("image");
 
-			viewHolder.productImg.setImageDrawable(storeImg);
+			//viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
 			viewHolder.remainsTV.setText(remains);
+			
+			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image, imageLoader);
+			
 
 			return convertView;
 		}

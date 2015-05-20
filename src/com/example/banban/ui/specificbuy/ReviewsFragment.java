@@ -95,6 +95,8 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		}
 
 		// else ret_code == 0
+		m_listItems.clear();
+		
 		// int avg_rating = response.getInt("avg_ration");
 		JSONArray jsonArray = response.getJSONArray("reviews");
 		addItem(jsonArray);
@@ -108,6 +110,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			int rating = jsonObject.getInt("rating");
 			String content = jsonObject.getString("content");
 			String image = jsonObject.getString("image");
+			String time = jsonObject.getString("time");
 
 			m_item = new HashMap<String, Object>();
 			m_item.put("user_id", user_id + "");
@@ -115,6 +118,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			m_item.put("rating", rating + "");
 			m_item.put("content", content);
 			m_item.put("image", image);
+			m_item.put("time", time);
 
 			m_listItems.add(m_item);
 			m_adapter.notifyDataSetChanged();
@@ -146,6 +150,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent(getActivity(), WritingReviewActivity.class);
+		intent.putExtra("store_id", m_storeId);
 		startActivity(intent);
 	}
 
@@ -220,11 +225,13 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 					.get("username");
 			String rating = (String) m_listItems.get(position).get("rating");
 			String content = (String) m_listItems.get(position).get("content");
+			String time = (String)m_listItems.get(position).get("time");
 			//String image = (String) m_listItems.get(position).get("image");
 
 			viewHolder.mUsername.setText(username);
 			viewHolder.mRatingBar.setRating(Float.parseFloat(rating));
 			viewHolder.mContent.setText(content);
+			viewHolder.mDate.setText(time);
 
 			return convertView;
 		}

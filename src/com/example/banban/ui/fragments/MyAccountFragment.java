@@ -6,14 +6,13 @@ package com.example.banban.ui.fragments;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
@@ -33,7 +32,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
@@ -45,9 +43,10 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MyAccountFragment extends BaseActionBarFragment {
-	
+
 	protected static final String LOG_TAG = MyAccountFragment.class.getName();
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -56,13 +55,15 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private int currIndex;// 当前页卡编号
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
-	
+
 	private Activity m_activity;
-	private ActionBar m_actionBar;
+	private TextView m_donateTextView;
+	private TextView m_balanceTextView;
+	private TextView m_nickName;
 
 	private Handler m_handler;
+	private Handler m_handler2;
 	private RequestQueue m_queue;
-	private Map<String, Object> item;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
 		initHandler();
-		//beginDataRequest();
 	}
 
 	private void initHandler() {
@@ -80,11 +80,32 @@ public class MyAccountFragment extends BaseActionBarFragment {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-//					try {
-//						updataDataFromServer(response);
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
+					try {
+						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+		
+		m_handler2 = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updateUserDetail(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 					Log.v(LOG_TAG, response.toString());
 					break;
 
@@ -96,41 +117,59 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		};
 	}
 
-//	private void beginDataRequest() {
-//		m_queue = Volley.newRequestQueue(m_activity);
-//		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-//				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
-//	}
-//
-//	private void updataDataFromServer(JSONObject jsonObject)
-//			throws JSONException {
-//		int retCode = jsonObject.getInt("ret_code");
-//		if (retCode == 1) {
-//			Log.v(LOG_TAG, "Missing order condition");
-//			return;
-//		}
-//
-//		// else retCode == 0
-//	}
+	private void beginDataRequest() {
+		m_queue = Volley.newRequestQueue(m_activity);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
+				m_handler, m_queue);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
+				+ BBConfigue.USER_ID, m_handler2, m_queue);
+		Log.v(LOG_TAG, "user id: " + BBConfigue.USER_ID);
+	}
 
-
+	private void updateUserDetail(JSONObject jsonObject) throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG, "User does not exist!");
+			return;
+		}
+		// String image = jsonObject.getString("image");
+		String username = jsonObject.getString("username");
+		m_nickName.setText(username);
+	}
 	
+	private void updataDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		if (retCode == 1) {
+			Log.v(LOG_TAG, "Database Exception!");
+			return;
+		}
+
+		int balance = jsonObject.getInt("balance");
+		int total_donate = jsonObject.getInt("total_donate");
+		m_donateTextView.setText(total_donate + "");
+		m_balanceTextView.setText(balance + "");
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		
-		//setActionBarCenterTitle(R.string.bb_tab_my_account);
-		m_actionBar.setDisplayShowTitleEnabled(false);
-		m_actionBar.setDisplayUseLogoEnabled(false);
-		m_actionBar.setDisplayShowHomeEnabled(false);
-		
+
 		View view = inflater.inflate(R.layout.bb_fragment_my_account,
 				container, false);
+
+		m_donateTextView = (TextView) view.findViewById(R.id.tv_total_donate);
+		m_balanceTextView = (TextView) view.findViewById(R.id.tv_balance);
+		m_nickName = (TextView)view.findViewById(R.id.tv_nickname);
+
 		InitTextView(view);
 		InitImage(view);
 		InitViewPager(view);
+
+		beginDataRequest();
 		return view;
 	}
+
 	/*
 	 * 初始化标签名0
 	 */
@@ -186,8 +225,8 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		fragmentList.add(new ShareProductFragment());
 
 		// 给ViewPager设置适配器
-		mPager.setAdapter(new MyFragmentPagerAdapter(
-				getChildFragmentManager(), fragmentList));
+		mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(),
+				fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
 	}
@@ -233,5 +272,5 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			return list.get(arg0);
 		}
 	}
-	
+
 }

@@ -55,7 +55,7 @@ public class RegisterActivity extends Activity {
 	}
 
 	private void initWidgets() {
-		m_usernameEditText = (EditText) findViewById(R.id.et_phone);
+		m_usernameEditText = (EditText) findViewById(R.id.et_user);
 		m_passwordEditText = (EditText) findViewById(R.id.et_passwd);
 		m_confirmPWEditText = (EditText) findViewById(R.id.et_confirm_passwd);
 

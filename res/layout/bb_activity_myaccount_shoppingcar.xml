@@ -79,6 +79,7 @@
                     android:id="@+id/tv_current_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:text="@string/bb_current_price"
                     android:textColor="@color/text_gray" />
             </LinearLayout>
@@ -106,32 +107,36 @@
         <Button
             android:id="@+id/btn_store_name"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
             android:text="@string/bb_shorename"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_shopping_code"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
             android:text="@string/bb_shopping_code"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_share"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
             android:text="@string/bb_share"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_giveup"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="start|center_vertical"
             android:text="@string/bb_giveup"
             android:textSize="18sp" />
     </LinearLayout>

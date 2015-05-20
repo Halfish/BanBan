@@ -99,8 +99,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			throws JSONException {
 		int retCode = jsonObject.getInt("ret_code");
 		if (retCode == 1) {
-			Log.v(LOG_TAG,
-					"updateDataFromServer Missing order condition");
+			Log.v(LOG_TAG, "updateDataFromServer Missing order condition");
 			return;
 		}
 
@@ -121,6 +120,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		int id = object.getInt("id");
 		// String image = object.getString("image");
 		String name = object.getString("name");
+		double distance = object.getDouble("distance");
 
 		item = new HashMap<String, Object>();
 		item.put("id", id);
@@ -128,7 +128,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 				getResources().getDrawable(R.drawable.bb_store_zhao));
 		item.put("store_name", name);
 		item.put("like_number", favorite + "");
-		item.put("distance", "1578.6km");
+		item.put("distance",
+				new java.text.DecimalFormat("#.00").format(distance) + "km");
 		m_listItems.add(item);
 		m_adapter.notifyDataSetChanged();
 	}
@@ -139,10 +140,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 		View view = inflater.inflate(R.layout.bb_fragment_specfic_buy,
 				container, false);
-		// setActionBarCenterTitle(R.string.bb_tab_specific_buy);
-		m_actionBar.setDisplayShowTitleEnabled(false);
-		m_actionBar.setDisplayUseLogoEnabled(false);
-		m_actionBar.setDisplayShowHomeEnabled(false);
 
 		m_searchView = (SearchView) view.findViewById(R.id.sv_store);
 		m_searchView.setIconifiedByDefault(false);

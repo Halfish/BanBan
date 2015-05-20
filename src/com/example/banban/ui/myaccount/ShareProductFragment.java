@@ -84,7 +84,7 @@ public class ShareProductFragment extends Fragment {
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/projects/list?order_by=" + "time", m_handler, m_queue);
+				+ "/users/purchases/shares", m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -108,8 +108,7 @@ public class ShareProductFragment extends Fragment {
 	}
 
 	private void addItem(JSONObject object) throws JSONException {
-
-//		int purchase_id = object.getInt("purchase_id");
+		String purchase_code = object.getString("purchase_code");
 		int product_id = object.getInt("product_id");
 		String product_name = object.getString("product_name");
 		
@@ -119,6 +118,8 @@ public class ShareProductFragment extends Fragment {
 		int favorites = object.getInt("favorites");
 		
 		item = new HashMap<String, Object>();
+		item.put("purchase_code", purchase_code);
+		item.put("product_id", product_id);
 		item.put("product_img",
 				getResources().getDrawable(R.drawable.bb_store_zhao_big));
 		item.put("product_name", product_name);
@@ -145,7 +146,11 @@ public class ShareProductFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
+						int product_id = (Integer) m_listItems.get(position).get("product_id");
+						String purchase_code = (String) m_listItems.get(position).get("purchase_code");
 						Intent intent = new Intent(getActivity(), ShareProductActivity.class);
+						intent.putExtra("product_id", product_id);
+						intent.putExtra("purchase_code", purchase_code);
 						startActivity(intent);
 					}
 				});

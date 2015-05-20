@@ -119,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:gravity="start|center_vertical"
-            android:text="@string/bb_shopping_code"
+            android:text="@string/bb_keep"
             android:textSize="18sp" />
     </LinearLayout>
 
