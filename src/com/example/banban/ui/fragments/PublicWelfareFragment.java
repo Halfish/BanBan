@@ -41,13 +41,11 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 	private int offset;// 图片移动的偏移量
 	
 	private Activity m_activity;
-	private ActionBar m_actionBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_actionBar = m_activity.getActionBar();
 	}
 	
 	

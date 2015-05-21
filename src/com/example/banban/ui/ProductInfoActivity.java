@@ -48,6 +48,7 @@ public class ProductInfoActivity extends Activity {
 	private Handler m_handler2;
 
 	private int m_productId = -1;
+	private int m_likeNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,11 @@ public class ProductInfoActivity extends Activity {
 		m_priceTextView = (TextView) findViewById(R.id.tv_product_price);
 		m_storeNameTextView = (TextView) findViewById(R.id.tv_store_name);
 		m_image = (ImageView) findViewById(R.id.img_product);
+		m_image.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
 		m_zanButton = (ImageButton) findViewById(R.id.img_like);
 		m_zanButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -159,6 +165,7 @@ public class ProductInfoActivity extends Activity {
 		switch (retCode) {
 		case 0:
 			infoString = "Succeed";
+			m_likeNumberTV.setText((m_likeNum + 1) + "");
 			break;
 
 		case 1:
@@ -185,6 +192,7 @@ public class ProductInfoActivity extends Activity {
 		int original_price = response.getInt("original_price");
 		// int donate = response.getInt("donate");
 		int favorite = response.getInt("favorites");
+		m_likeNum = favorite;
 		String image = response.getString("image");
 		// int store_id = response.getInt("store_id");
 		String store_name = response.getString("store_name");

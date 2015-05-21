@@ -64,7 +64,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_actionBar = m_activity.getActionBar();
 		initHandler();
 	}
 

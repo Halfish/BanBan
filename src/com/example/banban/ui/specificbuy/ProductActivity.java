@@ -23,6 +23,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,12 +37,15 @@ public class ProductActivity extends Activity {
 	private TextView m_currentPrice;
 	private TextView m_remains;
 	private TextView m_fund;
+	private ImageButton m_likeButton;
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
 	private static final String LOG_TAG = ProductInfoActivity.class.getName();
 	private Handler m_handler2;
+	private Handler m_handler3;
 	private int m_productId;
+	private int m_likeNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class ProductActivity extends Activity {
 		m_currentPrice = (TextView) findViewById(R.id.tv_current_price);
 		m_remains = (TextView) findViewById(R.id.tv_remains);
 		m_fund = (TextView) findViewById(R.id.tv_fund);
+		m_likeButton = (ImageButton) findViewById(R.id.img_like);
 
 		m_buyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -75,9 +80,15 @@ public class ProductActivity extends Activity {
 					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 							+ "/products/purchases/spec", m_handler2, m_queue);
 				}
-				Toast.makeText(getApplicationContext(), "已经购买！",
-						Toast.LENGTH_SHORT).show();
-				m_buyButton.setEnabled(false);
+			}
+		});
+
+		m_likeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("product_id", m_productId + "");
+				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+						+ "/products/favorites/add", m_handler3, m_queue);
 			}
 		});
 
@@ -115,6 +126,29 @@ public class ProductActivity extends Activity {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
+
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataProductFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_handler3 = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+
 					JSONObject response = (JSONObject) msg.obj;
 					try {
 						updataZanFromServer(response);
@@ -132,6 +166,32 @@ public class ProductActivity extends Activity {
 		};
 	}
 
+	private void updataZanFromServer(JSONObject response) throws JSONException {
+		int retCode = response.getInt("ret_code");
+		String infoString = "Wrong Code";
+		switch (retCode) {
+		case 0:
+			infoString = "Succeed";
+			m_zan.setText((m_likeNum + 1) + "");
+			m_likeNum++;
+			break;
+
+		case 1:
+			infoString = "Invalid query";
+			break;
+
+		case 2:
+			infoString = "Product not exist";
+			break;
+
+		case 3:
+			infoString = "Database exception";
+			break;
+		}
+		Toast.makeText(getApplicationContext(), infoString, Toast.LENGTH_SHORT)
+				.show();
+	}
+
 	private void updataDataFromServer(JSONObject response) throws JSONException {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
@@ -140,24 +200,30 @@ public class ProductActivity extends Activity {
 			Log.v(LOG_TAG, response.toString());
 			break;
 
-		case 1:
-			Toast.makeText(getBaseContext(), "Generate Failed!",
-					Toast.LENGTH_SHORT).show();
+		default:
+			String messageString = response.getString("message");
+			Toast.makeText(getBaseContext(), messageString, Toast.LENGTH_SHORT)
+					.show();
 			break;
 
-		default:
-			break;
 		}
 	}
 
-	private void updataZanFromServer(JSONObject response) throws JSONException {
+	private void updataProductFromServer(JSONObject response)
+			throws JSONException {
 		int retCode = response.getInt("ret_code");
 		String infoString = "Wrong Code";
 		switch (retCode) {
 		case 0:
 			infoString = "Succeed";
 			break;
+		default:
+			infoString = response.getString("message");
+			
+			break;
 		}
+		Toast.makeText(getBaseContext(), infoString, Toast.LENGTH_SHORT)
+		.show();
 	}
 
 	private void parseDataFromJson(JSONObject response) throws JSONException {
@@ -169,15 +235,16 @@ public class ProductActivity extends Activity {
 		int donate = response.getInt("donate");
 		int amount_spec = response.getInt("amount_spec");
 		int favorites = response.getInt("favorites");
-		// String image = response.getString("image");
+		String image = response.getString("image");
 
+		m_likeNum = favorites;
 		m_zan.setText(favorites + "");
 		m_productName.setText(name);
 		m_originalPrice.setText("原价：" + original_price + "元");
 		m_currentPrice.setText("现价" + price + "元");
 		m_remains.setText("剩余" + amount_spec + "个");
 		m_fund.setText("将获得" + donate + "元公益资金");
-		// updateImage(image);
+		updateImage(image);
 	}
 
 	private void updateImage(String image) {

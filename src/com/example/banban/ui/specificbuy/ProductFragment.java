@@ -120,6 +120,8 @@ public class ProductFragment extends Fragment {
 		item.put("price", price + "");
 		item.put("remains", amount_spec + "");
 		m_listItems.add(item);
+		
+		m_adapter.notifyDataSetChanged();
 
 	}
 

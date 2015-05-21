@@ -10,12 +10,12 @@
         android:layout_marginBottom="70dp"
         android:contentDescription="@string/cont_descrip"
         android:scaleType="fitXY"
-        android:src="@drawable/bb_store_zhao_big" />
+        android:src="@drawable/heartstone_thrall" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp" >
+        android:layout_margin="20dp" >
 
         <TextView
             android:id="@+id/tv_zan"
@@ -29,13 +29,14 @@
             android:textColor="#777"
             android:textSize="15sp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/img_like"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
             android:layout_toStartOf="@id/tv_zan"
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_like" />
+            android:background="@drawable/bb_like" />
     </RelativeLayout>
 
     <RelativeLayout

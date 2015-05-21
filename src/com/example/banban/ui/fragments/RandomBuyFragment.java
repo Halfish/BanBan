@@ -5,6 +5,7 @@ package com.example.banban.ui.fragments;
  * @description: 随机抢 fragment
  */
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -19,7 +20,9 @@ import com.example.sortlistview.AlphabetaContactActicity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -51,6 +54,8 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private ActionBar m_actionBar;
 	private RequestQueue m_queue;
 	private Handler m_handler;
+
+	private SharedPreferences m_pref;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_actionBar.setDisplayShowTitleEnabled(true);
 		m_actionBar.setDisplayUseLogoEnabled(true);
 		m_actionBar.setDisplayShowHomeEnabled(true);
+		m_actionBar.setHomeButtonEnabled(true);
 	}
 
 	private void initWidgets(View view) {
@@ -105,13 +111,17 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_chanceTextView = (TextView) view.findViewById(R.id.tv_chance);
 		m_infoTextView = (TextView) view.findViewById(R.id.tv_info);
 
-		remainTime = 3;
+		remainTime = getRemainingTime();
+		m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
+
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				remainTime = m_pref.getInt("remainTime", 3);
 				if (remainTime > 0) {
 					beginDataRequest();
 					remainTime--;
+					m_pref.edit().putInt("remainTime", remainTime).commit();
 					m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
 					Intent intent = new Intent(m_activity,
 							ProductInfoActivity.class);
@@ -125,18 +135,33 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		});
 	}
 
+	private int getRemainingTime() {
+		m_pref = m_activity.getSharedPreferences("remainTime",
+				Context.MODE_PRIVATE);
+		String date = m_pref.getString("date", "");
+
+		Calendar calendar = Calendar.getInstance();
+		String today = calendar.get(Calendar.YEAR) + ""
+				+ (calendar.get(Calendar.MONTH) + 1)
+				+ calendar.get(Calendar.DAY_OF_MONTH);
+
+		if (date.equals(today)) {
+			return m_pref.getInt("remainTime", 3);
+		} else {
+			m_pref.edit().putString("date", today).commit();
+			m_pref.edit().putInt("remainTime", 3).commit();
+		}
+
+		return 3;
+	}
+
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.NormalPostRequest(new HashMap<String, String>(),
 				BBConfigue.SERVER_HTTP + "/products/generate/random",
 				m_handler, m_queue);
 	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.bb_menu_fragment_random_buy, menu);
-	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -144,11 +169,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			Intent intent = new Intent(m_activity,
 					AlphabetaContactActicity.class);
 			startActivityForResult(intent, REQUEST_CODE_LOCATION);
-			break;
-
-		case R.id.menu_category:
-			Toast.makeText(m_activity, "Category", Toast.LENGTH_LONG).show();
-			break;
+			break;	
 
 		default:
 			break;
