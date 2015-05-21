@@ -6,22 +6,24 @@ package com.example.banban.ui.myaccount;
  * 可继续跳转到此商品对应的商家主页
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,15 +35,16 @@ import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.example.banban.ui.specificbuy.StoreInfoActivity;
 
-@SuppressWarnings("deprecation")
 public class ShareProductActivity extends BaseActionBarActivity {
 
 	private static final String LOG_TAG = ShareProductActivity.class.getName();
 	private int m_productId;
 	private String m_purchaseCode;
 	private Handler m_handler;
+	private Handler m_zanHandler;
+	private Handler m_keepHandler;
 	private RequestQueue m_queue;
-	
+
 	private TextView m_zan;
 	private TextView m_productName;
 	private TextView m_originPrice;
@@ -50,7 +53,10 @@ public class ShareProductActivity extends BaseActionBarActivity {
 
 	private Button m_storeNameBtn;
 	private Button m_keepButton;
-	
+
+	private ImageButton m_zanButton;
+	private int m_zanNum = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +69,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		}
 		Log.v(LOG_TAG, "m_productId is " + m_productId);
 		Log.v(LOG_TAG, "m_purchase_code is " + m_purchaseCode);
-		
+
 		initHandler();
 		m_queue = Volley.newRequestQueue(this);
 		initWidgets();
@@ -71,6 +77,18 @@ public class ShareProductActivity extends BaseActionBarActivity {
 	}
 
 	private void initWidgets() {
+		m_zanButton = (ImageButton) findViewById(R.id.img_like);
+		m_zanButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (m_productId != -1) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("product_id", m_productId + "");
+					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+							+ "/products/favorites/add", m_zanHandler, m_queue);
+				}
+			}
+		});
+
 		m_zan = (TextView) findViewById(R.id.tv_zan);
 		m_productName = (TextView) findViewById(R.id.tv_product_name);
 		m_originPrice = (TextView) findViewById(R.id.tv_origin_price);
@@ -78,7 +96,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		m_fund = (TextView) findViewById(R.id.tv_fund);
 
 		m_storeNameBtn = (Button) findViewById(R.id.btn_store_name);
-		m_keepButton = (Button)findViewById(R.id.btn_collected);
+		m_keepButton = (Button) findViewById(R.id.btn_collected);
 
 		m_storeNameBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -86,8 +104,8 @@ public class ShareProductActivity extends BaseActionBarActivity {
 						StoreInfoActivity.class);
 				startActivity(intent);
 			}
-		});		
-		
+		});
+
 		m_keepButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				new AlertDialog.Builder(ShareProductActivity.this)
@@ -95,12 +113,13 @@ public class ShareProductActivity extends BaseActionBarActivity {
 						.setPositiveButton("确定", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-//								Map<String, String> map = new HashMap<String, String>();
-//								map.put("purchase_code", m_purchaseCode);
-//								HttpUtil.NormalPostRequest(map,
-//										"/products/purchases/withdraw",
-//										m_handler, m_queue);
-//								m_isWithdrawed = true;
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("purchase_code", m_purchaseCode);
+								Log.v(LOG_TAG, "purchaseCode is " + m_purchaseCode);
+								HttpUtil.NormalPostRequest(map,
+										BBConfigue.SERVER_HTTP
+												+ "/products/purchases/verify",
+										m_keepHandler, m_queue);
 							}
 						}).setNegativeButton("取消", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -120,22 +139,73 @@ public class ShareProductActivity extends BaseActionBarActivity {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-//					if (m_isShared) {
-//						Toast.makeText(getApplicationContext(), "已分享",
-//								Toast.LENGTH_SHORT).show();
-//						finish();
-//					}
-//					if (m_isWithdrawed) {
-//						Toast.makeText(getApplicationContext(), "已经放弃该商品",
-//								Toast.LENGTH_SHORT).show();
-//						finish();
-//					}
 					try {
 						parseDataFromJson(response);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_zanHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						parseZanDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_keepHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					Log.v(LOG_TAG, "verify: " + response.toString());
+					try {
+						int retCode = response.getInt("ret_code");
+						switch (retCode) {
+						case 0:
+							Toast.makeText(getApplicationContext(), "验证成功！",
+									Toast.LENGTH_LONG).show();
+							break;
+
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+							String message = response.getString("message");
+							Toast.makeText(getApplicationContext(), message,
+									Toast.LENGTH_LONG).show();
+							break;
+
+						default:
+							break;
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 					break;
 
 				default:
@@ -169,6 +239,35 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		m_storeNameBtn.setText(store_name);
 	}
 
+	private void parseZanDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		switch (retCode) {
+		case 0:
+			m_zan.setText((m_zanNum + 1) + "");
+			m_zanNum++;
+			Toast.makeText(getApplicationContext(), "点赞 成功！", Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		case 1:
+		case 2:
+		case 3:
+			String message = jsonObject.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		case 4:
+			Toast.makeText(getApplicationContext(), "您已经点过赞了！",
+					Toast.LENGTH_LONG).show();
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -181,5 +280,5 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 }

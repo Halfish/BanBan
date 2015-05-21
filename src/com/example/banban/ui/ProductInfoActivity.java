@@ -179,6 +179,10 @@ public class ProductInfoActivity extends Activity {
 		case 3:
 			infoString = "Database exception";
 			break;
+			
+		case 4:
+			infoString = "您已经点过赞了！";
+			break;
 		}
 		Toast.makeText(getApplicationContext(), infoString, Toast.LENGTH_SHORT)
 				.show();

@@ -6,6 +6,9 @@ package com.example.banban.ui.specificbuy;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +56,14 @@ public class StoreInfoActivity extends FragmentActivity {
 
 	private RequestQueue m_queue;
 	private Handler m_handler;
+	private Handler m_likeHandler;
+	private Handler m_collectHandler;
 
 	private TextView m_totalDonate;
 	private TextView m_storeName;
+
+	private ImageButton m_likeButton;
+	private ImageButton m_collectButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +86,28 @@ public class StoreInfoActivity extends FragmentActivity {
 	private void initWidgets() {
 		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
 		m_storeName = (TextView) findViewById(R.id.tv_store_name);
+
+		m_likeButton = (ImageButton) findViewById(R.id.img_like);
+		m_collectButton = (ImageButton) findViewById(R.id.img_collect);
+
+		m_likeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("store_id", m_storeId + "");
+				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+						+ "/stores/favorites/add", m_likeHandler, m_queue);
+			}
+		});
+
+		m_collectButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("store_id", m_storeId + "");
+				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+						+ "/users/bookmarks/stores/add", m_collectHandler, m_queue);
+			}
+		});
+
 	}
 
 	private void initHandler() {
@@ -87,6 +119,48 @@ public class StoreInfoActivity extends FragmentActivity {
 					JSONObject response = (JSONObject) msg.obj;
 					try {
 						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_likeHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataLikeDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_collectHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updataCollectDataFromServer(response);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -123,11 +197,49 @@ public class StoreInfoActivity extends FragmentActivity {
 		}
 	}
 
+	private void updataLikeDataFromServer(JSONObject response)
+			throws JSONException {
+		int retCode = response.getInt("ret_code");
+		switch (retCode) {
+		case 0:
+			Toast.makeText(this, "已经点赞！", Toast.LENGTH_SHORT).show();
+			break;
+
+		case 1:
+		case 2:
+		case 3:
+			String message = response.getString("message");
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void updataCollectDataFromServer(JSONObject response)
+			throws JSONException {
+		int retCode = response.getInt("ret_code");
+		switch (retCode) {
+		case 0:
+			Toast.makeText(this, "已经收藏！", Toast.LENGTH_SHORT).show();
+			m_collectButton.setBackgroundResource(R.drawable.heart_red);
+			break;
+
+		case 1:
+			Toast.makeText(this, "DataBase Exception", Toast.LENGTH_SHORT).show();
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	private void parseDataFromJson(JSONObject response) throws JSONException {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		int total_donate = response.getInt("total_donate");
-		//String image = response.getString("image");
+		// String image = response.getString("image");
 		String name = response.getString("name");
 		m_totalDonate.setText("累计捐款：" + total_donate + " 元");
 		m_storeName.setText(name);

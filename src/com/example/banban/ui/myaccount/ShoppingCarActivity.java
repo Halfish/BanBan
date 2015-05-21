@@ -5,6 +5,9 @@ package com.example.banban.ui.myaccount;
  * @description: 我的账户 购物车Tab选项卡中的某一项点击后，进入此项商品的特定界面
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,13 +24,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
@@ -44,6 +47,9 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 	private int m_productId;
 	private String m_purchaseCode;
 	private Handler m_handler;
+	private Handler m_zanHandler;
+	private Handler m_shareHandler;
+	private Handler m_giveUpHandler;
 	private RequestQueue m_queue;
 
 	private TextView m_zan;
@@ -57,9 +63,9 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 	private Button m_shoppingCodeBtn;
 	private Button m_shareBtn;
 	private Button m_giveUpBtn;
+	private ImageButton m_zanButton;
 
-	private boolean m_isShared = false;
-	private boolean m_isWithdrawed = false;
+	private int m_zanNum = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,19 +79,30 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		}
 		Log.v(LOG_TAG, "m_productId is " + m_productId);
 		Log.v(LOG_TAG, "m_purchase_code is " + m_purchaseCode);
-		initHandler();
 		m_queue = Volley.newRequestQueue(this);
+		initHandler();
 		initWidgets();
 		beginDataRequest();
 	}
 
 	private void initWidgets() {
+		m_zanButton = (ImageButton) findViewById(R.id.img_like);
+		m_zanButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (m_productId != -1) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("product_id", m_productId + "");
+					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+							+ "/products/favorites/add", m_zanHandler, m_queue);
+				}
+			}
+		});
 		m_zan = (TextView) findViewById(R.id.tv_zan);
 		m_productName = (TextView) findViewById(R.id.tv_product_name);
 		m_originPrice = (TextView) findViewById(R.id.tv_origin_price);
 		m_currentPrice = (TextView) findViewById(R.id.tv_current_price);
 		m_fund = (TextView) findViewById(R.id.tv_fund);
-		m_imageView = (ImageView)findViewById(R.id.img_product);
+		m_imageView = (ImageView) findViewById(R.id.img_product);
 
 		m_storeNameBtn = (Button) findViewById(R.id.btn_store_name);
 		m_shoppingCodeBtn = (Button) findViewById(R.id.btn_shopping_code);
@@ -118,13 +135,12 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 						.setPositiveButton("确定", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-//								Map<String, String> map = new HashMap<String, String>();
-//								map.put("purchase_code", m_purchaseCode);
-//								Log.v(LOG_TAG, (m_handler == null) + ":" + (m_queue == null));
-//								HttpUtil.NormalPostRequest(map,
-//										"/products/purchases/share", m_handler,
-//										m_queue);
-//								m_isShared = true;
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("purchase_code", m_purchaseCode);
+								HttpUtil.NormalPostRequest(map,
+										BBConfigue.SERVER_HTTP
+												+ "/products/purchases/share",
+										m_shareHandler, m_queue);
 							}
 						}).setNegativeButton("取消", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -142,12 +158,13 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 						.setPositiveButton("确定", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-//								Map<String, String> map = new HashMap<String, String>();
-//								map.put("purchase_code", m_purchaseCode);
-//								HttpUtil.NormalPostRequest(map,
-//										"/products/purchases/withdraw",
-//										m_handler, m_queue);
-//								m_isWithdrawed = true;
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("purchase_code", m_purchaseCode);
+								HttpUtil.NormalPostRequest(
+										map,
+										BBConfigue.SERVER_HTTP
+												+ "/products/purchases/withdraw",
+										m_giveUpHandler, m_queue);
 							}
 						}).setNegativeButton("取消", new OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -167,16 +184,6 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-//					if (m_isShared) {
-//						Toast.makeText(getApplicationContext(), "已分享",
-//								Toast.LENGTH_SHORT).show();
-//						finish();
-//					}
-//					if (m_isWithdrawed) {
-//						Toast.makeText(getApplicationContext(), "已经放弃该商品",
-//								Toast.LENGTH_SHORT).show();
-//						finish();
-//					}
 					try {
 						parseDataFromJson(response);
 					} catch (JSONException e) {
@@ -191,6 +198,104 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 				super.handleMessage(msg);
 			}
 		};
+
+		m_zanHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						parseZanDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_shareHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					Log.v(LOG_TAG, "share: " + response.toString());
+					try {
+						int retCode = response.getInt("ret_code");
+						switch (retCode) {
+						case 0:
+							Toast.makeText(getApplicationContext(), "分享成功！",
+									Toast.LENGTH_LONG).show();
+							break;
+
+						case 1:
+						case 2:
+							String message = response.getString("message");
+							Toast.makeText(getApplicationContext(), message,
+									Toast.LENGTH_LONG).show();
+							break;
+
+						default:
+							break;
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
+		m_giveUpHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					Log.v(LOG_TAG, "giveUp: " + response.toString());
+					try {
+						int retCode = response.getInt("ret_code");
+						switch (retCode) {
+						case 0:
+							Toast.makeText(getApplicationContext(), "放弃分享！",
+									Toast.LENGTH_LONG).show();
+							finish();
+							break;
+
+						case 1:
+						case 2:
+						case 3:
+							String message = response.getString("message");
+							Toast.makeText(getApplicationContext(), message,
+									Toast.LENGTH_LONG).show();
+							break;
+
+						default:
+							break;
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+
 	}
 
 	private void beginDataRequest() {
@@ -209,18 +314,49 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		String store_name = response.getString("store_name");
 		String image = response.getString("image");
 
+		m_zanNum = favorites;
 		m_zan.setText(favorites + "");
 		m_productName.setText(name);
 		m_originPrice.setText("原价：" + original_price + "元");
 		m_currentPrice.setText("现价：" + price + "元");
 		m_fund.setText("将获得" + donate + "元公益资金");
 		m_storeNameBtn.setText(store_name);
-		
+
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_imageView,
-				R.drawable.bb_valeera_sanguinar, R.drawable.bb_valeera_sanguinar);
+				R.drawable.bb_valeera_sanguinar,
+				R.drawable.bb_valeera_sanguinar);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
-		
+
+	}
+
+	private void parseZanDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int retCode = jsonObject.getInt("ret_code");
+		switch (retCode) {
+		case 0:
+			m_zan.setText((m_zanNum + 1) + "");
+			m_zanNum++;
+			Toast.makeText(getApplicationContext(), "点赞 成功！", Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		case 1:
+		case 2:
+		case 3:
+			String message = jsonObject.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		case 4:
+			Toast.makeText(getApplicationContext(), "您已经点过赞了！",
+					Toast.LENGTH_LONG).show();
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	@Override

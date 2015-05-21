@@ -38,6 +38,7 @@ public class LoginActivity extends Activity {
 
 	private String m_username;
 	private String m_password;
+	private int m_userId = -1;
 
 	private RequestQueue m_queue;
 	private Handler m_handler;
@@ -117,10 +118,12 @@ public class LoginActivity extends Activity {
 	private void saveAccount() {
 		BBConfigue.USER_NAME = m_username;
 		BBConfigue.PASSWORD = m_password;
+		
 		SharedPreferences pref = getSharedPreferences("account",
 				Context.MODE_PRIVATE);
 		pref.edit().putString("username", m_username).commit();
 		pref.edit().putString("password", m_password).commit();
+		pref.edit().putInt("user_id", m_userId).commit();
 	}
 
 	private void handleResponse(JSONObject response) throws JSONException {
@@ -129,7 +132,6 @@ public class LoginActivity extends Activity {
 		switch (retCode) {
 		case 0:
 			// success
-			saveAccount();
 
 			int duration = response.getInt("duration");
 			BBConfigue.DURATION = duration;
@@ -137,9 +139,11 @@ public class LoginActivity extends Activity {
 			String token = response.getString("token");
 			BBConfigue.TOKEN = token;
 			
-			int userId = response.getInt("user_id");
-			BBConfigue.USER_ID = userId;
+			m_userId = response.getInt("user_id");
+			BBConfigue.USER_ID = m_userId;
 
+			saveAccount();
+			
 			Intent intent = new Intent(LoginActivity.this, BBMainActivity.class);
 			startActivity(intent);
 			finish();

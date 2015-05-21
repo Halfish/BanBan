@@ -47,12 +47,14 @@ public class StartUpActivity extends Activity {
 				Context.MODE_PRIVATE);
 		String username = pref.getString("username", "");
 		String password = pref.getString("password", "");
+		int userId = pref.getInt("user_id", -1);
 		Intent intent = null;
 		if (username.equals("") || password.equals("")) {
 			intent = new Intent(StartUpActivity.this, LoginActivity.class);
 		} else {
 			BBConfigue.USER_NAME = username;
 			BBConfigue.PASSWORD = password;
+			BBConfigue.USER_ID = userId;
 			intent = new Intent(StartUpActivity.this, BBMainActivity.class);
 		}
 		startActivity(intent);

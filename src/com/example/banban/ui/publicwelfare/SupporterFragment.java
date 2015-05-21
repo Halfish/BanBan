@@ -103,6 +103,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 		}
 
 		// else ret_code == 0
+		m_listItems.clear();
 		JSONArray jsonArray = response.getJSONArray("supporters");
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
