@@ -51,6 +51,7 @@
             android:src="@drawable/bb_phone" />
 
         <EditText
+            style="?android:attr/password"
             android:id="@+id/et_passwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -13,14 +13,6 @@
         android:text="@string/bb_support_btn" />
 
     <TextView
-        android:id="@+id/tv_fund_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:visibility="invisible"
-        android:text="@string/bb_support_fund" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

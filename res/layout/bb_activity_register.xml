@@ -52,6 +52,7 @@
 
         <EditText
             android:id="@+id/et_passwd"
+             style="?android:attr/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bb_hint_password" >
@@ -74,6 +75,7 @@
             android:id="@+id/et_confirm_passwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+             style="?android:attr/password"
             android:hint="@string/bb_hint_confirm_passwd" >
         </EditText>
     </LinearLayout>
