@@ -25,7 +25,6 @@ import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ShareProductFragment extends Fragment {
@@ -58,7 +56,15 @@ public class ShareProductFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_queue = Volley.newRequestQueue(m_activity);
 		initHandler();
+	}
+	
+	@Override
+	public void onResume() {
+		Log.v(LOG_TAG, "onResume called");
+		beginDataRequest();
+		super.onResume();
 	}
 
 	private void initHandler() {
@@ -85,9 +91,12 @@ public class ShareProductFragment extends Fragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
+		int userId = getActivity().getIntent().getIntExtra("user_id", -1);
+		if(userId == -1) {
+			userId = BBConfigue.USER_ID;
+		}
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/users/purchases/shares", m_handler, m_queue);
+				+ "/users/purchases/shares/" + userId, m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -99,7 +108,8 @@ public class ShareProductFragment extends Fragment {
 		}
 
 		// else retCode == 0
-		m_listItems = new ArrayList<Map<String, Object>>();
+		m_listItems.clear();
+		m_adapter.notifyDataSetChanged();
 		JSONArray jsonArray = jsonObject.getJSONArray("purchases");
 		if (jsonArray == null) {
 			return;
@@ -160,6 +170,7 @@ public class ShareProductFragment extends Fragment {
 					}
 				});
 
+		m_listItems.clear();
 		beginDataRequest();
 		return rootView;
 	}

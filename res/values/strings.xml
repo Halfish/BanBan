@@ -110,6 +110,12 @@
     <string name="bb_keep">留为己用</string>
     <string name="bb_share">分享出去</string>
     <string name="bb_giveup">放弃该商品</string>
+    
+    <!-- 他的账户 -->
+	<string name="bb_forcus">加关注</string>	
+	<string name="bb_Ta_focused">TA关注的人</string>
+    <string name="bb_Ta_fans">TA的粉丝</string>
+    <string name="bb_Ta_name">各类名字</string>
 
     <!-- 更多 -->
     <string name="bb_more_guest">游客2312</string>

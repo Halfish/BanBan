@@ -52,8 +52,16 @@ public class SupporterFragment extends BaseActionBarFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
+		m_queue = Volley.newRequestQueue(m_activity);
 		initHandler();
 		m_listItems = new ArrayList<Map<String, Object>>();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		beginDataGetRequest();
+		Log.v(LOG_TAG, "onResume called");
 	}
 
 	private void initHandler() {
@@ -82,7 +90,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataGetRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("project_id",
 				getActivity().getIntent().getIntExtra("projectId", -1) + "");
@@ -104,6 +112,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 
 		// else ret_code == 0
 		m_listItems.clear();
+		m_adapter.notifyDataSetChanged();
 		JSONArray jsonArray = response.getJSONArray("supporters");
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);

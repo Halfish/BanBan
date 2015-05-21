@@ -12,12 +12,13 @@
         android:layout_height="150dp"
         android:background="@color/light_blue" >
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_nickname"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:scaleType="fitXY"
             android:layout_centerInParent="true"
-            android:background="@drawable/bb_location"
+            android:src="@drawable/touxiang"
             android:contentDescription="@string/cont_descrip" />
 
         <TextView
@@ -163,7 +164,6 @@
             android:layout_height="wrap_content"
             android:scaleType="matrix"
             android:contentDescription="@string/cont_descrip"
-            android:visibility="invisible"
             android:src="@drawable/bb_cursor" />
 
         <android.support.v4.view.ViewPager

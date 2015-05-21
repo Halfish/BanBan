@@ -6,26 +6,24 @@ package com.example.banban.ui.fragments;
  */
 
 import java.util.ArrayList;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.BBSearchUserActivity;
 import com.example.banban.ui.myaccount.ProjectFragment;
 import com.example.banban.ui.myaccount.ShareProductFragment;
 import com.example.banban.ui.myaccount.ShoppingCarFragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -40,14 +38,15 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MyAccountFragment extends BaseActionBarFragment {
 
@@ -64,7 +63,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private TextView m_donateTextView;
 	private TextView m_balanceTextView;
 	private TextView m_nickName;
-	private ImageButton m_userPic;
+	private ImageView m_userPic;
 
 	private Handler m_handler;
 	private Handler m_handler2;
@@ -73,8 +72,10 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
+		m_queue = Volley.newRequestQueue(m_activity);
 		initHandler();
 	}
 
@@ -123,7 +124,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
+		
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
 				m_handler, m_queue);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
@@ -140,7 +141,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		String image = jsonObject.getString("image");
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
-				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
+				R.drawable.touxiang, R.drawable.touxiang);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 
 		String username = jsonObject.getString("username");
@@ -171,7 +172,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_donateTextView = (TextView) view.findViewById(R.id.tv_total_donate);
 		m_balanceTextView = (TextView) view.findViewById(R.id.tv_balance);
 		m_nickName = (TextView) view.findViewById(R.id.tv_nickname);
-		m_userPic = (ImageButton)view.findViewById(R.id.btn_nickname);
+		m_userPic = (ImageView)view.findViewById(R.id.btn_nickname);
 
 		InitTextView(view);
 		InitImage(view);
@@ -282,6 +283,25 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		public Fragment getItem(int arg0) {
 			return list.get(arg0);
 		}
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.bb_menu_fragment_my_account, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_search:
+			Intent intent = new Intent(getActivity(), BBSearchUserActivity.class);
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

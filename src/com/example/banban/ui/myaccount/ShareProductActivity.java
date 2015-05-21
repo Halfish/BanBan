@@ -118,7 +118,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 								Log.v(LOG_TAG, "purchaseCode is " + m_purchaseCode);
 								HttpUtil.NormalPostRequest(map,
 										BBConfigue.SERVER_HTTP
-												+ "/products/purchases/verify",
+												+ "/products/purchases/share/revoke",
 										m_keepHandler, m_queue);
 							}
 						}).setNegativeButton("取消", new OnClickListener() {
@@ -181,7 +181,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-					Log.v(LOG_TAG, "verify: " + response.toString());
+					Log.v(LOG_TAG, "revoke: " + response.toString());
 					try {
 						int retCode = response.getInt("ret_code");
 						switch (retCode) {

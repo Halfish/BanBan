@@ -52,7 +52,7 @@ public class ShoppingCarFragment extends Fragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
-	
+
 	private NetworkImageView m_image;
 
 	@Override
@@ -60,6 +60,8 @@ public class ShoppingCarFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_queue = Volley.newRequestQueue(m_activity);
+
 		initHandler();
 	}
 
@@ -87,7 +89,6 @@ public class ShoppingCarFragment extends Fragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/users/purchases/cart", m_handler, m_queue);
 	}
@@ -117,12 +118,12 @@ public class ShoppingCarFragment extends Fragment {
 		String purchase_code = object.getString("purchase_code");
 		int product_id = object.getInt("product_id");
 		String product_name = object.getString("product_name");
-		
+
 		int price = object.getInt("price");
 		String image = object.getString("image");
 		String amount_spec = object.getString("amount_spec");
 		int favorites = object.getInt("favorites");
-		
+
 		item = new HashMap<String, Object>();
 		item.put("image", image);
 		item.put("purchase_code", purchase_code);
@@ -135,14 +136,14 @@ public class ShoppingCarFragment extends Fragment {
 
 		m_adapter.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(
 				R.layout.bb_fragment_specificbuy_product, container, false);
 
-		m_image = (NetworkImageView)rootView.findViewById(R.id.img_product);
+		m_image = (NetworkImageView) rootView.findViewById(R.id.img_product);
 		m_gridView = (GridView) rootView.findViewById(R.id.gv_product);
 		m_adapter = new StoreInfoAdapter();
 		m_gridView.setAdapter(m_adapter);
@@ -152,9 +153,12 @@ public class ShoppingCarFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						int product_id = (Integer) m_listItems.get(position).get("product_id");
-						String purchase_code = (String) m_listItems.get(position).get("purchase_code");
-						Intent intent = new Intent(getActivity(), ShoppingCarActivity.class);
+						int product_id = (Integer) m_listItems.get(position)
+								.get("product_id");
+						String purchase_code = (String) m_listItems.get(
+								position).get("purchase_code");
+						Intent intent = new Intent(getActivity(),
+								ShoppingCarActivity.class);
 						intent.putExtra("product_id", product_id);
 						intent.putExtra("purchase_code", purchase_code);
 						startActivity(intent);
@@ -230,21 +234,20 @@ public class ShoppingCarFragment extends Fragment {
 					"product_name");
 			String likeNumber = (String) m_listItems.get(position).get(
 					"like_number");
-			String distance = (String) m_listItems.get(position)
-					.get("price");
-			String remains = (String) m_listItems.get(position)
-					.get("remains");
+			String distance = (String) m_listItems.get(position).get("price");
+			String remains = (String) m_listItems.get(position).get("remains");
 			String image = (String) m_listItems.get(position).get("image");
 
-			//viewHolder.productImg.setImageDrawable(storeImg);
+			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
 			viewHolder.remainsTV.setText(remains);
-			
-			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
-			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image, imageLoader);
-			
+
+			ImageLoader imageLoader = new ImageLoader(m_queue,
+					new BitmapCache());
+			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image,
+					imageLoader);
 
 			return convertView;
 		}

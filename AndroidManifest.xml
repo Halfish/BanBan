@@ -68,6 +68,12 @@
         <activity android:name="com.example.banban.ui.ProjectActivity" />
         <activity android:name=".ui.myaccount.ShoppingCarActivity" />
         <activity android:name=".ui.myaccount.ShareProductActivity" />
+        <activity android:name=".ui.BBSearchUserActivity" />
+        <activity android:name=".ui.otheraccount.OtherAccountActivity" />
+        <activity android:name=".ui.otheraccount.OtherAccount_GZDR" />
+        <activity android:name=".ui.otheraccount.OtherAccount_SCSJ" />
+        <activity android:name=".ui.otheraccount.OtherAccount_SCXM" />
+        <activity android:name=".ui.otheraccount.OtherAccount_TDFS" />
     </application>
 
 </manifest>
