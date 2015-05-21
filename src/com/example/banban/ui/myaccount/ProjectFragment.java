@@ -59,6 +59,7 @@ public class ProjectFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_queue = Volley.newRequestQueue(m_activity);
 		initHandler();
 	}
 
@@ -86,9 +87,13 @@ public class ProjectFragment extends Fragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
+		
+		int userId = getActivity().getIntent().getIntExtra("user_id", -1);
+		if(userId == -1) {
+			userId = BBConfigue.USER_ID;
+		}
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/users/supports/history", m_handler, m_queue);
+				+ "/users/supports/history/" + userId, m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -100,6 +105,7 @@ public class ProjectFragment extends Fragment {
 		}
 
 		// else retCode == 0
+		m_listItems.clear();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		JSONArray jsonArray = jsonObject.getJSONArray("projects");
 		if (jsonArray == null) {
@@ -109,6 +115,7 @@ public class ProjectFragment extends Fragment {
 			JSONObject object = jsonArray.getJSONObject(i);
 			addItem(object);
 		}
+		m_adapter.notifyDataSetChanged();
 	}
 
 	private void addItem(JSONObject object) throws JSONException {
