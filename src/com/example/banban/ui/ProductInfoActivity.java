@@ -20,18 +20,21 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProductInfoActivity extends Activity {
+public class ProductInfoActivity extends BaseActionBarActivity {
 	private Handler m_handler;
 	private RequestQueue m_queue;
 	private static final int SUCCESS_CODE = 0;
@@ -63,6 +66,7 @@ public class ProductInfoActivity extends Activity {
 	}
 
 	private void initWidgets() {
+		initActionBar();
 		m_likeNumberTV = (TextView) findViewById(R.id.tv_like_number);
 		m_nameTextView = (TextView) findViewById(R.id.tv_product_name);
 		m_priceTextView = (TextView) findViewById(R.id.tv_product_price);
@@ -85,6 +89,24 @@ public class ProductInfoActivity extends Activity {
 			}
 		});
 	}
+	
+	@SuppressLint("InflateParams") 
+	private void initActionBar() {
+		m_actionBar = getActionBar();
+
+		TextView m_title = (TextView) getLayoutInflater().inflate(
+				R.layout.bb_view_actionbar, null);
+
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+				ActionBar.LayoutParams.WRAP_CONTENT,
+				ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+		m_actionBar.setCustomView(m_title, lp);
+		m_actionBar.setDisplayShowCustomEnabled(true);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setHomeButtonEnabled(true);
+		m_actionBar.setIcon(R.drawable.bb_back);	
+	}
+
 
 	private void beginDataRequest() {
 		HttpUtil.NormalPostRequest(new HashMap<String, String>(),
@@ -191,7 +213,10 @@ public class ProductInfoActivity extends Activity {
 	private void parseDataFromJson(JSONObject response) throws JSONException {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
-		// int product_id = response.getInt("product_id");
+		m_productId = response.getInt("product_id");
+		if (m_productId == -1) {
+			Toast.makeText(this, "没有抢到商品，再抢一次吧~", Toast.LENGTH_LONG).show();
+		}
 		String product_name = response.getString("product_name");
 		int original_price = response.getInt("original_price");
 		// int donate = response.getInt("donate");
@@ -200,7 +225,7 @@ public class ProductInfoActivity extends Activity {
 		String image = response.getString("image");
 		// int store_id = response.getInt("store_id");
 		String store_name = response.getString("store_name");
-		m_productId = response.getInt("product_id");
+		
 
 		m_likeNumberTV.setText(favorite + "");
 		m_nameTextView.setText(product_name);
@@ -215,5 +240,18 @@ public class ProductInfoActivity extends Activity {
 		ImageListener listener = ImageLoader.getImageListener(m_image,
 				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;	
+
+		default:
+			break;
+		}
+		return false;
 	}
 }

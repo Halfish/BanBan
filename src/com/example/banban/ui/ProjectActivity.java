@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -24,6 +27,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -42,6 +47,7 @@ import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.publicwelfare.DetailFragment;
 import com.example.banban.ui.publicwelfare.SupportFragment;
 import com.example.banban.ui.publicwelfare.SupporterFragment;
+import com.example.sortlistview.AlphabetaContactActicity;
 
 public class ProjectActivity extends FragmentActivity {
 
@@ -64,6 +70,7 @@ public class ProjectActivity extends FragmentActivity {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private ActionBar m_actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +88,30 @@ public class ProjectActivity extends FragmentActivity {
 	}
 
 	private void initWidgets() {
+		initActionBar();
+		
 		m_projectName = (TextView) findViewById(R.id.tv_project_name);
 		m_goal = (TextView) findViewById(R.id.tv_goal);
 		m_achieve = (TextView) findViewById(R.id.tv_achieve);
 		m_accumulate = (TextView) findViewById(R.id.tv_accumulation);
 		m_image = (ImageView)findViewById(R.id.img_project);
+	}
+	
+	@SuppressLint("InflateParams") 
+	private void initActionBar() {
+		m_actionBar = getActionBar();
+
+		TextView m_title = (TextView) getLayoutInflater().inflate(
+				R.layout.bb_view_actionbar, null);
+
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+				ActionBar.LayoutParams.WRAP_CONTENT,
+				ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+		m_actionBar.setCustomView(m_title, lp);
+		m_actionBar.setDisplayShowCustomEnabled(true);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setHomeButtonEnabled(true);
+		m_actionBar.setIcon(R.drawable.bb_back);	
 	}
 
 	private void beginDataGetRequest() {
@@ -249,5 +275,18 @@ public class ProjectActivity extends FragmentActivity {
 		public Fragment getItem(int arg0) {
 			return list.get(arg0);
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;	
+
+		default:
+			break;
+		}
+		return false;
 	}
 }

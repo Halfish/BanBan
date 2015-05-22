@@ -16,10 +16,10 @@
             android:id="@+id/btn_nickname"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:scaleType="fitXY"
             android:layout_centerInParent="true"
-            android:src="@drawable/touxiang"
-            android:contentDescription="@string/cont_descrip" />
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_head" />
 
         <TextView
             android:id="@+id/tv_nickname"
@@ -37,6 +37,7 @@
         android:orientation="horizontal" >
 
         <Button
+            android:id="@+id/btn_stores"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +46,7 @@
             android:textSize="13sp" />
 
         <Button
+            android:id="@+id/btn_projects"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,6 +55,7 @@
             android:textSize="13sp" />
 
         <Button
+            android:id="@+id/btn_following"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,6 +64,7 @@
             android:textSize="13sp" />
 
         <Button
+            android:id="@+id/btn_followings"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,9 +74,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:baselineAligned="false" 
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:baselineAligned="false"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -83,16 +87,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:text="@string/bb_donation_sum" />
+                android:text="@string/bb_donation_sum"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tv_total_donate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="20sp"
-                android:text="@string/bb_donation_num" />
+                android:text="@string/bb_donation_num"
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -103,20 +107,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:text="@string/bb_fund_remains" />
+                android:text="@string/bb_fund_remains"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tv_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="20sp"
-                android:text="@string/bb_fund_sum" />
+                android:text="@string/bb_fund_sum"
+                android:textSize="20sp" />
         </RelativeLayout>
     </LinearLayout>
-    
+
     <!-- 我的账户 - 下面可滑动部分 -->
+
     <LinearLayout
         android:id="@+id/lly_store_info_2"
         android:layout_width="match_parent"
@@ -155,15 +160,14 @@
                 android:gravity="center"
                 android:text="@string/bb_share_product"
                 android:textSize="18sp" />
-
         </LinearLayout>
 
         <ImageView
             android:id="@+id/cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="matrix"
             android:contentDescription="@string/cont_descrip"
+            android:scaleType="matrix"
             android:src="@drawable/bb_cursor" />
 
         <android.support.v4.view.ViewPager

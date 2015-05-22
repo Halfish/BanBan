@@ -29,12 +29,12 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="17dp"
-            android:src="@drawable/touxiang"
+            android:src="@drawable/default_head"
             android:contentDescription="@string/cont_descrip" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/button1"
+            android:id="@+id/btn_follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

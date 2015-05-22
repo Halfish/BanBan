@@ -11,6 +11,7 @@
         android:layout_height="wrap_content" />
 
     <Button
+        style="?android:attr/buttonBarStyle"
         android:id="@+id/btn_write_reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

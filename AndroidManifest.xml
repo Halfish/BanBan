@@ -70,10 +70,10 @@
         <activity android:name=".ui.myaccount.ShareProductActivity" />
         <activity android:name=".ui.BBSearchUserActivity" />
         <activity android:name=".ui.otheraccount.OtherAccountActivity" />
-        <activity android:name=".ui.otheraccount.OtherAccount_GZDR" />
-        <activity android:name=".ui.otheraccount.OtherAccount_SCSJ" />
-        <activity android:name=".ui.otheraccount.OtherAccount_SCXM" />
-        <activity android:name=".ui.otheraccount.OtherAccount_TDFS" />
+        <activity android:name=".ui.otheraccount.CollectedStoresActivity" />
+        <activity android:name=".ui.otheraccount.CollectedProjectsActivity" />
+        <activity android:name=".ui.otheraccount.FollowingOtherPeopleActivity" />
+        <activity android:name=".ui.otheraccount.MyFansActivity" />
     </application>
 
 </manifest>

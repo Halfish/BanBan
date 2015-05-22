@@ -21,6 +21,11 @@ import com.example.banban.ui.BBSearchUserActivity;
 import com.example.banban.ui.myaccount.ProjectFragment;
 import com.example.banban.ui.myaccount.ShareProductFragment;
 import com.example.banban.ui.myaccount.ShoppingCarFragment;
+import com.example.banban.ui.otheraccount.CollectedProjectsActivity;
+import com.example.banban.ui.otheraccount.CollectedStoresActivity;
+import com.example.banban.ui.otheraccount.FollowingOtherPeopleActivity;
+import com.example.banban.ui.otheraccount.MyFansActivity;
+import com.example.banban.ui.otheraccount.OtherAccountActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -43,8 +48,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,6 +72,11 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private TextView m_nickName;
 	private ImageView m_userPic;
 
+	private Button m_storeButton;
+	private Button m_projectButton;
+	private Button m_followButton;
+	private Button m_followingsButton;
+
 	private Handler m_handler;
 	private Handler m_handler2;
 	private RequestQueue m_queue;
@@ -73,6 +85,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
 		m_queue = Volley.newRequestQueue(m_activity);
@@ -124,7 +137,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataRequest() {
-		
+
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
 				m_handler, m_queue);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
@@ -141,7 +154,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		String image = jsonObject.getString("image");
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
-				R.drawable.touxiang, R.drawable.touxiang);
+				R.drawable.default_head, R.drawable.default_head);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 
 		String username = jsonObject.getString("username");
@@ -172,7 +185,14 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_donateTextView = (TextView) view.findViewById(R.id.tv_total_donate);
 		m_balanceTextView = (TextView) view.findViewById(R.id.tv_balance);
 		m_nickName = (TextView) view.findViewById(R.id.tv_nickname);
-		m_userPic = (ImageView)view.findViewById(R.id.btn_nickname);
+		m_userPic = (ImageView) view.findViewById(R.id.btn_nickname);
+
+		m_storeButton = (Button) view.findViewById(R.id.btn_stores);
+		m_projectButton = (Button) view.findViewById(R.id.btn_projects);
+		m_followButton = (Button) view.findViewById(R.id.btn_following);
+		m_followingsButton = (Button) view.findViewById(R.id.btn_followings);
+
+		initButtons();
 
 		InitTextView(view);
 		InitImage(view);
@@ -181,6 +201,45 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		beginDataRequest();
 		return view;
 	}
+
+	private void initButtons() {
+		m_storeButton.setOnClickListener(listener);
+		m_projectButton.setOnClickListener(listener);
+		m_followButton.setOnClickListener(listener);
+		m_followingsButton.setOnClickListener(listener);
+	}
+
+	private OnClickListener listener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.btn_stores:
+				// 切换到一个新的activity;
+				Intent intent = new Intent(m_activity,
+						CollectedStoresActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.btn_projects:
+				Intent intent1 = new Intent(m_activity,
+						CollectedProjectsActivity.class);
+				startActivity(intent1);
+				break;
+			case R.id.btn_following:
+				Intent intent2 = new Intent(m_activity,
+						FollowingOtherPeopleActivity.class);
+				startActivity(intent2);
+				break;
+
+			case R.id.btn_followings:
+				Intent intent3 = new Intent(m_activity, MyFansActivity.class);
+				startActivity(intent3);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 
 	/*
 	 * 初始化标签名0
@@ -284,18 +343,20 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			return list.get(arg0);
 		}
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.bb_menu_fragment_my_account, menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_search:
-			Intent intent = new Intent(getActivity(), BBSearchUserActivity.class);
+			Intent intent = new Intent(getActivity(),
+					BBSearchUserActivity.class);
 			startActivity(intent);
+			Log.v(LOG_TAG, "menu search selected");
 			break;
 
 		default:

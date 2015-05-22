@@ -14,7 +14,7 @@
     <string name="bb_tab_my_account">我的账号</string>
     <string name="bb_tab_more_info">更多</string>
     <string name="sortlistview_search_hint">请输入关键字</string>
-    <string name="beijing">北京</string>
+    <string name="guangzhou">广州</string>
 
     <!-- 菜单 -->
     <string name="bb_menu_category">类别</string>
@@ -53,7 +53,7 @@
     <string name="bb_nickname">我是用户，我是上帝</string>
     <string name="bb_review_time">2008/08/08 20:00</string>
     <string name="bb_text">这里是正文里的非正文部分，所以不是真正的正文</string>
-    <string name="bb_write_reviews">写评价</string>
+    <string name="bb_write_reviews"> 写评价 </string>
     <string name="bb_rating">评分</string>
     <string name="bb_post_photo">上传照片</string>
     <string name="bb_publish">发布</string>

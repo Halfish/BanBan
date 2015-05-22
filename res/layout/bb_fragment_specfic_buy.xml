@@ -21,18 +21,16 @@
         android:layout_height="wrap_content" >
 
         <Spinner
-            android:id="@+id/sp_all_category"
+            android:id="@+id/sp_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/city_area"
             android:prompt="@string/bb_spinner_all_category"
             android:layout_weight="1" />
 
         <Spinner
-            android:id="@+id/sp_all_city"
+            android:id="@+id/sp_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/city_place"
             android:prompt="@string/bb_spiiner_all_city"
             android:layout_weight="1" />
 

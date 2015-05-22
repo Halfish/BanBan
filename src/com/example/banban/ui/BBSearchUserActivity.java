@@ -35,7 +35,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
-public class BBSearchUserActivity extends Activity implements
+public class BBSearchUserActivity extends BaseActionBarActivity implements
 		OnQueryTextListener {
 
 	protected static final String LOG_TAG = BBSearchUserActivity.class

@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.example.banban.R;
 import com.example.banban.ui.BBMainActivity;
-import com.example.banban.ui.fragments.RandomBuyFragment;
 import com.example.sortlistview.SideBar.OnTouchingLetterChangedListener;
 
 public class AlphabetaContactActicity extends Activity {
@@ -81,7 +80,7 @@ public class AlphabetaContactActicity extends Activity {
 				
 				Intent intent = new Intent(AlphabetaContactActicity.this, BBMainActivity.class);
 				intent.putExtra("location", string);
-				setResult(RandomBuyFragment.RESULT_CODE_LOCATION, intent);
+				setResult(BBMainActivity.RESULT_CODE_LOCATION, intent);
 				finish();
 				
 			}

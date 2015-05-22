@@ -16,8 +16,6 @@ import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.ProductInfoActivity;
-import com.example.sortlistview.AlphabetaContactActicity;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -29,21 +27,13 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class RandomBuyFragment extends BaseActionBarFragment {
-
-	public static final int REQUEST_CODE_LOCATION = 1;
-	public static final int RESULT_CODE_LOCATION = 2;
-
 	private static final String LOG_TAG = RandomBuyFragment.class.getName();
 
 	private Button m_randomBuyBtn;
@@ -51,7 +41,6 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private TextView m_infoTextView;
 	private int remainTime = 3;
 	private Activity m_activity;
-	private ActionBar m_actionBar;
 	private RequestQueue m_queue;
 	private Handler m_handler;
 
@@ -62,8 +51,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
-		m_actionBar = m_activity.getActionBar();
-		m_actionBar.setTitle(R.string.beijing);
+		
 		initHandler();
 	}
 
@@ -92,18 +80,9 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 
 		View view = inflater.inflate(R.layout.bb_fragment_random_buy,
 				container, false);
-		initActionBar();
+		setActionBarCenterTitle(R.string.bb_tab_random_buy);
 		initWidgets(view);
 		return view;
-	}
-
-	private void initActionBar() {
-		setActionBarCenterTitle(R.string.bb_tab_random_buy);
-		m_actionBar.setIcon(R.drawable.bb_location);
-		m_actionBar.setDisplayShowTitleEnabled(true);
-		m_actionBar.setDisplayUseLogoEnabled(true);
-		m_actionBar.setDisplayShowHomeEnabled(true);
-		m_actionBar.setHomeButtonEnabled(true);
 	}
 
 	private void initWidgets(View view) {
@@ -123,6 +102,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 					remainTime--;
 					m_pref.edit().putInt("remainTime", remainTime).commit();
 					m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
+					// TODO generate
 					Intent intent = new Intent(m_activity,
 							ProductInfoActivity.class);
 					startActivity(intent);
@@ -162,27 +142,4 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				m_handler, m_queue);
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			Intent intent = new Intent(m_activity,
-					AlphabetaContactActicity.class);
-			startActivityForResult(intent, REQUEST_CODE_LOCATION);
-			break;	
-
-		default:
-			break;
-		}
-		return true;
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_LOCATION
-				&& resultCode == RESULT_CODE_LOCATION) {
-			String location = data.getStringExtra("location");
-			m_actionBar.setTitle(location);
-		}
-	}
 }

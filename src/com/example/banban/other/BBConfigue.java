@@ -10,4 +10,6 @@ public class BBConfigue {
 	public static String PASSWORD = "";
 	public static int USER_ID = 0;
 	
+	public static String CURRENT_CITY = "";
+	
 }

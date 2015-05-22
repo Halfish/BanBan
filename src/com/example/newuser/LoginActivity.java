@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
 	private void saveAccount() {
 		BBConfigue.USER_NAME = m_username;
 		BBConfigue.PASSWORD = m_password;
-		
+
 		SharedPreferences pref = getSharedPreferences("account",
 				Context.MODE_PRIVATE);
 		pref.edit().putString("username", m_username).commit();
@@ -129,6 +129,8 @@ public class LoginActivity extends Activity {
 	private void handleResponse(JSONObject response) throws JSONException {
 		Log.v(LOG_TAG, response.toString());
 		int retCode = response.getInt("ret_code");
+		int is_store = response.getInt("is_store");
+
 		switch (retCode) {
 		case 0:
 			// success
@@ -138,14 +140,23 @@ public class LoginActivity extends Activity {
 
 			String token = response.getString("token");
 			BBConfigue.TOKEN = token;
-			
+
 			m_userId = response.getInt("user_id");
 			BBConfigue.USER_ID = m_userId;
 
 			saveAccount();
-			
-			Intent intent = new Intent(LoginActivity.this, BBMainActivity.class);
-			startActivity(intent);
+			if (is_store != 1) {
+				Intent intent = new Intent(LoginActivity.this,
+						BBMainActivity.class);
+				startActivity(intent);
+			} else {
+				Intent intent = new Intent(LoginActivity.this, Merchant_main.class);
+				localStore.store_id = response.getInt("user_id");
+				localStore.USER_NAME = m_username;
+				localStore.PASSWORD = m_password;
+
+				startActivity(intent);
+			}
 			finish();
 			break;
 

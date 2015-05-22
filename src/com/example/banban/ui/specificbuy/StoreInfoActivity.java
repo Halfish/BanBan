@@ -202,12 +202,13 @@ public class StoreInfoActivity extends FragmentActivity {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			Toast.makeText(this, "已经点赞！", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "点赞成功！", Toast.LENGTH_SHORT).show();
 			break;
 
 		case 1:
 		case 2:
 		case 3:
+		case 4:
 			String message = response.getString("message");
 			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 			break;

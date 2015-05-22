@@ -19,6 +19,6 @@
         android:layout_height="64dp"
         android:layout_margin="10dp"
         android:contentDescription="@string/cont_descrip"
-        android:src="@drawable/touxiang" />
+        android:src="@drawable/default_head" />
 
 </RelativeLayout>
