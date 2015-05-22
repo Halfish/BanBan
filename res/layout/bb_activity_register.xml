@@ -53,6 +53,7 @@
         <EditText
             android:id="@+id/et_passwd"
              style="?android:attr/password"
+             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bb_hint_password" >

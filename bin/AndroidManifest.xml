@@ -16,6 +16,11 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -68,6 +73,17 @@
         <activity android:name="com.example.banban.ui.ProjectActivity" />
         <activity android:name=".ui.myaccount.ShoppingCarActivity" />
         <activity android:name=".ui.myaccount.ShareProductActivity" />
+        <activity android:name=".ui.BBSearchUserActivity" />
+        <activity android:name=".ui.otheraccount.OtherAccountActivity" />
+        <activity android:name=".ui.otheraccount.CollectedStoresActivity" />
+        <activity android:name=".ui.otheraccount.CollectedProjectsActivity" />
+        <activity android:name=".ui.otheraccount.FollowingOtherPeopleActivity" />
+        <activity android:name=".ui.otheraccount.MyFansActivity" />
+
+        <!-- 商家版 -->
+        <activity android:name="com.example.BanBanBusiness.Merchant_main" />
+        <activity android:name="com.example.BBput.ThingPutting" />
+        <activity android:name="com.example.BusinessThingManager.ThingEdit" />
     </application>
 
 </manifest>

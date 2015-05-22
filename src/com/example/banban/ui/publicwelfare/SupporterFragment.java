@@ -121,6 +121,10 @@ public class SupporterFragment extends BaseActionBarFragment {
 	}
 
 	private void addItem(JSONObject jsonObject) throws JSONException {
+		
+		if (!isAdded()) {
+			return;
+		}
 
 		// int user_id = response.getInt("user_id");
 		String username = jsonObject.getString("username");

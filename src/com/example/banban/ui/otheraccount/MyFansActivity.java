@@ -34,8 +34,9 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.BaseActionBarActivity;
 
-public class MyFansActivity extends Activity {
+public class MyFansActivity extends BaseActionBarActivity {
 	private static final String LOG_TAG = MyFansActivity.class
 			.getName();
 

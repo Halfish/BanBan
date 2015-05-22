@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tthingp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+	<RelativeLayout 
+        android:id="@+id/r1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        >
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/thingname"
+        android:textSize="20sp" />
+    <ImageButton
+        android:id="@+id/things_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/app_name"
+        android:background="#ffffff"
+        android:src="@drawable/ic_arrow_grey" />
+	</RelativeLayout>
+   <TextView
+        android:id="@+id/textView2"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/r1"
+        android:layout_marginTop="10dp"
+        android:text="@string/thingdeliver"
+        android:textSize="20sp" />  
+  <RelativeLayout
+        android:id="@+id/r2"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView2"
+        android:background="#ffffff"
+        android:gravity="top" >
+   <TextView
+        android:id="@+id/textView3"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/suijiqiang"
+        android:textSize="20sp" />  
+      <TextView
+        android:id="@+id/things_name2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/jian"
+        android:textSize="20sp" />
+  </RelativeLayout>	
+  <RelativeLayout
+        android:id="@+id/r3"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/r2"
+        android:background="#ffffff"
+        android:gravity="top" >
+  <TextView
+        android:id="@+id/textView4"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/tedingqiang"
+        android:textSize="20sp" /> 
+    <TextView
+        android:id="@+id/things_name3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/jian"
+        android:textSize="20sp" />
+ </RelativeLayout>
+ <RelativeLayout
+        android:id="@+id/r4"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/r3"
+        android:background="#ffffff"
+        android:gravity="top" >	 
+  <TextView
+        android:id="@+id/textView5"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/price"
+        android:textSize="20sp" />  
+  <TextView
+        android:id="@+id/things_name4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/yuan"
+        android:textSize="20sp" />
+  </RelativeLayout>
+  <TextView
+        android:id="@+id/textView6"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/r4"
+        android:layout_marginTop="10dp"
+        android:text="@string/photo"
+        android:textSize="20sp" />
+  
+  <ImageButton
+      android:id="@+id/imageButton1"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_alignLeft="@+id/textView6"
+      android:layout_below="@+id/textView6"
+      android:layout_marginTop="5dp"
+      android:contentDescription="@string/app_name"
+      android:background="#ffffff"
+      android:src="@drawable/add" />
+   <RelativeLayout
+        android:id="@+id/r5"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/imageButton1"
+        android:layout_marginTop="10dp"
+        android:background="#00000000"
+        android:gravity="top" >
+  <TextView
+      android:id="@+id/textView7"
+	  android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_marginLeft="10dp"
+      android:layout_marginTop="10dp"
+      android:text="@string/description"
+      android:textSize="20sp" />
+   </RelativeLayout>
+
+
+  <Button
+      android:id="@+id/button1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+      android:text="@string/button" />
+  
+</RelativeLayout>

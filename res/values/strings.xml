@@ -140,5 +140,45 @@
     <string name="bb_register">注册</string>
     <string name="bb_hint_confirm_passwd">再次输入密码</string>
     <string name="bb_go_to_login">已有账号，去登录 ></string>
+    
+    <!-- 商家版 -->
+    <string name="action_puttings">发布宝贝</string>
+	<string name="myshop">我的商家</string>
+	<string name="thingmannage">宝贝管理</string>
+	<string name="dealmannage">交易管理</string>
+	<string name="ttitle">我的店铺</string>
+	<string name="thingname">宝贝名称</string>
+	<string name="thingdeliver">宝贝分配</string>
+	<string name="suijiqiang">随机抢</string>
+	<string name="tedingqiang">特定抢</string>
+	<string name="price">宝贝原价</string>
+	<string name="current_price">宝贝现价</string>
+	<string name="get_price">可获得的公益资金</string>
+	<string name="photo">宝贝图片</string>
+	<string name="description">宝贝描述</string>
+	<string name="button">确认发布</string>
+	<string name="yuan">元</string>
+	<string name="jian">件</string>
+	<string name="name">商品名称，商品名称</string>
+	<string name="c_price">￥9,999</string>
+	<string name="c_num">剩9999件</string>
+	<string name="sum_dontion">累计捐款9，999,999</string>
+	<string name="store_name">商家名称</string>
+	<string name="store_info">我的店铺</string>
+	<string name="store_product">宝贝橱窗</string>
+	<string name="store_records">交易记录</string>
+	<string name="store_reviews">评 价</string>
+	<string name="delete">删除</string>
+	<string name="edit">编辑</string>
+	<string name="action_edit">宝贝编辑</string>
+	<string name="consume_code">消费码确认</string>
+	<string name="verify">确定 </string>
+	<string name="deal_price">交易金额</string>
+	<string name="deal_date">成交时间 2015年4月23日</string>
+	<string name="buy_ncikname">买家昵称</string>
+	<string name="remark_time"> 2015年4月23日 12:00</string>
+	<string name="address"> 地址： </string>
+	<string name="phone"> 电话： </string>
+	<string name="store_description">商家详情： </string>
 
 </resources>

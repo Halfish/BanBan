@@ -18,6 +18,8 @@ import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -31,10 +33,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +67,8 @@ public class StoreInfoActivity extends FragmentActivity {
 
 	private ImageButton m_likeButton;
 	private ImageButton m_collectButton;
+	
+	private ActionBar m_actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +112,28 @@ public class StoreInfoActivity extends FragmentActivity {
 						+ "/users/bookmarks/stores/add", m_collectHandler, m_queue);
 			}
 		});
+		
+		initActionBar();
 
 	}
 
+	@SuppressLint("InflateParams") 
+	private void initActionBar() {
+		m_actionBar = getActionBar();
+
+		TextView m_title = (TextView) getLayoutInflater().inflate(
+				R.layout.bb_view_actionbar, null);
+
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+				ActionBar.LayoutParams.WRAP_CONTENT,
+				ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+		m_actionBar.setCustomView(m_title, lp);
+		m_actionBar.setDisplayShowCustomEnabled(true);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setHomeButtonEnabled(true);
+		m_actionBar.setIcon(R.drawable.bb_back);	
+	}
+	
 	private void initHandler() {
 		m_handler = new Handler(getMainLooper()) {
 			@Override
@@ -347,5 +371,18 @@ public class StoreInfoActivity extends FragmentActivity {
 		public Fragment getItem(int arg0) {
 			return list.get(arg0);
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;	
+
+		default:
+			break;
+		}
+		return false;
 	}
 }

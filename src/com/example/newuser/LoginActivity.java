@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.BanBanBusiness.Merchant_main;
+import com.example.BanBanBusiness.localStore;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
@@ -149,11 +151,22 @@ public class LoginActivity extends Activity {
 				Intent intent = new Intent(LoginActivity.this,
 						BBMainActivity.class);
 				startActivity(intent);
+				SharedPreferences pref = getSharedPreferences("account",
+						Context.MODE_PRIVATE);
+				pref.edit().putString("type", "user").commit();
 			} else {
+				SharedPreferences pref = getSharedPreferences("account",
+						Context.MODE_PRIVATE);
+				pref.edit().putString("type", "store").commit();
 				Intent intent = new Intent(LoginActivity.this, Merchant_main.class);
-				localStore.store_id = response.getInt("user_id");
+				localStore.store_id = response.getInt("store_id") + "";
+				Log.v("ll", localStore.store_id);
 				localStore.USER_NAME = m_username;
 				localStore.PASSWORD = m_password;
+				
+				pref.edit().putString("username", m_username).commit();
+				pref.edit().putString("password", m_password).commit();
+				pref.edit().putString("store_id", localStore.store_id ).commit();
 
 				startActivity(intent);
 			}

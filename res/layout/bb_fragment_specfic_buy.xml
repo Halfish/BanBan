@@ -18,26 +18,26 @@
     <LinearLayout
         android:id="@+id/lly_spinners"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="50dp" >
 
         <Spinner
             android:id="@+id/sp_city"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:prompt="@string/bb_spinner_all_category"
             android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/sp_district"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:prompt="@string/bb_spiiner_all_city"
             android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/sp_smart_order"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:entries="@array/smart_order"
             android:prompt="@string/bb_spinner_smart_choose"
             android:layout_weight="1" />

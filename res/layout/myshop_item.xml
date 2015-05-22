@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="4dip"  
+    >
+        
+<com.android.volley.toolbox.NetworkImageView 
+    android:id="@+id/itemImage3"
+    android:layout_width="150dp"
+    android:layout_height="100dp" 
+    android:layout_centerHorizontal="true"
+    android:scaleType="fitXY"
+    android:contentDescription="@string/app_name"
+    android:src="@drawable/moren" />
+
+<TextView
+    android:id="@+id/itemTextName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/itemImage3"
+    android:layout_alignRight="@+id/itemImage3"
+    android:layout_below="@+id/itemImage3"
+    android:text="@string/name" />
+<TextView
+    android:id="@+id/itemTextP"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/itemImage3"
+    android:layout_alignRight="@+id/itemImage3"
+    android:layout_below="@+id/itemTextName"
+    android:text="@string/c_price" />
+<TextView
+    android:id="@+id/itemText3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignRight="@+id/itemTextP"
+    android:layout_below="@+id/itemTextName"
+    android:text="@string/c_num" />
+
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/imageButton1"
+    android:layout_toRightOf="@+id/imageButton1"
+ />
+
+<ImageButton
+    android:id="@+id/imageButton1"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:layout_alignLeft="@+id/itemImage3"
+    android:layout_alignParentTop="true"
+    android:background="#00000000"
+    android:scaleType="fitXY"
+    android:focusable="false"
+    android:src="@drawable/bb_like" />
+
+</RelativeLayout>

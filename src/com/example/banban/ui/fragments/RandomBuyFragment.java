@@ -39,7 +39,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Button m_randomBuyBtn;
 	private TextView m_chanceTextView;
 	private TextView m_infoTextView;
-	private int remainTime = 3;
+	private int remainTime = 10;
 	private Activity m_activity;
 	private RequestQueue m_queue;
 	private Handler m_handler;
@@ -96,7 +96,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				remainTime = m_pref.getInt("remainTime", 3);
+				remainTime = m_pref.getInt("remainTime", 10);
 				if (remainTime > 0) {
 					beginDataRequest();
 					remainTime--;
@@ -126,13 +126,13 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				+ calendar.get(Calendar.DAY_OF_MONTH);
 
 		if (date.equals(today)) {
-			return m_pref.getInt("remainTime", 3);
+			return m_pref.getInt("remainTime", 10);
 		} else {
 			m_pref.edit().putString("date", today).commit();
-			m_pref.edit().putInt("remainTime", 3).commit();
+			m_pref.edit().putInt("remainTime", 10).commit();
 		}
 
-		return 3;
+		return 10;
 	}
 
 	private void beginDataRequest() {

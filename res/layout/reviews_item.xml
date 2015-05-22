@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textViewN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/ratingBar1"
+        android:text="@string/buy_ncikname" />
+
+    <com.android.volley.toolbox.NetworkImageView 
+        android:id="@+id/imageViewW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ratingBar1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/touxiang" />
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewN"
+        android:layout_marginTop="53dp"
+        android:numStars="5"
+        android:stepSize="0.5" />
+
+    <TextView
+        android:id="@+id/textViewT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/ratingBar1"
+        android:layout_marginRight="39dp"
+        android:text="@string/remark_time" />
+
+    <TextView
+        android:id="@+id/textViewC"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewC"
+        android:layout_below="@+id/textViewN"
+        android:layout_marginTop="14dp"
+        android:text="评论正文！！！！" />
+
+</RelativeLayout>

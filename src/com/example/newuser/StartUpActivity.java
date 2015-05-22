@@ -1,5 +1,7 @@
 package com.example.newuser;
 
+import com.example.BanBanBusiness.Merchant_main;
+import com.example.BanBanBusiness.localStore;
 import com.example.banban.R;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBMainActivity;
@@ -48,14 +50,20 @@ public class StartUpActivity extends Activity {
 		String username = pref.getString("username", "");
 		String password = pref.getString("password", "");
 		int userId = pref.getInt("user_id", -1);
-		Intent intent = null;
-		if (username.equals("") || password.equals("")) {
-			intent = new Intent(StartUpActivity.this, LoginActivity.class);
-		} else {
+		String store_id = pref.getString("store_id", "");
+		String type = pref.getString("type", "");
+
+		Intent intent = new Intent(StartUpActivity.this, LoginActivity.class);
+		if (type.equals("user")) {
 			BBConfigue.USER_NAME = username;
 			BBConfigue.PASSWORD = password;
 			BBConfigue.USER_ID = userId;
 			intent = new Intent(StartUpActivity.this, BBMainActivity.class);
+		} else if (type.equals("store")) {
+			intent = new Intent(StartUpActivity.this, Merchant_main.class);
+			localStore.USER_NAME = username;
+			localStore.PASSWORD = password;
+			localStore.store_id = store_id;
 		}
 		startActivity(intent);
 		finish();

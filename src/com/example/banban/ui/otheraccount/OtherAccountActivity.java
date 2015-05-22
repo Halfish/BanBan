@@ -21,6 +21,9 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.myaccount.ShareProductFragment;
+
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +34,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -56,7 +61,7 @@ public class OtherAccountActivity extends FragmentActivity {
 	private Button foucus_people;
 	private Button fans_people;
 	private Button m_followButton;
-
+	private ActionBar m_actionBar;
 	private int m_userId;
 
 	@Override
@@ -89,8 +94,26 @@ public class OtherAccountActivity extends FragmentActivity {
 		initHandler();
 		initView();
 		beginDataRequest();
+		initActionBar();
 	}
 
+	@SuppressLint("InflateParams") 
+	private void initActionBar() {
+		m_actionBar = getActionBar();
+
+		TextView m_title = (TextView) getLayoutInflater().inflate(
+				R.layout.bb_view_actionbar, null);
+
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+				ActionBar.LayoutParams.WRAP_CONTENT,
+				ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+		m_actionBar.setCustomView(m_title, lp);
+		m_actionBar.setDisplayShowCustomEnabled(true);
+		m_actionBar.setDisplayShowTitleEnabled(false);
+		m_actionBar.setHomeButtonEnabled(true);
+		m_actionBar.setIcon(R.drawable.bb_back);	
+	}
+	
 	private void initView() {
 		mPager = (ViewPager) findViewById(R.id.viewpager);
 		fragmentList = new ArrayList<Fragment>();
@@ -251,6 +274,20 @@ public class OtherAccountActivity extends FragmentActivity {
 		public Fragment getItem(int arg0) {
 			return list.get(arg0);
 		}
+	}
+	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;	
+
+		default:
+			break;
+		}
+		return false;
 	}
 
 }
