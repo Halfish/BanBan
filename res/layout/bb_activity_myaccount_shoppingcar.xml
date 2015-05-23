@@ -120,7 +120,7 @@
             android:layout_height="35dp"
             android:gravity="start|center_vertical"
             android:text="@string/bb_shopping_code"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btn_share"

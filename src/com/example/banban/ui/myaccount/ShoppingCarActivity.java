@@ -72,8 +72,8 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_myaccount_shoppingcar);
 
-		m_productId = getIntent().getIntExtra("product_id", -1);
-		m_purchaseCode = getIntent().getStringExtra("purchase_code");
+		m_productId = getIntent().getIntExtra("product_id", -1); // 商品的ID
+		m_purchaseCode = getIntent().getStringExtra("purchase_code"); // 消费码
 		if (m_purchaseCode == null) {
 			m_purchaseCode = "";
 		}
@@ -117,6 +117,8 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 			}
 		});
 
+		m_shoppingCodeBtn.setText("消费码： " + m_purchaseCode);
+		
 		m_shoppingCodeBtn
 				.setOnLongClickListener(new View.OnLongClickListener() {
 					public boolean onLongClick(View v) {

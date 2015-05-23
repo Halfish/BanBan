@@ -136,22 +136,26 @@ public class OtherAccountActivity extends FragmentActivity {
 				// 切换到一个新的activity;
 				Intent intent = new Intent(OtherAccountActivity.this,
 						CollectedStoresActivity.class);
+				intent.putExtra("user_id", m_userId);
 				startActivity(intent);
 				break;
 			case R.id.button_shoucangXM:
 				Intent intent1 = new Intent(OtherAccountActivity.this,
 						CollectedProjectsActivity.class);
+				intent1.putExtra("user_id", m_userId);
 				startActivity(intent1);
 				break;
 			case R.id.button_guanzhu:
 				Intent intent2 = new Intent(OtherAccountActivity.this,
 						FollowingOtherPeopleActivity.class);
+				intent2.putExtra("user_id", m_userId);
 				startActivity(intent2);
 				break;
 
 			case R.id.button_fans:
 				Intent intent3 = new Intent(OtherAccountActivity.this,
 						MyFansActivity.class);
+				intent3.putExtra("user_id", m_userId);
 				startActivity(intent3);
 				break;
 			default:
@@ -200,6 +204,7 @@ public class OtherAccountActivity extends FragmentActivity {
 							
 						case 1:
 						case 2:
+						case 3:
 							String message = response.getString("message");
 							Toast.makeText(getApplicationContext(), message,
 									Toast.LENGTH_LONG).show();

@@ -26,12 +26,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BBMainActivity extends FragmentActivity {
 
 	public static final int REQUEST_CODE_LOCATION = 1;
 	public static final int RESULT_CODE_LOCATION = 2;
-	
+
 	private FragmentTabHost m_tabHost = null;
 	private Context m_context;
 	private LayoutInflater m_inflater;
@@ -44,12 +45,12 @@ public class BBMainActivity extends FragmentActivity {
 		m_context = getBaseContext();
 		m_inflater = getLayoutInflater();
 		m_actionBar = getActionBar();
-		
+
 		initActionBar();
-		
+
 		initTabHost();
 	}
-	
+
 	private void initActionBar() {
 		m_actionBar.setTitle(R.string.guangzhou);
 		m_actionBar.setIcon(R.drawable.bb_location);
@@ -57,7 +58,7 @@ public class BBMainActivity extends FragmentActivity {
 		m_actionBar.setDisplayUseLogoEnabled(true);
 		m_actionBar.setDisplayShowHomeEnabled(true);
 		m_actionBar.setHomeButtonEnabled(true);
-		
+
 		SharedPreferences pref = getSharedPreferences("location",
 				Context.MODE_PRIVATE);
 		String location = pref.getString("location", "");
@@ -74,7 +75,7 @@ public class BBMainActivity extends FragmentActivity {
 				R.id.realtabcontent);
 
 		View indicator;
-		
+
 		// 随机抢页面Tab
 		indicator = getIndicatorView(R.string.bb_tab_random_buy,
 				R.layout.bb_indicator_main_activity);
@@ -117,7 +118,7 @@ public class BBMainActivity extends FragmentActivity {
 		tv.setText(name);
 		return v;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -125,25 +126,41 @@ public class BBMainActivity extends FragmentActivity {
 			Intent intent = new Intent(BBMainActivity.this,
 					AlphabetaContactActicity.class);
 			startActivityForResult(intent, REQUEST_CODE_LOCATION);
-			break;	
+			break;
 
 		default:
 			break;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_LOCATION
 				&& resultCode == RESULT_CODE_LOCATION) {
 			String location = data.getStringExtra("location");
 			getActionBar().setTitle(location);
-			
+
 			SharedPreferences pref = getSharedPreferences("location",
 					Context.MODE_PRIVATE);
 			pref.edit().putString("location", location).commit();
 		}
+	}
+
+	private static final long INTERVAL_MS_TIME = 2000;
+	private static long back_pressed;
+
+	@Override
+	public void onBackPressed() {
+		if (back_pressed + INTERVAL_MS_TIME > System.currentTimeMillis()) {
+			super.onBackPressed();
+			android.os.Process.killProcess(android.os.Process.myPid()); // 完全退出程序
+		} else {
+			Toast.makeText(getBaseContext(),
+					getResources().getString(R.string.bb_double_press_back),
+					Toast.LENGTH_SHORT).show();
+		}
+		back_pressed = System.currentTimeMillis();
 	}
 
 }

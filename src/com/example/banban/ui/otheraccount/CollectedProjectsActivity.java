@@ -14,13 +14,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,6 +38,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
+import com.example.banban.ui.ProjectActivity;
 
 public class CollectedProjectsActivity extends BaseActionBarActivity {
 	private static final String LOG_TAG = CollectedProjectsActivity.class
@@ -45,14 +49,14 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 	private ArrayList<Map<String, Object>> m_listItems;
 	private Map<String, Object> m_item;
 
-	private int m_userId;
-	private Handler m_userInfoHandler;
+	private int m_userId;	// TA的用户ID
+	private Handler m_userInfoHandler; // 用于请求用户收藏的项目名和图片
 	private RequestQueue m_queue;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_other_list);
-
+		setActionBarCenterTitle("收藏的项目");
 		initUser();
 		initListView();
 		initHandlers();
@@ -73,6 +77,15 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 		// 将数据绑定
 		m_adapter = new ProjectsBaseAdapter();
 		listView.setAdapter(m_adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(CollectedProjectsActivity.this, ProjectActivity.class);
+				int projectId = (Integer)m_listItems.get(position).get("project_id");
+				intent.putExtra("projectId", projectId);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void initHandlers() {
@@ -118,7 +131,7 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 		m_adapter.notifyDataSetChanged();
 		JSONArray jsonArray = jsonObject.getJSONArray("bookmarks");
 		if (jsonArray.length() == 0) {
-			Toast.makeText(this, "此用户没有关注的项目！", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "此用户没有收藏的项目！", Toast.LENGTH_LONG).show();
 			return;
 		}
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -206,6 +219,19 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

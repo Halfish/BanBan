@@ -8,6 +8,7 @@
     <string name="zan">赞</string>
 
     <!-- 客户端主Tab页面 -->
+    <string name="bb_double_press_back">再按一次退出半半</string>
     <string name="bb_tab_random_buy">随机抢</string>
     <string name="bb_tab_specific_buy">特定抢</string>
     <string name="bb_tab_public_welfare">公益众筹</string>
@@ -106,7 +107,7 @@
     <string name="bb_shopping_car">购物车</string>
     <string name="bb_share_product">分享商品</string>
     <string name="bb_shorename">商家名称</string>
-    <string name="bb_shopping_code">消费码（长按复制）</string>
+    <string name="bb_shopping_code">消费码</string>
     <string name="bb_keep">留为己用</string>
     <string name="bb_share">分享出去</string>
     <string name="bb_giveup">放弃该商品</string>

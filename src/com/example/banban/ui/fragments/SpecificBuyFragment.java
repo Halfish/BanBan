@@ -178,7 +178,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			m_adapter.notifyDataSetChanged();
 			JSONArray jsonArray = jsonObject.getJSONArray("stores");
 			if (jsonArray.length() == 0) {
-				Toast.makeText(m_activity, "没有商家！", Toast.LENGTH_LONG).show();
+				Toast.makeText(m_activity, "没有商家！", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			for (int i = 0; i < jsonArray.length(); i++) {

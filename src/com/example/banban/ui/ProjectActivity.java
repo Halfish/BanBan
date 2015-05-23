@@ -77,7 +77,9 @@ public class ProjectActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_publicwelfare_project);
 
-		m_projectId = getIntent().getIntExtra("projectId", -1); // TODO
+		// 要展示该醒目详细信息，必须给此Activity一个projectID
+		m_projectId = getIntent().getIntExtra("projectId", -1); 
+		
 		initWidgets();
 		initHandler();
 

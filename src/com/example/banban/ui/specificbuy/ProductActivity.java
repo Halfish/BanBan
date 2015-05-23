@@ -14,9 +14,7 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
-import com.example.banban.ui.ProductInfoActivity;
-
-import android.app.Activity;
+import com.example.banban.ui.BaseActionBarActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,7 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProductActivity extends Activity {
+public class ProductActivity extends BaseActionBarActivity {
+	private static final String LOG_TAG = ProductActivity.class.getName();
 	private Button m_buyButton;
 	private ImageView m_image;
 	private TextView m_zan;
@@ -41,9 +40,8 @@ public class ProductActivity extends Activity {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
-	private static final String LOG_TAG = ProductInfoActivity.class.getName();
-	private Handler m_handler2;
-	private Handler m_handler3;
+	private Handler m_buyHandler;
+	private Handler m_zanHandler;
 	private int m_productId;
 	private int m_likeNum;
 
@@ -78,7 +76,7 @@ public class ProductActivity extends Activity {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("product_id", m_productId + "");
 					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-							+ "/products/purchases/spec", m_handler2, m_queue);
+							+ "/products/purchases/spec", m_buyHandler, m_queue);
 				}
 			}
 		});
@@ -88,7 +86,7 @@ public class ProductActivity extends Activity {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("product_id", m_productId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-						+ "/products/favorites/add", m_handler3, m_queue);
+						+ "/products/favorites/add", m_zanHandler, m_queue);
 			}
 		});
 
@@ -121,7 +119,7 @@ public class ProductActivity extends Activity {
 			}
 		};
 
-		m_handler2 = new Handler(getMainLooper()) {
+		m_buyHandler = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -143,7 +141,7 @@ public class ProductActivity extends Activity {
 			}
 		};
 
-		m_handler3 = new Handler(getMainLooper()) {
+		m_zanHandler = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -212,18 +210,23 @@ public class ProductActivity extends Activity {
 	private void updataProductFromServer(JSONObject response)
 			throws JSONException {
 		int retCode = response.getInt("ret_code");
-		String infoString = "Wrong Code";
 		switch (retCode) {
 		case 0:
-			infoString = "Succeed";
+			Toast.makeText(getBaseContext(), "已抢到商品！", Toast.LENGTH_SHORT)
+					.show();
 			break;
+
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			String message = response.getString("message");
+			Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
+					.show();
 		default:
-			infoString = response.getString("message");
-			
 			break;
 		}
-		Toast.makeText(getBaseContext(), infoString, Toast.LENGTH_SHORT)
-		.show();
+
 	}
 
 	private void parseDataFromJson(JSONObject response) throws JSONException {

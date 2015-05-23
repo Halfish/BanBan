@@ -14,17 +14,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -35,6 +38,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
+import com.example.banban.ui.specificbuy.StoreInfoActivity;
 
 public class CollectedStoresActivity extends BaseActionBarActivity {
 	private static final String LOG_TAG = CollectedStoresActivity.class
@@ -52,7 +56,7 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_other_list);
-
+		setActionBarCenterTitle("收藏的商家");
 		initUser();
 		initListView();
 		initHandlers();
@@ -73,6 +77,17 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 		// 将数据绑定
 		m_adapter = new StoresBaseAdapter();
 		listView.setAdapter(m_adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(CollectedStoresActivity.this,
+						StoreInfoActivity.class);
+				int store_id = (Integer) m_listItems.get(position).get(
+						"store_id");
+				intent.putExtra("store_id", store_id);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void initHandlers() {
@@ -206,6 +221,19 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 
 			return convertView;
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

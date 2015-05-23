@@ -14,17 +14,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -53,6 +56,8 @@ public class MyFansActivity extends BaseActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_other_list);
 
+		setActionBarCenterTitle("我的粉丝"); // followers = fans
+		
 		initUser();
 		initListView();
 		initHandlers();
@@ -73,6 +78,15 @@ public class MyFansActivity extends BaseActionBarActivity {
 		// 将数据绑定
 		m_adapter = new StoresBaseAdapter();
 		listView.setAdapter(m_adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(MyFansActivity.this, OtherAccountActivity.class);
+				int userId = (Integer)m_listItems.get(position).get("user_id");
+				intent.putExtra("user_id", userId);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void initHandlers() {
@@ -101,7 +115,7 @@ public class MyFansActivity extends BaseActionBarActivity {
 	private void beginDataRequest() {
 		m_queue = Volley.newRequestQueue(this);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/users/followings/" + m_userId, m_userInfoHandler,
+				+ "/users/followers/" + m_userId, m_userInfoHandler,
 				m_queue);
 		Log.v(LOG_TAG, "beginDataRequest");
 	}
@@ -116,9 +130,9 @@ public class MyFansActivity extends BaseActionBarActivity {
 		// else retCode == 0
 		m_listItems.clear();
 		m_adapter.notifyDataSetChanged();
-		JSONArray jsonArray = jsonObject.getJSONArray("followings");
+		JSONArray jsonArray = jsonObject.getJSONArray("followers");
 		if (jsonArray.length() == 0) {
-			Toast.makeText(this, "TA没有关注任何人！", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "没有粉丝！", Toast.LENGTH_LONG).show();
 			return;
 		}
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -206,6 +220,19 @@ public class MyFansActivity extends BaseActionBarActivity {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

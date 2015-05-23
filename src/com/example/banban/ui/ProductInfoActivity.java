@@ -3,6 +3,8 @@ package com.example.banban.ui;
 /*
  * @author: BruceZhang
  * @description: 随机抢 抢到的某商品，不可再抢，只是静态展示没有功能
+ * 特定抢下面也有一个商品的页面，但是可以抢。
+ * @see com.example.banban.ui.specificbuy.ProductActivity，
  */
 
 import java.util.HashMap;
