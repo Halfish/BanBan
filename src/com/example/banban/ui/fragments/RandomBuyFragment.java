@@ -2,12 +2,14 @@ package com.example.banban.ui.fragments;
 
 /*
  * @author: BruceZhang
- * @description: 随机抢 fragment
+ * @description: 随机抢 fragment，抢到商品后，跳转到ProductInfoActivity，
+ * 查看商品的信息
  */
 
 import java.util.Calendar;
 import java.util.HashMap;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
@@ -16,7 +18,6 @@ import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.ProductInfoActivity;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RandomBuyFragment extends BaseActionBarFragment {
 	private static final String LOG_TAG = RandomBuyFragment.class.getName();
@@ -39,7 +41,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Button m_randomBuyBtn;
 	private TextView m_chanceTextView;
 	private TextView m_infoTextView;
-	private int remainTime = 10;
+	private int remainTime = 100;
 	private Activity m_activity;
 	private RequestQueue m_queue;
 	private Handler m_handler;
@@ -51,8 +53,20 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
-		
+		Log.v(LOG_TAG, "onCreate called");
 		initHandler();
+	}
+	
+	@Override
+	public void onStart() {
+		Log.v(LOG_TAG, "onStart called");
+		super.onStart();
+	}
+
+	@Override
+	public void onResume() {
+		Log.v(LOG_TAG, "onResume called");
+		super.onResume();
 	}
 
 	private void initHandler() {
@@ -62,7 +76,11 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
-					// updataDataFromServer(response);
+					try {
+						updateDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 					Log.v(LOG_TAG, response.toString());
 					break;
 
@@ -72,6 +90,19 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				super.handleMessage(msg);
 			}
 		};
+	}
+
+	private void updateDataFromServer(JSONObject jsonObject)
+			throws JSONException {
+		int product_id = jsonObject.getInt("product_id");
+		if (product_id == -1) {
+			// 没抢到 TODO 看还有几次机会
+			Toast.makeText(m_activity, "没抢到，再试一次吧！", Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(m_activity, "不错呦，抢到了一个！", Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(m_activity, ProductInfoActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override
@@ -96,16 +127,12 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				remainTime = m_pref.getInt("remainTime", 10);
+				remainTime = m_pref.getInt("remainTime", 100);
 				if (remainTime > 0) {
 					beginDataRequest();
 					remainTime--;
 					m_pref.edit().putInt("remainTime", remainTime).commit();
 					m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
-					// TODO generate
-					Intent intent = new Intent(m_activity,
-							ProductInfoActivity.class);
-					startActivity(intent);
 				} else {
 					m_chanceTextView.setVisibility(View.INVISIBLE);
 					m_infoTextView.setVisibility(View.VISIBLE);
@@ -126,13 +153,13 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				+ calendar.get(Calendar.DAY_OF_MONTH);
 
 		if (date.equals(today)) {
-			return m_pref.getInt("remainTime", 10);
+			return m_pref.getInt("remainTime", 100);
 		} else {
 			m_pref.edit().putString("date", today).commit();
-			m_pref.edit().putInt("remainTime", 10).commit();
+			m_pref.edit().putInt("remainTime", 100).commit();
 		}
 
-		return 10;
+		return 100;
 	}
 
 	private void beginDataRequest() {
@@ -141,5 +168,5 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				BBConfigue.SERVER_HTTP + "/products/generate/random",
 				m_handler, m_queue);
 	}
-	
+
 }

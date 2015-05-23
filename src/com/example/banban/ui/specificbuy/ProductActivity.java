@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -166,28 +167,24 @@ public class ProductActivity extends BaseActionBarActivity {
 
 	private void updataZanFromServer(JSONObject response) throws JSONException {
 		int retCode = response.getInt("ret_code");
-		String infoString = "Wrong Code";
 		switch (retCode) {
 		case 0:
-			infoString = "Succeed";
 			m_zan.setText((m_likeNum + 1) + "");
 			m_likeNum++;
+			Toast.makeText(getApplicationContext(), "您赞了这个项目！",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		case 1:
-			infoString = "Invalid query";
-			break;
-
 		case 2:
-			infoString = "Product not exist";
-			break;
-
 		case 3:
-			infoString = "Database exception";
+		case 4:
+			String message = response.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
+					.show();
 			break;
 		}
-		Toast.makeText(getApplicationContext(), infoString, Toast.LENGTH_SHORT)
-				.show();
+
 	}
 
 	private void updataDataFromServer(JSONObject response) throws JSONException {
@@ -256,4 +253,18 @@ public class ProductActivity extends BaseActionBarActivity {
 				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return false;
+	}
+
 }

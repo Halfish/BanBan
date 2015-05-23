@@ -25,7 +25,6 @@ import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +56,7 @@ public class ProductFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); // TODO
+		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); 
 		initHandler();
 	}
 
@@ -117,8 +115,8 @@ public class ProductFragment extends Fragment {
 		item.put("product_img", image);
 		item.put("product_name", name);
 		item.put("like_number", favorites + "");
-		item.put("price", price + "");
-		item.put("remains", amount_spec + "");
+		item.put("price", "价格：" + price + "元");
+		item.put("remains", "剩余" + amount_spec + "个");
 		m_listItems.add(item);
 		
 		m_adapter.notifyDataSetChanged();
