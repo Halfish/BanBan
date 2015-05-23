@@ -36,11 +36,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -67,6 +65,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private SimpleAdapter m_districtsSimpleAdapter;
 	private Map<String, Object> item;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 	private Handler m_handler;
 	private Handler m_citiesHandler;
 	private Handler m_districtHandler;
@@ -82,9 +81,22 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_activity = getActivity();
 		m_progDiag = new ProgressDialog(m_activity);
 		m_queue = Volley.newRequestQueue(m_activity);
+		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		m_listItems = new ArrayList<Map<String, Object>>();
 		initHandler();
+		Log.v(LOG_TAG, "onCreate called");
+	}
 
+	@Override
+	public void onStart() {
+		Log.v(LOG_TAG, "onStart called");
+		super.onStart();
+	}
+
+	@Override
+	public void onResume() {
+		Log.v(LOG_TAG, "onResume called");
+		super.onResume();
 	}
 
 	private void initHandler() {
@@ -478,10 +490,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			String distance = (String) m_listItems.get(position)
 					.get("distance");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue,
-					new BitmapCache());
 			viewHolder.storeImg.setImageUrl(BBConfigue.SERVER_HTTP + storeImg,
-					imageLoader);
+					m_imageLoader);
 
 			// viewHolder.storeImg.setImageDrawable(storeImg);
 			viewHolder.storeNameTV.setText(storeName);

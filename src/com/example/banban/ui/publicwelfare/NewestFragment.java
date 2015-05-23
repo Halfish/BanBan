@@ -26,7 +26,6 @@ import com.example.banban.ui.ProjectActivity;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,11 +37,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NewestFragment extends BaseActionBarFragment {
-	
+
 	public NewestFragment(String orderBy) {
 		super();
 		m_orderBy = orderBy;
@@ -59,14 +57,30 @@ public class NewestFragment extends BaseActionBarFragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_queue = Volley.newRequestQueue(m_activity);
+		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
+		
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.v(LOG_TAG, "onStart called order by: " + m_orderBy);
+	}
+
+	@Override
+	public void onResume() {
+		Log.v(LOG_TAG, "onResume called");
 		beginDataRequest();
+		super.onResume();
 	}
 
 	private void initHandler() {
@@ -93,7 +107,6 @@ public class NewestFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/projects/list?order_by=" + m_orderBy, m_handler, m_queue);
 	}
@@ -131,8 +144,7 @@ public class NewestFragment extends BaseActionBarFragment {
 
 		item = new HashMap<String, Object>();
 		item.put("project_id", project_id + "");
-		item.put("project_img",
-				image);
+		item.put("project_img", image);
 		item.put("project_name", name);
 		item.put("like_number", "34,334");
 		item.put("goal", "目标 " + expect_length + "天" + expect + "元");
@@ -140,7 +152,7 @@ public class NewestFragment extends BaseActionBarFragment {
 		item.put("accumulation", total_support + "元\n已融资");
 		item.put("remain", remaining_days + "天\n剩余时间");
 		m_listItems.add(item);
-		
+
 		m_adapter.notifyDataSetChanged();
 	}
 
@@ -159,10 +171,12 @@ public class NewestFragment extends BaseActionBarFragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						String project_id = (String) m_listItems.get(position).get("project_id");
+						String project_id = (String) m_listItems.get(position)
+								.get("project_id");
 						Intent intent = new Intent(getActivity(),
 								ProjectActivity.class);
-						intent.putExtra("projectId", Integer.parseInt(project_id));
+						intent.putExtra("projectId",
+								Integer.parseInt(project_id));
 						startActivity(intent);
 					}
 				});
@@ -252,10 +266,10 @@ public class NewestFragment extends BaseActionBarFragment {
 					"accumulation");
 			String remain = (String) m_listItems.get(position).get("remain");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
-			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP + projectImg, imageLoader);
-			
-		//	viewHolder.projectImg.setImageDrawable(projectImg);
+			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP
+					+ projectImg, m_imageLoader);
+
+			// viewHolder.projectImg.setImageDrawable(projectImg);
 			viewHolder.projectName.setText(projectName);
 			viewHolder.likeNumber.setText(likeNumber);
 			viewHolder.goal.setText(goal);

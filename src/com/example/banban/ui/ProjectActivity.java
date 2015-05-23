@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -47,7 +46,6 @@ import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.publicwelfare.DetailFragment;
 import com.example.banban.ui.publicwelfare.SupportFragment;
 import com.example.banban.ui.publicwelfare.SupporterFragment;
-import com.example.sortlistview.AlphabetaContactActicity;
 
 public class ProjectActivity extends FragmentActivity {
 

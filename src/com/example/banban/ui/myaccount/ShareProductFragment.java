@@ -50,6 +50,7 @@ public class ShareProductFragment extends Fragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,8 @@ public class ShareProductFragment extends Fragment {
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		m_queue = Volley.newRequestQueue(m_activity);
+		m_imageLoader = new ImageLoader(m_queue,
+				new BitmapCache());
 		initHandler();
 	}
 	
@@ -245,10 +248,8 @@ public class ShareProductFragment extends Fragment {
 			String distance = (String) m_listItems.get(position).get("price");
 			String remains = (String) m_listItems.get(position).get("remains");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue,
-					new BitmapCache());
 			viewHolder.productImg.setImageUrl(
-					BBConfigue.SERVER_HTTP + productImg, imageLoader);
+					BBConfigue.SERVER_HTTP + productImg, m_imageLoader);
 
 			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);

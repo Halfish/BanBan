@@ -25,7 +25,6 @@ import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ShoppingCarFragment extends Fragment {
@@ -52,8 +50,7 @@ public class ShoppingCarFragment extends Fragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
-
-	private NetworkImageView m_image;
+	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,8 @@ public class ShoppingCarFragment extends Fragment {
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		m_queue = Volley.newRequestQueue(m_activity);
-
+		m_imageLoader = new ImageLoader(m_queue,
+				new BitmapCache());
 		initHandler();
 	}
 
@@ -86,6 +84,12 @@ public class ShoppingCarFragment extends Fragment {
 				super.handleMessage(msg);
 			}
 		};
+	}
+	
+	@Override
+	public void onResume() {
+		beginDataRequest();
+		super.onResume();
 	}
 
 	private void beginDataRequest() {
@@ -130,8 +134,8 @@ public class ShoppingCarFragment extends Fragment {
 		item.put("product_id", product_id);
 		item.put("product_name", product_name);
 		item.put("like_number", favorites + "");
-		item.put("price", price + "");
-		item.put("remains", amount_spec);
+		item.put("price", "价格：" + price + "");
+		item.put("remains", "还剩余" + amount_spec + "个");
 		m_listItems.add(item);
 
 		m_adapter.notifyDataSetChanged();
@@ -143,7 +147,6 @@ public class ShoppingCarFragment extends Fragment {
 		View rootView = inflater.inflate(
 				R.layout.bb_fragment_specificbuy_product, container, false);
 
-		m_image = (NetworkImageView) rootView.findViewById(R.id.img_product);
 		m_gridView = (GridView) rootView.findViewById(R.id.gv_product);
 		m_adapter = new StoreInfoAdapter();
 		m_gridView.setAdapter(m_adapter);
@@ -165,7 +168,6 @@ public class ShoppingCarFragment extends Fragment {
 					}
 				});
 
-		beginDataRequest();
 		return rootView;
 	}
 
@@ -244,10 +246,8 @@ public class ShoppingCarFragment extends Fragment {
 			viewHolder.priceTV.setText(distance);
 			viewHolder.remainsTV.setText(remains);
 
-			ImageLoader imageLoader = new ImageLoader(m_queue,
-					new BitmapCache());
 			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image,
-					imageLoader);
+					m_imageLoader);
 
 			return convertView;
 		}
