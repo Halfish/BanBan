@@ -9,7 +9,7 @@
         android:layout_height="80dp"
         android:layout_margin="10dp"
         android:contentDescription="@string/cont_descrip"
-        android:src="#eee" />
+        android:src="@drawable/ic_launcher" />
 
     <LinearLayout
         android:layout_width="wrap_content"

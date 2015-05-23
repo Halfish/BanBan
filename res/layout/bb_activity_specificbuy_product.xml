@@ -44,14 +44,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="80dp" >
+        android:layout_marginBottom="70dp" >
 
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:textSize="18sp"
             android:text="@string/bb_zhao"
             android:textColor="#ccc" />
 
@@ -61,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_product_name"
             android:layout_margin="3dp"
-            android:textSize="18sp"
             android:text="@string/bb_origin_price"
             android:textColor="#ccc" />
 
@@ -71,7 +69,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_product_name"
             android:layout_margin="3dp"
-            android:textSize="18sp"
             android:layout_toEndOf="@id/tv_origin_price"
             android:text="@string/bb_current_price"
             android:textColor="#ccc" />
@@ -88,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:textSize="18sp"
             android:text="@string/bb_buy" />
 
         <TextView
@@ -97,7 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:textSize="18sp"
             android:text="@string/bb_remains" />
 
         <TextView
@@ -106,7 +101,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/tv_remains"
             android:layout_alignParentEnd="true"
-            android:textSize="18sp"
             android:layout_margin="5dp"
             android:text="@string/bb_fund" />
     </RelativeLayout>

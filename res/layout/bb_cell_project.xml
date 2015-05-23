@@ -13,10 +13,10 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_project"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/cont_descrip"
             android:scaleType="fitXY"
-            android:src="#eee" />
+            android:src="@drawable/bb_valeera_sanguinar" />
 
         <!-- 点赞图标和点赞数 -->
 

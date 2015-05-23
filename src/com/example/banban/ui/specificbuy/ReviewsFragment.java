@@ -58,7 +58,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_storeId = m_activity.getIntent().getIntExtra("store_id", -1); // TODO
+		m_storeId = m_activity.getIntent().getIntExtra("store_id", 1); // TODO
 		m_listItems = new ArrayList<Map<String, Object>>();
 		initHandler();
 	}

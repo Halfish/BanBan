@@ -39,16 +39,18 @@ import android.widget.Toast;
 public class ProductInfoActivity extends BaseActionBarActivity {
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private static final int SUCCESS_CODE = 0;
+	private static final int NOT_CHOSEN_CODE = 1;
+	private static final int DATABASE_EXCEPTION_CDDE = 2;
 	private static final String LOG_TAG = ProductInfoActivity.class.getName();
 
 	private TextView m_likeNumberTV;
 	private TextView m_nameTextView;
 	private TextView m_priceTextView;
 	private TextView m_storeNameTextView;
-	private TextView m_donateTextView;
 	private ImageView m_image;
 	private ImageButton m_zanButton;
-	private Handler m_zanHandler;
+	private Handler m_handler2;
 
 	private int m_productId = -1;
 	private int m_likeNum;
@@ -71,7 +73,6 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		m_nameTextView = (TextView) findViewById(R.id.tv_product_name);
 		m_priceTextView = (TextView) findViewById(R.id.tv_product_price);
 		m_storeNameTextView = (TextView) findViewById(R.id.tv_store_name);
-		m_donateTextView = (TextView)findViewById(R.id.tv_donate);
 		m_image = (ImageView) findViewById(R.id.img_product);
 		m_image.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -85,13 +86,13 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("product_id", m_productId + "");
 					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-							+ "/products/favorites/add", m_zanHandler, m_queue);
+							+ "/products/favorites/add", m_handler2, m_queue);
 				}
 			}
 		});
 	}
-
-	@SuppressLint("InflateParams")
+	
+	@SuppressLint("InflateParams") 
 	private void initActionBar() {
 		m_actionBar = getActionBar();
 
@@ -105,12 +106,14 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		m_actionBar.setDisplayShowCustomEnabled(true);
 		m_actionBar.setDisplayShowTitleEnabled(false);
 		m_actionBar.setHomeButtonEnabled(true);
-		m_actionBar.setIcon(R.drawable.bb_back);
+		m_actionBar.setIcon(R.drawable.bb_back);	
 	}
 
+
 	private void beginDataRequest() {
-		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/products/show/random", m_handler, m_queue);
+		HttpUtil.NormalPostRequest(new HashMap<String, String>(),
+				BBConfigue.SERVER_HTTP + "/products/generate/random",
+				m_handler, m_queue);
 	}
 
 	private void initHandler() {
@@ -135,7 +138,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 			}
 		};
 
-		m_zanHandler = new Handler(getMainLooper()) {
+		m_handler2 = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -160,15 +163,19 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 	private void updataDataFromServer(JSONObject response) throws JSONException {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
-		case 0:
+		case SUCCESS_CODE:
 			parseDataFromJson(response);
+			Log.v(LOG_TAG, response.toString());
 			break;
 
-		case 1:
-		case 2:
-			String message = response.getString("message");
-			Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
-					.show();
+		case NOT_CHOSEN_CODE:
+			Toast.makeText(getBaseContext(), "Generate Failed!",
+					Toast.LENGTH_SHORT).show();
+			break;
+
+		case DATABASE_EXCEPTION_CDDE:
+			Toast.makeText(getBaseContext(), "Database Exception!",
+					Toast.LENGTH_SHORT).show();
 			break;
 
 		default:
@@ -196,7 +203,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		case 3:
 			infoString = "Database exception";
 			break;
-
+			
 		case 4:
 			infoString = "您已经点过赞了！";
 			break;
@@ -209,19 +216,23 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		m_productId = response.getInt("product_id");
+		if (m_productId == -1) {
+			Toast.makeText(this, "没有抢到商品，再抢一次吧~", Toast.LENGTH_LONG).show();
+		}
 		String product_name = response.getString("product_name");
 		int original_price = response.getInt("original_price");
-		int donate = response.getInt("donate");
+		// int donate = response.getInt("donate");
 		int favorite = response.getInt("favorites");
 		m_likeNum = favorite;
 		String image = response.getString("image");
+		// int store_id = response.getInt("store_id");
 		String store_name = response.getString("store_name");
+		
 
 		m_likeNumberTV.setText(favorite + "");
-		m_nameTextView.setText("产品名：" + product_name);
-		m_priceTextView.setText("原价：" + original_price + "元");
-		m_storeNameTextView.setText("商家：" + store_name);
-		m_donateTextView.setText("将获得公益资金" + donate + "元");
+		m_nameTextView.setText(product_name);
+		m_priceTextView.setText(original_price + "");
+		m_storeNameTextView.setText(store_name);
 
 		updateImage(image);
 	}
@@ -232,13 +243,13 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			break;
+			break;	
 
 		default:
 			break;

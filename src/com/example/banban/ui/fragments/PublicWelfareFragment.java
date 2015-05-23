@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import com.example.banban.R;
 import com.example.banban.ui.publicwelfare.NewestFragment;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -20,7 +22,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,35 +32,22 @@ import android.widget.TextView;
 
 public class PublicWelfareFragment extends BaseActionBarFragment {
 
-	private static final String LOG_TAG = PublicWelfareFragment.class.getName();
-	
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView image;
-	private TextView view1, view2, view3, view4;
+	private TextView view1, view2, view3;
 	private int currIndex;// 当前页卡编号
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
-	private static final int MAX_CACHE_PAGE = 1; // 缓存Fragment的最大数量
 	
+	private Activity m_activity;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.v(LOG_TAG, "onCreate called");
+		m_activity = getActivity();
 	}
 	
-	@Override
-	public void onStart() {
-		Log.v(LOG_TAG, "onStart called");
-		super.onStart();
-	}
-	
-	@Override
-	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
-		super.onResume();
-	}
-
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -79,12 +67,10 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 		view1 = (TextView) view.findViewById(R.id.tv_guid1);
 		view2 = (TextView) view.findViewById(R.id.tv_guid2);
 		view3 = (TextView) view.findViewById(R.id.tv_guid3);
-		view4 = (TextView) view.findViewById(R.id.tv_guid4);
 
 		view1.setOnClickListener(new txListener(0));
 		view2.setOnClickListener(new txListener(1));
 		view3.setOnClickListener(new txListener(2));
-		view4.setOnClickListener(new txListener(3));
 	}
 
 	private class txListener implements View.OnClickListener {
@@ -128,7 +114,6 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 				fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
-		mPager.setOffscreenPageLimit(MAX_CACHE_PAGE );
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {

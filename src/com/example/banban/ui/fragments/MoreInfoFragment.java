@@ -13,10 +13,11 @@ import com.example.banban.ui.BBUIUtil;
 import com.example.newuser.LoginActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import android.widget.Toast;
 
 public class MoreInfoFragment extends BaseActionBarFragment {
 
-	private static final String LOG_TAG = MoreInfoFragment.class.getName();
 	private Button m_aboutButton;
 	private Button m_inviteButton;
 	private Button m_feedBackButton;
@@ -41,19 +41,6 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		Log.v(LOG_TAG, "onCreate called");
-	}
-	
-	@Override
-	public void onStart() {
-		Log.v(LOG_TAG, "onStart called");
-		super.onStart();
-	}
-	
-	@Override
-	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
-		super.onResume();
 	}
 
 	@Override
@@ -92,7 +79,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText("我是分享文本");
 		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		//oks.setImagePath("/sdcard/test.jpg");// 确保SDcard下面存在此张图片
+		oks.setImagePath("/sdcard/test.jpg");// 确保SDcard下面存在此张图片
 		// url仅在微信（包括好友和朋友圈）中使用
 		oks.setUrl("http://sharesdk.cn");
 		// comment是我对这条分享的评论，仅在人人网和QQ空间使用
@@ -140,8 +127,14 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 
 		m_clearButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO 首先你得有缓存
+				SharedPreferences pref = getActivity().getSharedPreferences(
+						"account", Context.MODE_PRIVATE);
+				pref.edit().putString("username", "").commit();
+				pref.edit().putString("password", "").commit();
 				Toast.makeText(m_activity, "已经清除", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intent);
+				getActivity().finish();
 			}
 		});
 

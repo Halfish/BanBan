@@ -26,6 +26,7 @@ import com.example.banban.ui.ProjectActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProjectFragment extends Fragment {
@@ -51,7 +53,6 @@ public class ProjectFragment extends Fragment {
 
 	private Handler m_handler;
 	private RequestQueue m_queue;
-	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,6 @@ public class ProjectFragment extends Fragment {
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
 	}
 
@@ -86,12 +86,6 @@ public class ProjectFragment extends Fragment {
 		};
 	}
 
-	@Override
-	public void onResume() {
-		beginDataRequest();
-		super.onResume();
-	}
-	
 	private void beginDataRequest() {
 		
 		int userId = getActivity().getIntent().getIntExtra("user_id", -1);
@@ -174,7 +168,7 @@ public class ProjectFragment extends Fragment {
 					}
 				});
 
-		
+		beginDataRequest();
 		return rootView;
 	}
 
@@ -260,7 +254,8 @@ public class ProjectFragment extends Fragment {
 					"accumulation");
 			String remain = (String) m_listItems.get(position).get("remain");
 
-			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP + projectImg, m_imageLoader);
+			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP + projectImg, imageLoader);
 			
 			//viewHolder.projectImg.setImageDrawable(projectImg);
 			viewHolder.projectName.setText(projectName);

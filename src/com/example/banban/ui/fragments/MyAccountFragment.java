@@ -25,6 +25,8 @@ import com.example.banban.ui.otheraccount.CollectedProjectsActivity;
 import com.example.banban.ui.otheraccount.CollectedStoresActivity;
 import com.example.banban.ui.otheraccount.FollowingOtherPeopleActivity;
 import com.example.banban.ui.otheraccount.MyFansActivity;
+import com.example.banban.ui.otheraccount.OtherAccountActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -55,7 +57,7 @@ import android.widget.TextView;
 
 public class MyAccountFragment extends BaseActionBarFragment {
 
-	private static final String LOG_TAG = MyAccountFragment.class.getName();
+	protected static final String LOG_TAG = MyAccountFragment.class.getName();
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView image;
@@ -78,7 +80,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private Handler m_handler;
 	private Handler m_handler2;
 	private RequestQueue m_queue;
-	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,25 +89,9 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
 		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
-		
-		Log.v(LOG_TAG, "onCreate called");
-	}
-	
-	@Override
-	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
-		super.onResume();
 	}
 
-	@Override
-	public void onStart() {
-		Log.v(LOG_TAG, "onStart called");
-		super.onStart();
-	}
-
-	
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {
 			@Override
@@ -167,11 +152,11 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			return;
 		}
 		String image = jsonObject.getString("image");
-		
+		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
 				R.drawable.default_head, R.drawable.default_head);
-		m_imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
-		
+		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
+
 		String username = jsonObject.getString("username");
 		m_nickName.setText(username);
 	}
@@ -315,7 +300,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 				fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
-		mPager.setOffscreenPageLimit(4);
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {
