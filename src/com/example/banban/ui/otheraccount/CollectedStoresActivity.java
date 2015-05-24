@@ -38,7 +38,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
-import com.example.banban.ui.specificbuy.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreActivity;
 
 public class CollectedStoresActivity extends BaseActionBarActivity {
 	private static final String LOG_TAG = CollectedStoresActivity.class
@@ -81,7 +81,7 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(CollectedStoresActivity.this,
-						StoreInfoActivity.class);
+						StoreActivity.class);
 				int store_id = (Integer) m_listItems.get(position).get(
 						"store_id");
 				intent.putExtra("store_id", store_id);

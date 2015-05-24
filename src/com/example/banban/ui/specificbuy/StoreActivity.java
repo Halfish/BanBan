@@ -13,8 +13,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
@@ -43,9 +46,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StoreInfoActivity extends FragmentActivity {
+public class StoreActivity extends FragmentActivity {
 
-	private static final String LOG_TAG = StoreInfoActivity.class.getName();
+	private static final String LOG_TAG = StoreActivity.class.getName();
 
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -67,13 +70,14 @@ public class StoreInfoActivity extends FragmentActivity {
 
 	private ImageButton m_likeButton;
 	private ImageButton m_collectButton;
+	private ImageView m_storeImageView;
 	
 	private ActionBar m_actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.bb_activity_store_info);
+		setContentView(R.layout.bb_activity_store);
 
 		initWidgets();
 
@@ -91,6 +95,7 @@ public class StoreInfoActivity extends FragmentActivity {
 	private void initWidgets() {
 		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
 		m_storeName = (TextView) findViewById(R.id.tv_store_name);
+		m_storeImageView = (ImageView)findViewById(R.id.img_store);
 
 		m_likeButton = (ImageButton) findViewById(R.id.img_like);
 		m_collectButton = (ImageButton) findViewById(R.id.img_collect);
@@ -264,10 +269,18 @@ public class StoreInfoActivity extends FragmentActivity {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		int total_donate = response.getInt("total_donate");
-		// String image = response.getString("image");
+		String image = response.getString("image");
 		String name = response.getString("name");
 		m_totalDonate.setText("累计捐款：" + total_donate + " 元");
-		m_storeName.setText(name);
+		m_storeName.setText(name); //TODO
+		updateImage(image);
+	}
+	
+	private void updateImage(String image) {
+		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageListener listener = ImageLoader.getImageListener(m_storeImageView,
+				R.drawable.loading_01, R.drawable.loading_01);
+		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 	}
 
 	/*
@@ -320,7 +333,7 @@ public class StoreInfoActivity extends FragmentActivity {
 	public void InitViewPager() {
 		mPager = (ViewPager) findViewById(R.id.viewpager);
 		fragmentList = new ArrayList<Fragment>();
-		fragmentList.add(new ProductFragment());
+		fragmentList.add(new ProductsFragment());
 		fragmentList.add(new StoreInfoFragment());
 		fragmentList.add(new ReviewsFragment());
 
@@ -329,6 +342,7 @@ public class StoreInfoActivity extends FragmentActivity {
 				getSupportFragmentManager(), fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
+		mPager.setOffscreenPageLimit(2);
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {

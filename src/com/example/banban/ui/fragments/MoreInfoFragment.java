@@ -43,35 +43,45 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		m_activity = getActivity();
 		Log.v(LOG_TAG, "onCreate called");
 	}
-	
+
 	@Override
 	public void onStart() {
 		Log.v(LOG_TAG, "onStart called");
 		super.onStart();
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
 		super.onResume();
 	}
 
+	private View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.bb_fragment_more_info, container,
-				false);
-
-		m_aboutButton = (Button) view.findViewById(R.id.btn_about_banban);
-		m_inviteButton = (Button) view.findViewById(R.id.btn_invite);
-		m_feedBackButton = (Button) view.findViewById(R.id.btn_feedback);
-		m_remindButton = (Button) view.findViewById(R.id.btn_remind);
-		m_payAssistButton = (Button) view.findViewById(R.id.btn_pay_assist);
-		m_clearButton = (Button) view.findViewById(R.id.btn_clear_cache);
-		m_checkUpdateButton = (Button) view.findViewById(R.id.btn_check_update);
-		m_logoutButton = (Button) view.findViewById(R.id.btn_logout);
-		initButtons(view);
+		if (view == null) {
+			view = inflater.inflate(R.layout.bb_fragment_more_info, container,
+					false);
+			m_aboutButton = (Button) view.findViewById(R.id.btn_about_banban);
+			m_inviteButton = (Button) view.findViewById(R.id.btn_invite);
+			m_feedBackButton = (Button) view.findViewById(R.id.btn_feedback);
+			m_remindButton = (Button) view.findViewById(R.id.btn_remind);
+			m_payAssistButton = (Button) view.findViewById(R.id.btn_pay_assist);
+			m_clearButton = (Button) view.findViewById(R.id.btn_clear_cache);
+			m_checkUpdateButton = (Button) view
+					.findViewById(R.id.btn_check_update);
+			m_logoutButton = (Button) view.findViewById(R.id.btn_logout);
+			initButtons(view);
+		}
+		// 缓存的view需要判断是否已经被加过parent，
+		// 如果有parent需要从parent删除，要不然会发生这个view已经有parent的错误。
+		ViewGroup parent = (ViewGroup) view.getParent();
+		if (parent != null) {
+			parent.removeView(view);
+		}
 
 		return view;
 	}
@@ -92,7 +102,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText("我是分享文本");
 		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		//oks.setImagePath("/sdcard/test.jpg");// 确保SDcard下面存在此张图片
+		// oks.setImagePath("/sdcard/test.jpg");// 确保SDcard下面存在此张图片
 		// url仅在微信（包括好友和朋友圈）中使用
 		oks.setUrl("http://sharesdk.cn");
 		// comment是我对这条分享的评论，仅在人人网和QQ空间使用

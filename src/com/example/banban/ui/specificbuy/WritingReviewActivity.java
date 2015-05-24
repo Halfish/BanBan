@@ -18,6 +18,7 @@ import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +39,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 	private Button m_publishButton;
 	private RequestQueue m_queue;
 	private Handler m_handler;
+	private ProgressDialog m_progDialog;
 
 	private int m_storeId;
 	private double m_rating;
@@ -62,13 +64,15 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 
 			}
 		});
-
+		m_progDialog = new ProgressDialog(this);
 		m_publishButton = (Button) findViewById(R.id.btn_publish);
 		m_publishButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				m_rating = m_ratingBar.getRating();
 				String review = m_editText.getText().toString();
 				if (!review.equals("")) {
+					m_progDialog.setMessage("正在发布评论~");
+					m_progDialog.show();
 					beginDataRequest(review);
 				}
 			}
@@ -81,7 +85,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		map.put("store_id", m_storeId + "");
 		map.put("rating", m_rating + "");
 		map.put("content", review);
-		map.put("image", "");
+		map.put("image", ""); // TODO
 
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/stores/reviews/add", m_handler, m_queue);
@@ -114,7 +118,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			Toast.makeText(this, "Review Succeed!", Toast.LENGTH_SHORT).show();
+			m_progDialog.dismiss();
 			finish();
 			break;
 

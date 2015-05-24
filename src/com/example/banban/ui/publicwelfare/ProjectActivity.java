@@ -7,6 +7,8 @@ package com.example.banban.ui.publicwelfare;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -65,6 +68,8 @@ public class ProjectActivity extends FragmentActivity {
 	private ImageView m_image;
 
 	private Handler m_handler;
+	private Handler m_likeHandler;
+	private Handler m_collectHandler;
 	private RequestQueue m_queue;
 	private ActionBar m_actionBar;
 
@@ -141,6 +146,52 @@ public class ProjectActivity extends FragmentActivity {
 				super.handleMessage(msg);
 			}
 		};
+
+		m_likeHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						parseLikeDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+				case HttpUtil.FAILURE_CODE:
+					Log.v(LOG_TAG, "failed");
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+		
+		m_collectHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						parseCollectDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+				case HttpUtil.FAILURE_CODE:
+					Log.v(LOG_TAG, "failed");
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 
 	private void parseDataFromServer(JSONObject response) throws JSONException {
@@ -167,9 +218,44 @@ public class ProjectActivity extends FragmentActivity {
 
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_image,
-				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
+				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + imageUrl, listener);
 
+	}
+
+	private void parseLikeDataFromServer(JSONObject response)
+			throws JSONException {
+		int ret_code = response.getInt("ret_code");
+		switch (ret_code) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			String message = response.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	private void parseCollectDataFromServer(JSONObject response)
+			throws JSONException {
+		int ret_code = response.getInt("ret_code");
+		switch (ret_code) {
+		case 0:
+		case 1:
+		case 2:
+			String message = response.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	/*
@@ -277,15 +363,51 @@ public class ProjectActivity extends FragmentActivity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.bb_menu_activity_project, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem zanItem = menu.getItem(0);
+		Log.v(LOG_TAG, zanItem.getTitle().toString());
+		// TODO
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			break;
 
+		case R.id.menu_like:
+			beginLikeRequest();
+			break;
+
+		case R.id.menu_collect:
+			beginCollectRequest();
+			break;
+
 		default:
 			break;
 		}
 		return false;
+	}
+
+	private void beginLikeRequest() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("project_id", m_projectId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/projects/favorites/add", m_likeHandler, m_queue);
+	}
+
+	private void beginCollectRequest() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("project_id", m_projectId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/users/bookmarks/projects/add", m_collectHandler, m_queue);
 	}
 }

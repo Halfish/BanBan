@@ -110,6 +110,7 @@ public class BBMainActivity extends FragmentActivity {
 		m_tabHost.addTab(
 				m_tabHost.newTabSpec("more_info").setIndicator(indicator),
 				MoreInfoFragment.class, null);
+		
 	}
 
 	private View getIndicatorView(int name, int layoutId) {

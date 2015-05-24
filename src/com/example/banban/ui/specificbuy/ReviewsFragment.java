@@ -58,11 +58,20 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_storeId = m_activity.getIntent().getIntExtra("store_id", -1); // TODO
+		m_storeId = m_activity.getIntent().getIntExtra("store_id", -1);
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_queue = Volley.newRequestQueue(getActivity());
+
 		initHandler();
 	}
 
+	@Override
+	public void onResume() {
+		Log.v(LOG_TAG, "onResume called");
+		beginDataRequest(); // update data when resume from WritingReviewActivity
+		super.onResume();
+	}
+	
 	private void initHandler() {
 		m_handler = new Handler(getActivity().getMainLooper()) {
 			@Override
@@ -96,7 +105,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 
 		// else ret_code == 0
 		m_listItems.clear();
-		
+
 		// int avg_rating = response.getInt("avg_ration");
 		JSONArray jsonArray = response.getJSONArray("reviews");
 		addItem(jsonArray);
@@ -123,6 +132,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			m_listItems.add(m_item);
 			m_adapter.notifyDataSetChanged();
 		}
+		m_listView.smoothScrollToPosition(m_listView.getCount() - 1);
 	}
 
 	@Override
@@ -137,12 +147,12 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		m_adapter = new ReviewsAdapter();
 		m_listView.setAdapter(m_adapter);
 
-		beginDataRequest();
+		beginDataRequest(); // get date when created
 		return rootView;
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(getActivity());
+
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/reviews/"
 				+ m_storeId, m_handler, m_queue);
 	}
@@ -159,9 +169,9 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		RatingBar mRatingBar;
 		TextView mDate;
 		TextView mContent;
-		//ImageView mFirstImg;
-		//ImageView mSecondImg;
-		//ImageView mThirdImg;
+		// ImageView mFirstImg;
+		// ImageView mSecondImg;
+		// ImageView mThirdImg;
 	}
 
 	private class ReviewsAdapter extends BaseAdapter {
@@ -206,12 +216,12 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 						.findViewById(R.id.tv_review_time);
 				viewHolder.mContent = (TextView) convertView
 						.findViewById(R.id.tv_reviews);
-//				viewHolder.mFirstImg = (ImageView) convertView
-//						.findViewById(R.id.img_review1);
-//				viewHolder.mSecondImg = (ImageView) convertView
-//						.findViewById(R.id.img_review2);
-//				viewHolder.mThirdImg = (ImageView) convertView
-//						.findViewById(R.id.img_review3);
+				// viewHolder.mFirstImg = (ImageView) convertView
+				// .findViewById(R.id.img_review1);
+				// viewHolder.mSecondImg = (ImageView) convertView
+				// .findViewById(R.id.img_review2);
+				// viewHolder.mThirdImg = (ImageView) convertView
+				// .findViewById(R.id.img_review3);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -225,8 +235,8 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 					.get("username");
 			String rating = (String) m_listItems.get(position).get("rating");
 			String content = (String) m_listItems.get(position).get("content");
-			String time = (String)m_listItems.get(position).get("time");
-			//String image = (String) m_listItems.get(position).get("image");
+			String time = (String) m_listItems.get(position).get("time");
+			// String image = (String) m_listItems.get(position).get("image");
 
 			viewHolder.mUsername.setText(username);
 			viewHolder.mRatingBar.setRating(Float.parseFloat(rating));

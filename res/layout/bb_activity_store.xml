@@ -14,12 +14,12 @@
         android:layout_weight="2" >
 
         <ImageView
-            android:id="@+id/img_product"
+            android:id="@+id/img_store"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/cont_descrip"
             android:scaleType="fitXY"
-            android:src="@drawable/heartstone_thrall" />
+            android:src="#eee" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"

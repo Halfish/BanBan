@@ -6,9 +6,7 @@
         android:id="@+id/action_puttings"
         android:orderInCategory="1"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/action_puttings"
         android:textSize="20sp"
-     />
-    
+        android:title="@string/action_puttings"/>
 
 </menu>

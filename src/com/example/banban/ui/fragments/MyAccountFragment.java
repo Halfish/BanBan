@@ -90,10 +90,10 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_queue = Volley.newRequestQueue(m_activity);
 		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
-		
+
 		Log.v(LOG_TAG, "onCreate called");
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
@@ -106,7 +106,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		super.onStart();
 	}
 
-	
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {
 			@Override
@@ -167,11 +166,11 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			return;
 		}
 		String image = jsonObject.getString("image");
-		
+
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
 				R.drawable.default_head, R.drawable.default_head);
 		m_imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
-		
+
 		String username = jsonObject.getString("username");
 		m_nickName.setText(username);
 	}
@@ -190,30 +189,44 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_balanceTextView.setText(balance + "");
 	}
 
+	private View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.bb_fragment_my_account,
-				container, false);
+		if (view == null) {
+			view = inflater.inflate(R.layout.bb_fragment_my_account, container,
+					false);
 
-		m_donateTextView = (TextView) view.findViewById(R.id.tv_total_donate);
-		m_balanceTextView = (TextView) view.findViewById(R.id.tv_balance);
-		m_nickName = (TextView) view.findViewById(R.id.tv_nickname);
-		m_userPic = (ImageView) view.findViewById(R.id.btn_nickname);
+			m_donateTextView = (TextView) view
+					.findViewById(R.id.tv_total_donate);
+			m_balanceTextView = (TextView) view.findViewById(R.id.tv_balance);
+			m_nickName = (TextView) view.findViewById(R.id.tv_nickname);
+			m_userPic = (ImageView) view.findViewById(R.id.btn_nickname);
 
-		m_storeButton = (Button) view.findViewById(R.id.btn_stores);
-		m_projectButton = (Button) view.findViewById(R.id.btn_projects);
-		m_followButton = (Button) view.findViewById(R.id.btn_following);
-		m_followingsButton = (Button) view.findViewById(R.id.btn_followings);
+			m_storeButton = (Button) view.findViewById(R.id.btn_stores);
+			m_projectButton = (Button) view.findViewById(R.id.btn_projects);
+			m_followButton = (Button) view.findViewById(R.id.btn_following);
+			m_followingsButton = (Button) view
+					.findViewById(R.id.btn_followings);
 
-		initButtons();
+			initButtons();
 
-		InitTextView(view);
-		InitImage(view);
-		InitViewPager(view);
+			InitTextView(view);
+			InitImage(view);
+			InitViewPager(view);
 
-		beginDataRequest();
+			beginDataRequest();
+		}
+
+		// 缓存的view需要判断是否已经被加过parent，
+		// 如果有parent需要从parent删除，要不然会发生这个view已经有parent的错误。
+		ViewGroup parent = (ViewGroup) view.getParent();
+		if (parent != null) {
+			parent.removeView(view);
+		}
+
 		return view;
 	}
 

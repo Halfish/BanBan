@@ -22,7 +22,7 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
-import com.example.banban.ui.specificbuy.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreActivity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -269,24 +269,36 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		}
 	}
 
+	private View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.bb_fragment_specfic_buy,
-				container, false);
+		if (view == null) {
+			view = inflater.inflate(R.layout.bb_fragment_specfic_buy,
+					container, false);
 
-		m_searchView = (SearchView) view.findViewById(R.id.sv_store);
-		m_citySpinner = (Spinner) view.findViewById(R.id.sp_city);
-		m_districtSpinner = (Spinner) view.findViewById(R.id.sp_district);
-		m_smartOrderSpinner = (Spinner) view.findViewById(R.id.sp_smart_order);
-		m_listView = (ListView) view.findViewById(R.id.lv_stores);
+			m_searchView = (SearchView) view.findViewById(R.id.sv_store);
+			m_citySpinner = (Spinner) view.findViewById(R.id.sp_city);
+			m_districtSpinner = (Spinner) view.findViewById(R.id.sp_district);
+			m_smartOrderSpinner = (Spinner) view
+					.findViewById(R.id.sp_smart_order);
+			m_listView = (ListView) view.findViewById(R.id.lv_stores);
 
-		initSearchView();
-		initSpinners();
-		initListView();
+			initSearchView();
+			initSpinners();
+			initListView();
+			beginDataRequest();
+		}
 
-		beginDataRequest();
+		// 缓存的view需要判断是否已经被加过parent，
+		// 如果有parent需要从parent删除，要不然会发生这个view已经有parent的错误。
+		ViewGroup parent = (ViewGroup) view.getParent();
+		if (parent != null) {
+			parent.removeView(view);
+		}
+
 		return view;
 	}
 
@@ -415,7 +427,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 								"id");
 
 						Intent intent = new Intent(m_activity,
-								StoreInfoActivity.class);
+								StoreActivity.class);
 						intent.putExtra("store_id", store_id);
 						startActivity(intent);
 					}

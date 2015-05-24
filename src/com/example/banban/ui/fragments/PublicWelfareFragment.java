@@ -5,7 +5,6 @@ package com.example.banban.ui.fragments;
  * @description: 公益众筹 fragment
  */
 
-
 import java.util.ArrayList;
 
 import com.example.banban.R;
@@ -32,7 +31,7 @@ import android.widget.TextView;
 public class PublicWelfareFragment extends BaseActionBarFragment {
 
 	private static final String LOG_TAG = PublicWelfareFragment.class.getName();
-	
+
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView image;
@@ -41,36 +40,46 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
 	private static final int EXTRA_CACHE_PAGE = 1; // 缓存Fragment的最大数量
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(LOG_TAG, "onCreate called");
 	}
-	
+
 	@Override
 	public void onStart() {
 		Log.v(LOG_TAG, "onStart called");
 		super.onStart();
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
 		super.onResume();
 	}
 
-	
+	private View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.bb_fragment_public_welfare,
-				container, false);
+		if (view == null) {
+			view = inflater.inflate(R.layout.bb_fragment_public_welfare,
+					container, false);
 
-		InitTextView(view);
-		InitImage(view);
-		InitViewPager(view);
+			InitTextView(view);
+			InitImage(view);
+			InitViewPager(view);
+		}
+
+		// 缓存的view需要判断是否已经被加过parent，
+		// 如果有parent需要从parent删除，要不然会发生这个view已经有parent的错误。
+		ViewGroup parent = (ViewGroup) view.getParent();
+		if (parent != null) {
+			parent.removeView(view);
+		}
 
 		return view;
 	}
@@ -128,7 +137,7 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 				fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
-		mPager.setOffscreenPageLimit(EXTRA_CACHE_PAGE );
+		mPager.setOffscreenPageLimit(EXTRA_CACHE_PAGE);
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {

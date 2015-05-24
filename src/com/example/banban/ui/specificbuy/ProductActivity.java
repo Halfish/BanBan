@@ -250,7 +250,7 @@ public class ProductActivity extends BaseActionBarActivity {
 	private void updateImage(String image) {
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_image,
-				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
+				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 	}
 

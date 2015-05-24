@@ -57,7 +57,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		Log.v(LOG_TAG, "onCreate called");
 		initHandler();
 	}
-	
+
 	@Override
 	public void onStart() {
 		Log.v(LOG_TAG, "onStart called");
@@ -106,14 +106,26 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		}
 	}
 
+	private View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.bb_fragment_random_buy,
-				container, false);
-		setActionBarCenterTitle(R.string.bb_tab_random_buy);
-		initWidgets(view);
+		if (view == null) {
+			view = inflater.inflate(R.layout.bb_fragment_random_buy, container,
+					false);
+			setActionBarCenterTitle(R.string.bb_tab_random_buy);
+			initWidgets(view);
+		}
+
+		// 缓存的view需要判断是否已经被加过parent，
+		// 如果有parent需要从parent删除，要不然会发生这个view已经有parent的错误。
+		ViewGroup parent = (ViewGroup) view.getParent();
+		if (parent != null) {
+			parent.removeView(view);
+		}
+
 		return view;
 	}
 

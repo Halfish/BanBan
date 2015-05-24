@@ -9,7 +9,7 @@
         android:layout_height="210dp"
         android:scaleType="fitXY"
         android:contentDescription="@string/cont_descrip"
-        android:src="@drawable/bb_store_zhao_big" />
+        android:src="#eee" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

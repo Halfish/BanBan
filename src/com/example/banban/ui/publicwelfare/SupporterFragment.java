@@ -123,6 +123,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			addItem(jsonObject);
 		}
+		m_listView.smoothScrollToPosition(m_listView.getCount() - 1);
 	}
 
 	private void addItem(JSONObject jsonObject) throws JSONException {

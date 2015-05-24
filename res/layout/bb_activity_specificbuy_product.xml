@@ -10,7 +10,7 @@
         android:layout_marginBottom="70dp"
         android:contentDescription="@string/cont_descrip"
         android:scaleType="fitXY"
-        android:src="@drawable/heartstone_thrall" />
+        android:src="#eee" />
 
     <RelativeLayout
         android:layout_width="match_parent"

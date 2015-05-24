@@ -33,7 +33,7 @@ import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
-import com.example.banban.ui.specificbuy.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreActivity;
 
 public class ShareProductActivity extends BaseActionBarActivity {
 
@@ -101,7 +101,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		m_storeNameBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ShareProductActivity.this,
-						StoreInfoActivity.class);
+						StoreActivity.class);
 				startActivity(intent);
 			}
 		});

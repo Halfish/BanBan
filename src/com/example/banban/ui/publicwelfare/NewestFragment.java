@@ -78,7 +78,7 @@ public class NewestFragment extends BaseActionBarFragment {
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called"  + m_orderBy);
-		beginDataRequest();
+		beginDataRequest(); 
 		super.onResume();
 	}
 	

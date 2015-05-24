@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/cont_descrip"
         android:scaleType="fitXY"
-        android:src="@drawable/heartstone_thrall" />
+        android:src="#eee" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -20,9 +20,9 @@
             android:id="@+id/img_like"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:scaleType="fitXY"
+            android:background="@drawable/bb_like"
             android:contentDescription="@string/cont_descrip"
-            android:background="@drawable/bb_like" />
+            android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/tv_like_number"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#ccc" />
-        
+
         <TextView
             android:id="@+id/tv_donate"
             android:layout_width="wrap_content"

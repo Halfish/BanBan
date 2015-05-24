@@ -38,7 +38,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
-import com.example.banban.ui.specificbuy.StoreInfoActivity;
+import com.example.banban.ui.specificbuy.StoreActivity;
 
 @SuppressWarnings("deprecation")
 public class ShoppingCarActivity extends BaseActionBarActivity {
@@ -112,7 +112,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		m_storeNameBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ShoppingCarActivity.this,
-						StoreInfoActivity.class);
+						StoreActivity.class);
 				startActivity(intent);
 			}
 		});

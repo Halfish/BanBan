@@ -49,6 +49,7 @@
 
     <ImageView
         android:id="@+id/cursor"
+        android:layout_margin="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/cont_descrip"
@@ -59,6 +60,7 @@
         android:id="@+id/viewpager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_margin="10dp"
         android:flipInterval="30"
         android:persistentDrawingCache="animation" />
 

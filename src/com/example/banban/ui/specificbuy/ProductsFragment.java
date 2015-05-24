@@ -40,7 +40,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProductFragment extends Fragment {
+public class ProductsFragment extends Fragment {
 
 	protected static final String LOG_TAG = "ProductFragment";
 	private Activity m_activity;
@@ -50,14 +50,26 @@ public class ProductFragment extends Fragment {
 	private Map<String, Object> item;
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 	private int m_storeId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
+		m_queue = Volley.newRequestQueue(getActivity());
+		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); 
 		initHandler();
+	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// 可见时刷新数据
+		if (isVisibleToUser && isAdded()) {
+			beginDataRequest();
+		}
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	private void initHandler() {
@@ -105,7 +117,6 @@ public class ProductFragment extends Fragment {
 		String image = jsonObject.getString("image");
 		int price = jsonObject.getInt("price");
 		int product_id = jsonObject.getInt("product_id");
-		// int original_price = jsonObject.getInt("original_price");
 		String name = jsonObject.getString("name");
 		int favorites = jsonObject.getInt("favorites");
 		int amount_spec = jsonObject.getInt("amount_spec");
@@ -124,7 +135,7 @@ public class ProductFragment extends Fragment {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(getActivity());
+		
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/products/"
 				+ m_storeId, m_handler, m_queue);
 	}
@@ -227,8 +238,8 @@ public class ProductFragment extends Fragment {
 			String distance = (String) m_listItems.get(position).get("price");
 			String remains = (String) m_listItems.get(position).get("remains");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
-			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + productImg, imageLoader);
+			
+			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + productImg, m_imageLoader);
 			
 			//viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
