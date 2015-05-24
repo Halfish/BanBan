@@ -1,4 +1,4 @@
-package com.example.banban.ui;
+package com.example.banban.ui.randombuy;
 
 /*
  * @author: BruceZhang
@@ -21,6 +21,7 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.BaseActionBarActivity;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -52,6 +53,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 
 	private int m_productId = -1;
 	private int m_likeNum;
+	private ActionBar m_actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

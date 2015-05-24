@@ -38,7 +38,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
-import com.example.banban.ui.ProjectActivity;
+import com.example.banban.ui.publicwelfare.ProjectActivity;
 
 public class CollectedProjectsActivity extends BaseActionBarActivity {
 	private static final String LOG_TAG = CollectedProjectsActivity.class

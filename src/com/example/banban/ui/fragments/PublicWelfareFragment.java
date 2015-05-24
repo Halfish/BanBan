@@ -40,7 +40,7 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 	private int currIndex;// 当前页卡编号
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
-	private static final int MAX_CACHE_PAGE = 1; // 缓存Fragment的最大数量
+	private static final int EXTRA_CACHE_PAGE = 1; // 缓存Fragment的最大数量
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +128,7 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 				fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
-		mPager.setOffscreenPageLimit(MAX_CACHE_PAGE );
+		mPager.setOffscreenPageLimit(EXTRA_CACHE_PAGE );
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {

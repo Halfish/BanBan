@@ -17,7 +17,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
-import com.example.banban.ui.ProductInfoActivity;
+import com.example.banban.ui.randombuy.ProductInfoActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

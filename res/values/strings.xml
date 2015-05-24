@@ -85,6 +85,7 @@
     <string name="bb_pw_supporter">支持者</string>
     <string name="bb_support_btn">投入公益资金</string>
     <string name="bb_support_fund">已投入公益资金：44,444元</string>
+    <string name="bb_support_donate">填写投入金额</string>
     <string name="bb_support_feedback">投入反馈说明</string>
     <string name="bb_support_feedback_descp">其实我没有什么反馈，这只是测试而已</string>
 

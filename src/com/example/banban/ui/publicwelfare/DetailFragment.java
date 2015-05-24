@@ -36,11 +36,24 @@ public class DetailFragment extends BaseActionBarFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		m_queue = Volley.newRequestQueue(getActivity());
 		initHandler();
+	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		/*
+		 * 由于这里是第一个Fragment，所以要判断isAdd，否则直接网络请求的话，
+		 * 会因为Activity还没来得及Create而getIntent引用空指针程序崩溃
+		 */
+		if (isVisibleToUser && isAdded()) {
+			beginDataGetRequest();
+		}
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	private void beginDataGetRequest() {
-		m_queue = Volley.newRequestQueue(getActivity());
+		
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/projects/detail/"
 				+ getActivity().getIntent().getIntExtra("projectId", -1),
 				m_handler, m_queue);
@@ -91,6 +104,7 @@ public class DetailFragment extends BaseActionBarFragment {
 		View view = getActivity().getLayoutInflater().inflate(
 				R.layout.bb_fragment_publicwelfare_detail, container, false);
 		m_detail = (TextView) view.findViewById(R.id.tv_detail);
+		
 		beginDataGetRequest();
 		return view;
 	}

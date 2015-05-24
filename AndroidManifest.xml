@@ -62,18 +62,20 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        
+        <!-- 客户版 -->
         <activity android:name="com.example.newuser.LoginActivity" />
         <activity android:name="com.example.newuser.RegisterActivity" />
-        <activity android:name=".ui.BBMainActivity" />
-        <activity android:name=".ui.ProductInfoActivity" />
         <activity android:name="com.example.sortlistview.AlphabetaContactActicity" />
+        <activity android:name=".ui.BBMainActivity" />
+        <activity android:name=".ui.BBSearchUserActivity" />
+        <activity android:name=".ui.randombuy.ProductInfoActivity" />
         <activity android:name=".ui.specificbuy.StoreInfoActivity" />
         <activity android:name=".ui.specificbuy.WritingReviewActivity" />
         <activity android:name=".ui.specificbuy.ProductActivity" />
-        <activity android:name="com.example.banban.ui.ProjectActivity" />
+        <activity android:name=".ui.publicwelfare.ProjectActivity" />
         <activity android:name=".ui.myaccount.ShoppingCarActivity" />
         <activity android:name=".ui.myaccount.ShareProductActivity" />
-        <activity android:name=".ui.BBSearchUserActivity" />
         <activity android:name=".ui.otheraccount.OtherAccountActivity" />
         <activity android:name=".ui.otheraccount.CollectedStoresActivity" />
         <activity android:name=".ui.otheraccount.CollectedProjectsActivity" />

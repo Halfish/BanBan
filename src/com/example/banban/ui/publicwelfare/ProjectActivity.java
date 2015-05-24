@@ -1,4 +1,4 @@
-package com.example.banban.ui;
+package com.example.banban.ui.publicwelfare;
 
 /*
  * @author: BruceZhang
@@ -43,13 +43,11 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
-import com.example.banban.ui.publicwelfare.DetailFragment;
-import com.example.banban.ui.publicwelfare.SupportFragment;
-import com.example.banban.ui.publicwelfare.SupporterFragment;
 
 public class ProjectActivity extends FragmentActivity {
 
 	private static final String LOG_TAG = ProjectActivity.class.getName();
+	private static final int EXTRA_CATHE_PAGES = 2;
 
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragmentList;
@@ -76,8 +74,8 @@ public class ProjectActivity extends FragmentActivity {
 		setContentView(R.layout.bb_activity_publicwelfare_project);
 
 		// 要展示该醒目详细信息，必须给此Activity一个projectID
-		m_projectId = getIntent().getIntExtra("projectId", -1); 
-		
+		m_projectId = getIntent().getIntExtra("projectId", -1);
+
 		initWidgets();
 		initHandler();
 
@@ -89,15 +87,15 @@ public class ProjectActivity extends FragmentActivity {
 
 	private void initWidgets() {
 		initActionBar();
-		
+
 		m_projectName = (TextView) findViewById(R.id.tv_project_name);
 		m_goal = (TextView) findViewById(R.id.tv_goal);
 		m_achieve = (TextView) findViewById(R.id.tv_achieve);
 		m_accumulate = (TextView) findViewById(R.id.tv_accumulation);
-		m_image = (ImageView)findViewById(R.id.img_project);
+		m_image = (ImageView) findViewById(R.id.img_project);
 	}
-	
-	@SuppressLint("InflateParams") 
+
+	@SuppressLint("InflateParams")
 	private void initActionBar() {
 		m_actionBar = getActionBar();
 
@@ -111,7 +109,7 @@ public class ProjectActivity extends FragmentActivity {
 		m_actionBar.setDisplayShowCustomEnabled(true);
 		m_actionBar.setDisplayShowTitleEnabled(false);
 		m_actionBar.setHomeButtonEnabled(true);
-		m_actionBar.setIcon(R.drawable.bb_back);	
+		m_actionBar.setIcon(R.drawable.bb_back);
 	}
 
 	private void beginDataGetRequest() {
@@ -166,7 +164,7 @@ public class ProjectActivity extends FragmentActivity {
 		m_goal.setText("目标：" + expect + "元");
 		m_achieve.setText("已筹资：" + total_support + "元");
 		m_accumulate.setText("达成：" + percentage + "%");
-		
+
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_image,
 				R.drawable.heartstone_thrall, R.drawable.heartstone_thrall);
@@ -233,6 +231,7 @@ public class ProjectActivity extends FragmentActivity {
 				getSupportFragmentManager(), fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
+		mPager.setOffscreenPageLimit(EXTRA_CATHE_PAGES);
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {
@@ -276,13 +275,13 @@ public class ProjectActivity extends FragmentActivity {
 			return list.get(arg0);
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			break;	
+			break;
 
 		default:
 			break;

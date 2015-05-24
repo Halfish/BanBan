@@ -11,6 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/bb_support_btn" />
+    
+    <TextView 
+        android:id="@+id/tv_donate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:layout_margin="10dp"
+        android:visibility="gone"
+        android:text=""/>
 
     <TextView
         android:layout_width="wrap_content"

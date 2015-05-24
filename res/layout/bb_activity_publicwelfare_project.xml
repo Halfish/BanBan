@@ -58,6 +58,7 @@
                 android:text="@string/bb_accumulation1" />
         </LinearLayout>
     </LinearLayout>
+   // 加赞，收藏
 
     <!-- 商家界面 - 下面可滑动部分 -->
 

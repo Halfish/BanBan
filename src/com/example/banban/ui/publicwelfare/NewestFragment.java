@@ -22,7 +22,6 @@ import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
-import com.example.banban.ui.ProjectActivity;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 import android.app.Activity;
 import android.content.Intent;
@@ -67,7 +66,7 @@ public class NewestFragment extends BaseActionBarFragment {
 		m_queue = Volley.newRequestQueue(m_activity);
 		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
-		
+		Log.v(LOG_TAG, "onCreate called" + m_orderBy);
 	}
 
 	@Override
@@ -78,11 +77,23 @@ public class NewestFragment extends BaseActionBarFragment {
 
 	@Override
 	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
+		Log.v(LOG_TAG, "onResume called"  + m_orderBy);
 		beginDataRequest();
 		super.onResume();
 	}
+	
+	@Override
+	public void onStop() {
+		Log.v(LOG_TAG, "onStop called" + m_orderBy);
+		super.onStop();
+	}
 
+	@Override
+	public void onDestroy() {
+		Log.v(LOG_TAG, "onDestroy called");
+		super.onDestroy();
+	}
+	
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {
 			@Override
@@ -180,7 +191,7 @@ public class NewestFragment extends BaseActionBarFragment {
 						startActivity(intent);
 					}
 				});
-
+		Log.v(LOG_TAG, "onCreateView called" + m_orderBy);
 		return rootView;
 	}
 

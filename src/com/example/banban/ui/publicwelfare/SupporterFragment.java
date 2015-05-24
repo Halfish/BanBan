@@ -15,14 +15,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
+import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +34,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 	private Map<String, Object> item;
 	private Handler m_handler;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,13 +57,16 @@ public class SupporterFragment extends BaseActionBarFragment {
 		m_queue = Volley.newRequestQueue(m_activity);
 		initHandler();
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 	}
-	
+
 	@Override
-	public void onResume() {
-		super.onResume();
-		beginDataGetRequest();
-		Log.v(LOG_TAG, "onResume called");
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// 可见时刷新数据
+		if (isVisibleToUser) {
+			beginDataGetRequest();
+		}
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	private void initHandler() {
@@ -90,7 +95,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataGetRequest() {
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("project_id",
 				getActivity().getIntent().getIntExtra("projectId", -1) + "");
@@ -121,27 +126,27 @@ public class SupporterFragment extends BaseActionBarFragment {
 	}
 
 	private void addItem(JSONObject jsonObject) throws JSONException {
-		
+
 		if (!isAdded()) {
 			return;
 		}
 
 		// int user_id = response.getInt("user_id");
+		String image = jsonObject.getString("image");
 		String username = jsonObject.getString("username");
 		int amount = jsonObject.getInt("amount");
 		String time = jsonObject.getString("time");
 		int total_projects = jsonObject.getInt("total_projects");
 
 		item = new HashMap<String, Object>();
-		item.put("supporter_img",
-				getResources().getDrawable(R.drawable.bb_valeera_sanguinar));
+		item.put("supporter_img", image);
 		item.put("nickname", username);
 		item.put("date", time);
 		item.put("money", "支持了" + amount + "元");
 		item.put("project_num", "我一共支持了" + total_projects + "个项目");
 
 		m_listItems.add(item);
-		
+
 		m_adapter.notifyDataSetChanged();
 	}
 
@@ -156,11 +161,12 @@ public class SupporterFragment extends BaseActionBarFragment {
 		m_listView.setAdapter(m_adapter);
 
 		beginDataGetRequest();
+		Log.v(LOG_TAG, "onCreateView called");
 		return rootView;
 	}
 
 	private static class ViewHolder {
-		ImageView supporterImg;
+		NetworkImageView supporterImg;
 		TextView nickname;
 		TextView date;
 		TextView money;
@@ -202,7 +208,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 				 * initialize viewHolder;
 				 */
 				viewHolder = new ViewHolder();
-				viewHolder.supporterImg = (ImageView) convertView
+				viewHolder.supporterImg = (NetworkImageView) convertView
 						.findViewById(R.id.img_supporter);
 				viewHolder.nickname = (TextView) convertView
 						.findViewById(R.id.tv_nickname);
@@ -222,7 +228,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			Drawable supporterImg = (Drawable) m_listItems.get(position).get(
+			String supporterImg = (String) m_listItems.get(position).get(
 					"supporter_img");
 			String nickname = (String) m_listItems.get(position)
 					.get("nickname");
@@ -231,7 +237,10 @@ public class SupporterFragment extends BaseActionBarFragment {
 			String projectNum = (String) m_listItems.get(position).get(
 					"project_num");
 
-			viewHolder.supporterImg.setImageDrawable(supporterImg);
+			viewHolder.supporterImg.setImageUrl(BBConfigue.SERVER_HTTP
+					+ supporterImg, m_imageLoader);
+			
+			// viewHolder.supporterImg.setImageDrawable(supporterImg);
 			viewHolder.nickname.setText(nickname);
 			viewHolder.date.setText(date);
 			viewHolder.money.setText(money);
