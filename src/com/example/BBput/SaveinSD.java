@@ -10,7 +10,7 @@ import android.os.Environment;
 
 public class SaveinSD {
 	private static String path="/sdcard/banban/photo/";
-	public static boolean savephoto(Bitmap bitmap){
+	public static boolean savephoto(Bitmap bitmap,String name){
 		 //判断外部存储是否可用
 		 String sdStatus = Environment.getExternalStorageState();
 		 if (!sdStatus.equals(Environment.MEDIA_MOUNTED))

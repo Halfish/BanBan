@@ -5,14 +5,84 @@
     android:orientation="vertical" >
 
     <FrameLayout
-        android:id="@+id/realtabcontent"
-        android:layout_width="match_parent"
+        android:id="@+id/tab_content"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1.0" />
 
-    <android.support.v4.app.FragmentTabHost
-        android:id="@android:id/tabhost"
+    <RadioGroup
+        android:id="@+id/tabs_rg"
         android:layout_width="match_parent"
-        android:layout_height="64dp" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="10dp" >
+
+        <RadioButton
+            android:id="@+id/tab_rb_a"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.0"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_tab"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/bb_tab_random_buy"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_b"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.0"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/bb_tab_specific_buy"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_c"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.0"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/bb_tab_public_welfare"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_d"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.0"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/bb_tab_my_account"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/tab_rb_e"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1.0"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/bb_tab_more_info"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+    </RadioGroup>
 
 </LinearLayout>

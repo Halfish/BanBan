@@ -6,6 +6,9 @@ package com.example.banban.ui.fragments;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +16,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.example.BBput.Compress_Save;
+import com.example.BBput.PhotoM;
+import com.example.BBput.SaveinSD;
 import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
@@ -26,9 +32,14 @@ import com.example.banban.ui.otheraccount.CollectedStoresActivity;
 import com.example.banban.ui.otheraccount.FollowingOtherPeopleActivity;
 import com.example.banban.ui.otheraccount.MyFansActivity;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,6 +56,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -63,12 +75,15 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private int currIndex;// 当前页卡编号
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
+	private static int RESULT_LOAD_IMAGE = 1;
+	private static int RESULT_LOAD = 2;
 
 	private Activity m_activity;
 	private TextView m_donateTextView;
 	private TextView m_balanceTextView;
 	private TextView m_nickName;
 	private ImageView m_userPic;
+	private ImageView m_back_veiw;
 
 	private Button m_storeButton;
 	private Button m_projectButton;
@@ -194,7 +209,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 		if (view == null) {
 			view = inflater.inflate(R.layout.bb_fragment_my_account, container,
 					false);
@@ -211,6 +225,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			m_followingsButton = (Button) view
 					.findViewById(R.id.btn_followings);
 
+			m_back_veiw = (ImageView) view.findViewById(R.id.img_beijing);
 			initButtons();
 
 			InitTextView(view);
@@ -235,8 +250,39 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_projectButton.setOnClickListener(listener);
 		m_followButton.setOnClickListener(listener);
 		m_followingsButton.setOnClickListener(listener);
+		m_userPic.setOnClickListener(listener);
+		m_back_veiw.setOnLongClickListener(listener2);
 	}
 
+	private OnLongClickListener listener2 = new OnLongClickListener() {
+
+		@Override
+		public boolean onLongClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.img_beijing:
+				Builder dialog = new AlertDialog.Builder(getActivity());
+				dialog.setPositiveButton("切换背景",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										Intent.ACTION_PICK,
+										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								startActivityForResult(intent,
+										RESULT_LOAD_IMAGE);
+							}
+
+						});
+				dialog.show();
+				break;
+			}
+			return false;
+		}
+	};
 	private OnClickListener listener = new OnClickListener() {
 
 		@Override
@@ -263,11 +309,70 @@ public class MyAccountFragment extends BaseActionBarFragment {
 				Intent intent3 = new Intent(m_activity, MyFansActivity.class);
 				startActivity(intent3);
 				break;
+			case R.id.btn_nickname:
+				Builder dialog = new AlertDialog.Builder(getActivity());
+				dialog.setPositiveButton("切换头像",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										Intent.ACTION_PICK,
+										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								startActivityForResult(intent, RESULT_LOAD);
+							}
+
+						});
+				dialog.show();
+				break;
 			default:
 				break;
 			}
 		}
 	};
+
+	/*
+	 * 头像上传
+	 */
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.v(LOG_TAG, "onResult called: requestCode = " + requestCode
+				+ " resultCode = " + resultCode);
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == -1
+				&& data != null) {
+			// 这个图片的URI
+			Uri selectedImage = data.getData();
+			// 获得图像的绝对路径
+			String picturePath = PhotoM
+					.getpicture(getActivity(), selectedImage);
+			// 将图像进行压缩;
+			Bitmap bitmap2 = Compress_Save.getSmallBitmap(picturePath,
+					m_back_veiw.getWidth(), m_back_veiw.getHeight());
+			//
+			Log.v("haha", "dod");
+			m_back_veiw.setImageBitmap(bitmap2);
+			// 图片保存
+			SaveinSD.savephoto(bitmap2, "user_beijing.png");
+			// 将图片上传
+		} else if (requestCode == RESULT_LOAD) {
+			// 这个图片的URI
+			Uri selectedImage = data.getData();
+			// 获得图像的绝对路径
+			String picturePath = PhotoM
+					.getpicture(getActivity(), selectedImage);
+			// 将图像进行压缩;
+			Bitmap bitmap2 = Compress_Save.getSmallBitmap(picturePath,
+					m_userPic.getWidth(), m_userPic.getHeight());
+			m_userPic.setImageBitmap(bitmap2);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("image", PhotoM.imgToBase64(bitmap2));
+			// HttpUtil.NormalPostRequest(map, uri2, handler,
+			// Merchant_main.BBQueue);
+		}
+		//super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	/*
 	 * 初始化标签名0

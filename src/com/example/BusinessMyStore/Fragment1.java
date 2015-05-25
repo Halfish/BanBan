@@ -201,7 +201,7 @@ public class Fragment1 extends Fragment  {
 			 // 
 			  imageView.setImageBitmap(bitmap2);
 			  //图片保存
-			  SaveinSD.savephoto(bitmap2);  
+			 // SaveinSD.savephoto(bitmap2);  
 			  //将图片上传
 			  
 			  Map<String, String> map=new HashMap<String, String>();

@@ -13,6 +13,14 @@
         android:background="@color/light_blue" >
 
         <ImageView
+            android:id="@+id/img_beijing"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/cont_descrip"
+            android:src="#eee" />
+
+        <ImageView
             android:id="@+id/btn_nickname"
             android:layout_width="64dp"
             android:layout_height="64dp"
