@@ -35,6 +35,7 @@ public class LoginActivity extends Activity {
 
 	private Button m_loginButton;
 	private Button m_registerButton;
+	private Button m_visitorButton;
 	private EditText m_usernameEditText;
 	private EditText m_passwordEditText;
 
@@ -61,12 +62,13 @@ public class LoginActivity extends Activity {
 
 		m_loginButton = (Button) findViewById(R.id.btn_login);
 		m_registerButton = (Button) findViewById(R.id.btn_register);
+		m_visitorButton = (Button)findViewById(R.id.btn_visitor);
 
 		m_loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				m_username = m_usernameEditText.getText().toString().trim();
 				m_password = m_passwordEditText.getText().toString().trim();
-
+				BBConfigue.IS_VISITOR = false;
 				beginDataRequest();
 			}
 		});
@@ -75,6 +77,17 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(LoginActivity.this,
 						RegisterActivity.class);
+				startActivity(intent);
+				finish();
+			}
+		});
+		
+		m_visitorButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				clearAccount();
+				BBConfigue.IS_VISITOR = true;
+				Intent intent = new Intent(LoginActivity.this,
+						BBMainActivity.class);
 				startActivity(intent);
 				finish();
 			}
@@ -126,6 +139,17 @@ public class LoginActivity extends Activity {
 		pref.edit().putString("username", m_username).commit();
 		pref.edit().putString("password", m_password).commit();
 		pref.edit().putInt("user_id", m_userId).commit();
+	}
+	
+	private void clearAccount() {
+		BBConfigue.USER_NAME = "";
+		BBConfigue.PASSWORD = "";
+
+		SharedPreferences pref = getSharedPreferences("account",
+				Context.MODE_PRIVATE);
+		pref.edit().putString("username", "").commit();
+		pref.edit().putString("password", "").commit();
+		pref.edit().putInt("user_id", -1).commit();
 	}
 
 	private void handleResponse(JSONObject response) throws JSONException {

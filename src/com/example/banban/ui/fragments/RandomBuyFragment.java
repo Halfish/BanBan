@@ -6,8 +6,11 @@ package com.example.banban.ui.fragments;
  * 查看商品的信息
  */
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import kankan.wheel.widget.WheelView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,12 +20,11 @@ import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.TigerMathine;
 import com.example.banban.ui.randombuy.ProductInfoActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,18 +44,22 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Button m_randomBuyBtn;
 	private TextView m_chanceTextView;
 	private TextView m_infoTextView;
-	private int remainTime = 100;
+	private List<WheelView> m_wheelViewList;
+	private TigerMathine m_tigerMathine;
+
+	private int remainTime = 0;
 	private Activity m_activity;
 	private RequestQueue m_queue;
 	private Handler m_handler;
-
-	private SharedPreferences m_pref;
+	private Handler m_randomTimeHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
+		m_queue = Volley.newRequestQueue(m_activity);
+		beginTimeDataRequest();
 		Log.v(LOG_TAG, "onCreate called");
 		initHandler();
 	}
@@ -91,6 +97,27 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				super.handleMessage(msg);
 			}
 		};
+
+		m_randomTimeHandler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updateRandomTimeFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 
 	private void updateDataFromServer(JSONObject jsonObject)
@@ -106,6 +133,16 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		}
 	}
 
+	private void updateRandomTimeFromServer(JSONObject response)
+			throws JSONException {
+		int retCode = response.getInt("ret_code");
+		if (retCode == 0) {
+			int random_times = response.getInt("random_times");
+			remainTime = random_times;
+			m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
+		}
+	}
+
 	private View view;
 
 	@Override
@@ -117,6 +154,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 					false);
 			setActionBarCenterTitle(R.string.bb_tab_random_buy);
 			initWidgets(view);
+			initTigerMathine(view);
 		}
 
 		// 缓存的view需要判断是否已经被加过parent，
@@ -134,17 +172,16 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_chanceTextView = (TextView) view.findViewById(R.id.tv_chance);
 		m_infoTextView = (TextView) view.findViewById(R.id.tv_info);
 
-		remainTime = getRemainingTime();
+		remainTime = 0;
 		m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
 
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				remainTime = m_pref.getInt("remainTime", 100);
+				
 				if (remainTime > 0) {
 					beginDataRequest();
-					remainTime--;
-					m_pref.edit().putInt("remainTime", remainTime).commit();
+					m_tigerMathine.startAnim();
 					m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
 				} else {
 					m_chanceTextView.setVisibility(View.INVISIBLE);
@@ -155,31 +192,27 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		});
 	}
 
-	private int getRemainingTime() {
-		m_pref = m_activity.getSharedPreferences("remainTime",
-				Context.MODE_PRIVATE);
-		String date = m_pref.getString("date", "");
-
-		Calendar calendar = Calendar.getInstance();
-		String today = calendar.get(Calendar.YEAR) + ""
-				+ (calendar.get(Calendar.MONTH) + 1)
-				+ calendar.get(Calendar.DAY_OF_MONTH);
-
-		if (date.equals(today)) {
-			return m_pref.getInt("remainTime", 100);
-		} else {
-			m_pref.edit().putString("date", today).commit();
-			m_pref.edit().putInt("remainTime", 100).commit();
-		}
-
-		return 100;
+	private void initTigerMathine(View view) {
+		m_wheelViewList = new ArrayList<WheelView>();
+		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_1));
+		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_2));
+		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_3));
+		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_4));
+		m_tigerMathine = new TigerMathine(m_activity, m_wheelViewList);
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(m_activity);
+		
 		HttpUtil.NormalPostRequest(new HashMap<String, String>(),
 				BBConfigue.SERVER_HTTP + "/products/generate/random",
 				m_handler, m_queue);
+		beginTimeDataRequest();
 	}
 
+	private void beginTimeDataRequest() {
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/users/suppports/history/" + BBConfigue.USER_ID,
+				m_randomTimeHandler, m_queue);
+	}
+	
 }

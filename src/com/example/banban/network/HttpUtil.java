@@ -60,7 +60,7 @@ public class HttpUtil {
 
 				Map<String, String> headers = new HashMap<String, String>();
 				String str = BBConfigue.USER_NAME + ":" + BBConfigue.PASSWORD;
-			//	Log.v("HttpUtil JsonGetRequest", "str is:" + str);
+				Log.v("HttpUtil JsonGetRequest", "str is:" + str);
 				headers.put(
 						"Authorization",
 						"Basic "

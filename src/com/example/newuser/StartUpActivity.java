@@ -55,10 +55,14 @@ public class StartUpActivity extends Activity {
 
 		Intent intent = new Intent(StartUpActivity.this, LoginActivity.class);
 		if (type.equals("user")) {
-			BBConfigue.USER_NAME = username;
-			BBConfigue.PASSWORD = password;
-			BBConfigue.USER_ID = userId;
-			intent = new Intent(StartUpActivity.this, BBMainActivity.class);
+			if(username.equals("")) {
+				intent = new Intent(StartUpActivity.this, LoginActivity.class);
+			} else {
+				BBConfigue.USER_NAME = username;
+				BBConfigue.PASSWORD = password;
+				BBConfigue.USER_ID = userId;
+				intent = new Intent(StartUpActivity.this, BBMainActivity.class);
+			}
 		} else if (type.equals("store")) {
 			intent = new Intent(StartUpActivity.this, Merchant_main.class);
 			localStore.USER_NAME = username;

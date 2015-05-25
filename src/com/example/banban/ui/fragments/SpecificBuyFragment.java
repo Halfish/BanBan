@@ -44,7 +44,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.Toast;
 
 public class SpecificBuyFragment extends BaseActionBarFragment implements
 		OnQueryTextListener {
@@ -55,6 +54,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private Spinner m_citySpinner;
 	private Spinner m_districtSpinner;
 	private Spinner m_smartOrderSpinner;
+	private TextView m_infoTextView;
 
 	private ListView m_listView;
 	private StoreBaseAdapter m_adapter;
@@ -87,18 +87,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		Log.v(LOG_TAG, "onCreate called");
 	}
 
-	@Override
-	public void onStart() {
-		Log.v(LOG_TAG, "onStart called");
-		super.onStart();
-	}
-
-	@Override
-	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
-		super.onResume();
-	}
-
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {
 			@Override
@@ -126,6 +114,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_citiesHandler = new Handler(m_activity.getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
+				m_progDiag.dismiss();
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
@@ -147,6 +136,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_districtHandler = new Handler(m_activity.getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
+				m_progDiag.dismiss();
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
 					JSONObject response = (JSONObject) msg.obj;
@@ -190,9 +180,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			m_adapter.notifyDataSetChanged();
 			JSONArray jsonArray = jsonObject.getJSONArray("stores");
 			if (jsonArray.length() == 0) {
-				Toast.makeText(m_activity, "没有商家！", Toast.LENGTH_SHORT).show();
+				m_infoTextView.setVisibility(View.VISIBLE);
 				return;
 			}
+			m_infoTextView.setVisibility(View.GONE);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject object = jsonArray.getJSONObject(i);
 				addItem(object);
@@ -285,6 +276,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			m_smartOrderSpinner = (Spinner) view
 					.findViewById(R.id.sp_smart_order);
 			m_listView = (ListView) view.findViewById(R.id.lv_stores);
+			m_infoTextView = (TextView)view.findViewById(R.id.tv_info_nostore);
 
 			initSearchView();
 			initSpinners();
@@ -377,6 +369,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 								+ "&city=" + m_city + "&district=" + m_district;
 						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
 						Log.v(LOG_TAG, "district url is " + url);
+						//m_progDiag.setMessage("正在搜寻");
+						//m_progDiag.show();
 					}
 
 					@Override
@@ -406,6 +400,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 								+ "/stores/list?order_by=" + m_orderBy
 								+ "&city=" + m_city + "&district=" + m_district;
 						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+						//m_progDiag.setMessage("正在搜寻");
+						//m_progDiag.show();
 					}
 
 					@Override

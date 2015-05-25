@@ -74,16 +74,27 @@
         android:text="@string/bb_forget_passwd" />
 
     <LinearLayout
+        
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|center_horizontal" >
+        android:gravity="bottom|center_horizontal"
+        android:orientation="horizontal" >
 
         <Button
+            style="?android:attr/buttonBarStyle"
             android:id="@+id/btn_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_margin="15dp"
             android:text="@string/bb_register_account" />
+        
+        <Button
+            style="?android:attr/buttonBarStyle"
+            android:id="@+id/btn_visitor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/bb_visitor" />
     </LinearLayout>
 
 </LinearLayout>

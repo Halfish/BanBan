@@ -257,7 +257,9 @@ public class StoreActivity extends FragmentActivity {
 			break;
 
 		case 1:
-			Toast.makeText(this, "DataBase Exception", Toast.LENGTH_SHORT).show();
+		case 2:
+			String message = response.getString("message");
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 			break;
 
 		default:

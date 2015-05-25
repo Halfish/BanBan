@@ -217,6 +217,7 @@ public class ProductActivity extends BaseActionBarActivity {
 		case 2:
 		case 3:
 		case 4:
+		case 5:
 			String message = response.getString("message");
 			Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
 					.show();

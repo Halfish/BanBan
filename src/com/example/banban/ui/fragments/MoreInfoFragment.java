@@ -9,8 +9,10 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.example.banban.R;
+import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBUIUtil;
 import com.example.newuser.LoginActivity;
+import com.example.newuser.RegisterActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MoreInfoFragment extends BaseActionBarFragment {
@@ -34,6 +37,9 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 	private Button m_clearButton;
 	private Button m_checkUpdateButton;
 	private Button m_logoutButton;
+	private Button m_loginButton;
+	private Button m_registerButton;
+	private RelativeLayout m_visitorRly;
 
 	private Activity m_activity;
 
@@ -42,6 +48,16 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		Log.v(LOG_TAG, "onCreate called");
+	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		if(BBConfigue.IS_VISITOR) {
+			m_visitorRly.setVisibility(View.VISIBLE);
+		} else {
+			m_visitorRly.setVisibility(View.GONE);
+		}
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	@Override
@@ -65,6 +81,8 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		if (view == null) {
 			view = inflater.inflate(R.layout.bb_fragment_more_info, container,
 					false);
+			m_visitorRly = (RelativeLayout)view.findViewById(R.id.rly_visitor);
+			
 			m_aboutButton = (Button) view.findViewById(R.id.btn_about_banban);
 			m_inviteButton = (Button) view.findViewById(R.id.btn_invite);
 			m_feedBackButton = (Button) view.findViewById(R.id.btn_feedback);
@@ -74,6 +92,8 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 			m_checkUpdateButton = (Button) view
 					.findViewById(R.id.btn_check_update);
 			m_logoutButton = (Button) view.findViewById(R.id.btn_logout);
+			m_loginButton = (Button)view.findViewById(R.id.btn_login);
+			m_registerButton = (Button)view.findViewById(R.id.btn_register);
 			initButtons(view);
 		}
 		// 缓存的view需要判断是否已经被加过parent，
@@ -165,6 +185,22 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		m_logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intent);
+				getActivity().finish();
+			}
+		});
+		
+		m_loginButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intent);
+				getActivity().finish();
+			}
+		});
+		
+		m_registerButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), RegisterActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}

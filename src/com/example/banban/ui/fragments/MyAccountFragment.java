@@ -258,7 +258,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 
 		@Override
 		public boolean onLongClick(View v) {
-			// TODO Auto-generated method stub
 			switch (v.getId()) {
 			case R.id.img_beijing:
 				Builder dialog = new AlertDialog.Builder(getActivity());
@@ -268,7 +267,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								Intent intent = new Intent(
 										Intent.ACTION_PICK,
 										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -317,7 +315,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								Intent intent = new Intent(
 										Intent.ACTION_PICK,
 										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -336,7 +333,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	/*
 	 * 头像上传
 	 */
-	
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.v(LOG_TAG, "onResult called: requestCode = " + requestCode
 				+ " resultCode = " + resultCode);
@@ -371,7 +368,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			// HttpUtil.NormalPostRequest(map, uri2, handler,
 			// Merchant_main.BBQueue);
 		}
-		//super.onActivityResult(requestCode, resultCode, data);
+		// super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/*

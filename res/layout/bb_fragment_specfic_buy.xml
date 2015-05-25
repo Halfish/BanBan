@@ -43,6 +43,16 @@
             android:layout_weight="1" />
     </LinearLayout>
     
+    <TextView 
+        android:id="@+id/tv_info_nostore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        android:text="@string/bb_no_store"/>
+    
     <ListView 
         android:id="@+id/lv_stores"
         android:layout_width="match_parent"

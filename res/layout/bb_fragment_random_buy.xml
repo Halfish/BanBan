@@ -12,35 +12,33 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
+        android:gravity="center"
         android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/slot_1"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/sysu" />
+            android:gravity="center"
+            android:layout_weight="1" />
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/slot_2"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/sysu" />
+            android:layout_weight="1" />
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/slot_3"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/sysu" />
+            android:layout_weight="1" />
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <kankan.wheel.widget.WheelView
+            android:id="@+id/slot_4"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/sysu" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <Button
@@ -58,16 +56,15 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
         android:text="@string/bb_random_buy_got_chances" />
-    
-    
+
     <TextView
         android:id="@+id/tv_info"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:visibility="invisible"
-        android:text="@string/bb_random_buy_no_chance" />
+        android:text="@string/bb_random_buy_no_chance"
+        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/progressBar_rb"
@@ -76,5 +73,5 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible" />
-    
+
 </RelativeLayout>
