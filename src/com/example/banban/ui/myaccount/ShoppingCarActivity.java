@@ -117,7 +117,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 			}
 		});
 
-		m_shoppingCodeBtn.setText("消费码： " + m_purchaseCode);
+		m_shoppingCodeBtn.setText("消费码 " + m_purchaseCode);
 		
 		m_shoppingCodeBtn
 				.setOnLongClickListener(new View.OnLongClickListener() {
@@ -326,8 +326,8 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_imageView,
-				R.drawable.bb_valeera_sanguinar,
-				R.drawable.bb_valeera_sanguinar);
+				R.drawable.loading_01,
+				R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 
 	}

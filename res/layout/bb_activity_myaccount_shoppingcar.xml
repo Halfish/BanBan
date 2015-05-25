@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/cont_descrip"
             android:scaleType="fitXY"
-            android:src="@drawable/bb_valeera_sanguinar" />
+            android:src="#eee" />
 
         <!-- 赞 -->
 
