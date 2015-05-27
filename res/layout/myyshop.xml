@@ -14,24 +14,29 @@
 
      <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY"
             android:src="@drawable/moren" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="13dp"
+            android:background="#AA9E9E9E"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tv_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:text="@string/sum_dontion"
                 android:textColor="#ccc" />
 
@@ -39,9 +44,39 @@
                 android:id="@+id/tv_store_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tv_product_price"
+                android:layout_centerHorizontal="true"
                 android:text="@string/store_name"
                 android:textColor="#ccc" />
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/touxiang" />
+
+            <TextView
+                android:id="@+id/tv_store_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_store_name"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/tv_store_name"
+                android:text="@string/store_fav"
+                android:textColor="#ccc" />
+
+            <TextView
+                android:id="@+id/tv_store_collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_store_name"
+                android:layout_toRightOf="@+id/tv_store_name"
+                android:text="@string/store_col"
+                android:textColor="#ccc" />
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <!-- 商家界面 - 下面可滑动部分 -->

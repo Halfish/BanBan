@@ -64,14 +64,17 @@ public class Fragment3 extends Fragment   {
 					case 0:
 						Toast.makeText(getActivity(),"确认成功",2000).show();
 						mDialog.dismiss();
+						editText.setText("");
 						break;
 					case 5:
 						Toast.makeText(getActivity(),"消费已经使用",2000).show();
 						mDialog.dismiss();
+						editText.setText("");
 						break;
 					default:
 						Toast.makeText(getActivity(),"确认失败",2000).show();
 						mDialog.dismiss();
+						editText.setText("");
 						break;
 					}
 			 		

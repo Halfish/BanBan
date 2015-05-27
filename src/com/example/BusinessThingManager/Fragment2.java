@@ -21,6 +21,9 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -34,11 +37,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
+import com.example.BBput.ThingPutting;
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BanBanBusiness.localStore;
 import com.example.BusinessHttp.HttpUtil;
 import com.example.BusinessHttp.BitmapCache;
 import com.example.banban.R;
+import com.example.newuser.LoginActivity;
 
 public class Fragment2 extends Fragment   {
 	  private String  uri="http://omegaga.net/banban/stores/products/";
@@ -54,6 +59,7 @@ public class Fragment2 extends Fragment   {
 	  RequestQueue deleteQueue;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -88,7 +94,7 @@ public class Fragment2 extends Fragment   {
 			//调用图片加载
 			networkImageView.setDefaultImageResId(R.drawable.moren); 
 			networkImageView.setErrorImageResId(R.drawable.moren); 
-			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, new BitmapCache());  
+			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, localStore.storeCache);  
 			
 			networkImageView.setImageUrl(lstImageItem.get(position).get("image").toString(),imageLoader);
 			
@@ -231,5 +237,21 @@ public class Fragment2 extends Fragment   {
 			 		Toast.makeText(getActivity(),"服务器无响应",2000).show();
 			 }
 		 }
+	}
+	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		 inflater.inflate(R.menu.main, menu);
+		 super.onCreateOptionsMenu(menu,inflater);
+	}
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		Builder dialog;
+		switch (id) {
+		case R.id.action_puttings:
+			Intent intent=new Intent(getActivity(),ThingPutting.class);
+			startActivity(intent);
+			break;
+		}
+		return false;
 	}
 }

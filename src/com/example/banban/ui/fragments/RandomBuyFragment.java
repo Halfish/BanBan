@@ -9,6 +9,7 @@ package com.example.banban.ui.fragments;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kankan.wheel.widget.WheelView;
 
@@ -21,6 +22,7 @@ import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.TigerMathine;
+import com.example.banban.ui.TigerMathine.TigerAnimFinishedCallBack;
 import com.example.banban.ui.randombuy.ProductInfoActivity;
 
 import android.app.Activity;
@@ -36,7 +38,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class RandomBuyFragment extends BaseActionBarFragment {
 	private static final String LOG_TAG = RandomBuyFragment.class.getName();
@@ -47,11 +48,12 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private List<WheelView> m_wheelViewList;
 	private TigerMathine m_tigerMathine;
 
-	private int remainTime = 0;
 	private Activity m_activity;
 	private RequestQueue m_queue;
 	private Handler m_handler;
 	private Handler m_randomTimeHandler;
+	private int m_randomTimes = 0;
+	private boolean m_lucky = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,9 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
 		m_queue = Volley.newRequestQueue(m_activity);
+		initHandler();
 		beginTimeDataRequest();
 		Log.v(LOG_TAG, "onCreate called");
-		initHandler();
 	}
 
 	@Override
@@ -82,6 +84,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case HttpUtil.SUCCESS_CODE:
+					beginTimeDataRequest();
 					JSONObject response = (JSONObject) msg.obj;
 					try {
 						updateDataFromServer(response);
@@ -124,12 +127,11 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			throws JSONException {
 		int product_id = jsonObject.getInt("product_id");
 		if (product_id == -1) {
-			// 没抢到 TODO 看还有几次机会
-			Toast.makeText(m_activity, "没抢到，再试一次吧！", Toast.LENGTH_LONG).show();
+			m_lucky = false;
+			m_tigerMathine.startAnim(false);
 		} else {
-			Toast.makeText(m_activity, "不错呦，抢到了一个！", Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(m_activity, ProductInfoActivity.class);
-			startActivity(intent);
+			m_lucky = true;
+			m_tigerMathine.startAnim(true);
 		}
 	}
 
@@ -137,9 +139,19 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			throws JSONException {
 		int retCode = response.getInt("ret_code");
 		if (retCode == 0) {
-			int random_times = response.getInt("random_times");
-			remainTime = random_times;
-			m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
+			m_randomTimes = response.getInt("random_times");
+			Log.v(LOG_TAG, "random_times is " + m_randomTimes);
+			updateRandomTimes();
+		}
+	}
+
+	private void updateRandomTimes() {
+		if (m_randomTimes == 0) {
+			m_chanceTextView.setVisibility(View.GONE);
+			m_randomBuyBtn.setVisibility(View.GONE);
+			m_infoTextView.setVisibility(View.VISIBLE);
+		} else {
+			m_chanceTextView.setText("今天还有 " + m_randomTimes + " 次机会");
 		}
 	}
 
@@ -172,22 +184,13 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_chanceTextView = (TextView) view.findViewById(R.id.tv_chance);
 		m_infoTextView = (TextView) view.findViewById(R.id.tv_info);
 
-		remainTime = 0;
-		m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
-
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				if (remainTime > 0) {
-					beginDataRequest();
-					m_tigerMathine.startAnim();
-					m_chanceTextView.setText("今天还有 " + remainTime + " 次机会");
-				} else {
-					m_chanceTextView.setVisibility(View.INVISIBLE);
-					m_infoTextView.setVisibility(View.VISIBLE);
-					m_randomBuyBtn.setVisibility(View.INVISIBLE);
-				}
+				m_lucky = false;
+				beginDataRequest();
+				m_randomTimes--;
+				updateRandomTimes();
 			}
 		});
 	}
@@ -198,21 +201,27 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_2));
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_3));
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_4));
-		m_tigerMathine = new TigerMathine(m_activity, m_wheelViewList);
+		m_tigerMathine = new TigerMathine(m_activity, m_wheelViewList, new TigerAnimFinishedCallBack() {
+			public void onTigerAnimFinished() {
+				Log.v(LOG_TAG, "anim finished");
+				if (m_lucky) {
+					Intent intent = new Intent(m_activity, ProductInfoActivity.class);
+					startActivity(intent);
+				}
+			}
+		});
 	}
 
 	private void beginDataRequest() {
-		
-		HttpUtil.NormalPostRequest(new HashMap<String, String>(),
-				BBConfigue.SERVER_HTTP + "/products/generate/random",
-				m_handler, m_queue);
-		beginTimeDataRequest();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("city", 440100 + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/products/generate/random", m_handler, m_queue);
 	}
 
 	private void beginTimeDataRequest() {
-		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/users/suppports/history/" + BBConfigue.USER_ID,
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/random_times",
 				m_randomTimeHandler, m_queue);
 	}
-	
+
 }

@@ -95,12 +95,10 @@ public class SupporterFragment extends BaseActionBarFragment {
 	}
 
 	private void beginDataGetRequest() {
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("project_id",
-				getActivity().getIntent().getIntExtra("projectId", -1) + "");
-		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-				+ "/projects/supporters", m_handler, m_queue);
+		int project_id = getActivity().getIntent().getIntExtra("projectId", -1);
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+				+ "/projects/supporters/" + project_id, m_handler,
+				m_queue);
 	}
 
 	private void parseDataFromServer(JSONObject response) throws JSONException {
@@ -160,6 +158,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 		m_listView = (ListView) rootView.findViewById(R.id.lv_supporter);
 		m_adapter = new SupporterAdapter();
 		m_listView.setAdapter(m_adapter);
+		// TODO
 
 		beginDataGetRequest();
 		Log.v(LOG_TAG, "onCreateView called");
@@ -240,7 +239,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 
 			viewHolder.supporterImg.setImageUrl(BBConfigue.SERVER_HTTP
 					+ supporterImg, m_imageLoader);
-			
+
 			// viewHolder.supporterImg.setImageDrawable(supporterImg);
 			viewHolder.nickname.setText(nickname);
 			viewHolder.date.setText(date);

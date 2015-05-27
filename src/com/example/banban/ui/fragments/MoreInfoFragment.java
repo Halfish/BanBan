@@ -11,6 +11,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 import com.example.banban.R;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBUIUtil;
+import com.example.newuser.ChooseLoginActivity;
 import com.example.newuser.LoginActivity;
 import com.example.newuser.RegisterActivity;
 
@@ -184,7 +185,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 
 		m_logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				Intent intent = new Intent(getActivity(), ChooseLoginActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}

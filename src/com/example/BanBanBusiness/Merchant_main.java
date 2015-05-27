@@ -7,23 +7,37 @@ import com.example.BusinessBuyManager.Fragment3;
 import com.example.BusinessMyStore.Fragment1;
 import com.example.BusinessThingManager.Fragment2;
 import com.example.banban.R;
+import com.example.newuser.ChooseLoginActivity;
 import com.example.newuser.LoginActivity;
 
+import android.R.bool;
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.TabHost.TabSpec;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Merchant_main extends FragmentActivity {
 
 	private FragmentTabHost mTabHost;
 	private RadioGroup mTabRg;
+	private static final long INTERVAL_MS_TIME = 2000;
+	private static long back_pressed;
 
 	private final Class[] fragments = { Fragment1.class, Fragment2.class,
 			Fragment3.class };
@@ -34,10 +48,15 @@ public class Merchant_main extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getActionBar().setDisplayShowTitleEnabled(false);
-		getActionBar().setCustomView(R.layout.title);
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+				ActionBar.LayoutParams.WRAP_CONTENT,
+				ActionBar.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+
+		TextView title = (TextView) getLayoutInflater().inflate(
+				R.layout.title, null);
+		getActionBar().setCustomView(title,lp);
 		getActionBar().setDisplayShowCustomEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setIcon(R.drawable.bb_back);
+		
 		BBQueue = Volley.newRequestQueue(Merchant_main.this);
 		initView();
 	}
@@ -81,34 +100,50 @@ public class Merchant_main extends FragmentActivity {
 
 		mTabHost.setCurrentTab(0);
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		// TODO Auto-generated method stub
+		return super.onCreateOptionsMenu(menu);
 	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		Builder dialog;
 		switch (id) {
 		case android.R.id.home:
-			Intent intent = new Intent(Merchant_main.this,LoginActivity.class);
-			startActivity(intent);
-			finish();
-			break;
-
-		case R.id.action_puttings:
-			Intent intent2 = new Intent(Merchant_main.this, ThingPutting.class);
-			startActivity(intent2);
-			break;
-		default:
+			dialog=new AlertDialog.Builder(Merchant_main .this);
+			dialog.setTitle("是否退出");
+			dialog.setPositiveButton("是",new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+						Intent intent=new Intent(Merchant_main .this,ChooseLoginActivity.class);
+						startActivity(intent);
+						SharedPreferences sp = getSharedPreferences("account", Context.MODE_PRIVATE);
+						Editor editor = sp.edit();  
+						editor.clear();  
+						editor.commit(); 
+						finish();
+					}
+			});
+			dialog.setNegativeButton("否", new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+					}
+			});
+			dialog.show();
 			break;
 		}
-		return super.onOptionsItemSelected(item);
+		return false;
+	}  
+	public void onBackPressed() {
+		if (back_pressed + INTERVAL_MS_TIME > System.currentTimeMillis()) {
+			super.onBackPressed();
+			android.os.Process.killProcess(android.os.Process.myPid()); // 完全退出程序
+		} else {
+			Toast.makeText(getBaseContext(),
+					getResources().getString(R.string.bb_double_press_back),
+					Toast.LENGTH_SHORT).show();
+		}
+		back_pressed = System.currentTimeMillis();
 	}
 }

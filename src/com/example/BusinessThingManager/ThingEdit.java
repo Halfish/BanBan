@@ -17,6 +17,7 @@ import com.example.BusinessHttp.BitmapCache;
 import com.example.BusinessHttp.HttpUtil;
 import com.example.banban.R;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -50,9 +51,7 @@ public class ThingEdit extends Activity {
 	private EditText editText1;
 	private EditText editText2;
 	private EditText editText3;
-	private EditText editText4;
 	private EditText editText5;
-	private EditText editText8;
 
 	private SelectPicPopupWindow menuWindow;
 	private static int RESULT_LOAD_IMAGE = 1;
@@ -81,21 +80,17 @@ public class ThingEdit extends Activity {
 		editText1 = (EditText) findViewById(R.id.editText1);
 		editText2 = (EditText) findViewById(R.id.editText2);
 		editText3 = (EditText) findViewById(R.id.editText3);
-		editText4 = (EditText) findViewById(R.id.editText4);
 		editText5 = (EditText) findViewById(R.id.editText5);
-		editText8 = (EditText) findViewById(R.id.editText8);
 		final HashMap<String, Object> tmap = localStore.Itemlist
 				.get(localStore.position);
 		itTextView.setText(tmap.get("name").toString());
 		editText1.setText(tmap.get("amount_random").toString());
 		editText2.setText(tmap.get("amount_spec").toString());
 		editText3.setText(tmap.get("o_price").toString());
-		editText4.setText(tmap.get("price_h").toString());
-		editText8.setText(tmap.get("donate").toString());
 		editText5.setText(tmap.get("description").toString());
 		// 获取图片
 		ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue,
-				new BitmapCache());
+				localStore.storeCache);
 		ImageListener listener = ImageLoader.getImageListener(btButton1,
 				R.drawable.add, R.drawable.add);
 		Log.v("haha", (String) tmap.get("image"));
@@ -164,9 +159,7 @@ public class ThingEdit extends Activity {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("id", tmap.get("product_id").toString());
 				map.put("name", itTextView.getText().toString());
-				map.put("original_price", editText3.getText().toString());
-				map.put("price", editText4.getText().toString());
-				map.put("donate", editText8.getText().toString());
+				map.put("original_price",editText3.getText().toString());
 				map.put("amount_random", editText1.getText().toString());
 				map.put("amount_spec", editText2.getText().toString());
 				map.put("description", editText5.getText().toString());
@@ -277,7 +270,7 @@ public class ThingEdit extends Activity {
 		mDialog = new AlertDialog.Builder(mContext).create();
 		mDialog.setOnKeyListener(keyListener);
 		mDialog.show();
-		// 注意此处要放在show之后 否则会报异常
+		//注意此处要放在show之后 否则会报异常
 		mDialog.setContentView(layout);
 	}
 

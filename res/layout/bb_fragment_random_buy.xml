@@ -55,7 +55,7 @@
         android:layout_below="@+id/btn_random_buy"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="@string/bb_random_buy_got_chances" />
+        android:text="" />
 
     <TextView
         android:id="@+id/tv_info"

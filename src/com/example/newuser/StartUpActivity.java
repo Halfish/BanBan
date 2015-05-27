@@ -53,7 +53,7 @@ public class StartUpActivity extends Activity {
 		String store_id = pref.getString("store_id", "");
 		String type = pref.getString("type", "");
 
-		Intent intent = new Intent(StartUpActivity.this, LoginActivity.class);
+		Intent intent = new Intent(StartUpActivity.this, ChooseLoginActivity.class);
 		if (type.equals("user")) {
 			if(username.equals("")) {
 				intent = new Intent(StartUpActivity.this, LoginActivity.class);

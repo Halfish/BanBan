@@ -28,12 +28,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,9 +48,7 @@ public class ThingPutting extends Activity {
 	private EditText editText1;
 	private EditText editText2;
 	private EditText editText3;
-	private EditText editText4;
 	private EditText editText5;
-	private EditText editText8;
 	private AlertDialog mDialog;
 	private SelectPicPopupWindow menuWindow;
 	private static int RESULT_LOAD_IMAGE = 1;
@@ -56,6 +59,7 @@ public class ThingPutting extends Activity {
 	private Button button1;
 	private String picturePath;
 	private Bitmap smallmap;
+	private Spinner m_spinner;
 	private PuttingHandler handler = new PuttingHandler();
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +78,10 @@ public class ThingPutting extends Activity {
 		editText1 = (EditText) findViewById(R.id.editText1);
 		editText2 = (EditText) findViewById(R.id.editText2);
 		editText3 = (EditText) findViewById(R.id.editText3);
-		editText4 = (EditText) findViewById(R.id.editText4);
 		editText5 = (EditText) findViewById(R.id.editText5);
-		editText8 = (EditText) findViewById(R.id.editText8);
 		// 对名字进行监听
-
+		m_spinner=(Spinner) findViewById(R.id.spinner1);
+		
 		view1.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -145,8 +148,6 @@ public class ThingPutting extends Activity {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("name", itTextView.getText().toString());
 				map.put("original_price", editText3.getText().toString());
-				map.put("price", editText4.getText().toString());
-				map.put("donate", editText8.getText().toString());
 				map.put("amount_random", editText1.getText().toString());
 				map.put("amount_spec", editText2.getText().toString());
 				map.put("description", editText5.getText().toString());
@@ -160,9 +161,18 @@ public class ThingPutting extends Activity {
 
 			}
 		});
+		/*m_spinner.setOnItemClickListener(new OnItemClickListener(){
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+					
+			}
+			
+		});*/
 	}
-
+	
 	public class PuttingHandler extends Handler {
 		public void dispatchMessage(Message msg) {
 			switch (msg.what) {
@@ -272,4 +282,25 @@ public class ThingPutting extends Activity {
 		return imm.hideSoftInputFromWindow(this.getCurrentFocus()
 				.getWindowToken(), 0);
 	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		switch (id) {
+		case android.R.id.home:
+			//Intent intent = new Intent(Merchant_main.this,LoginActivity.class);
+			//startActivity(intent);
+			finish();
+			break;
+		}
+		return false;
+	}
+	
 }

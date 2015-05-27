@@ -118,7 +118,7 @@ public class Store_reviews extends Fragment {
 			NetworkImageView networkImageView = (NetworkImageView) v.findViewById(R.id.imageViewW);
 			networkImageView.setDefaultImageResId(R.drawable.touxiang); 
 			networkImageView.setErrorImageResId(R.drawable.touxiang);
-			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, new BitmapCache());  
+			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue,localStore.storeCache);  
 			networkImageView.setImageUrl(lstViewItem.get(position).get("image").toString(),imageLoader);
 			
 			return v;

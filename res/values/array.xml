@@ -53,40 +53,22 @@
         <item>威海</item>
         <item>泉州</item>
     </string-array>
-    <string-array name="city_area">
-        <item>荔湾区</item>
-        <item>海珠区</item>
-        <item>越秀区</item>
-        <item>天河区</item>
-        <item>白云区</item>
-        <item>黄埔区</item>
-        <item>花都区</item>
-        <item>萝岗区</item>
-        <item>番禺区</item>
-        <item>南沙区</item>
-    </string-array>
-    <string-array name="city_place">
-        <item>全城</item>
-        <item>百乐广场</item>
-        <item>白云大道沿线</item>
-        <item>维多利亚广场</item>
-        <item>广州塔</item>
-        <item>百乐广场</item>
-        <item>白云大道沿线</item>
-        <item>维多利亚广场</item>
-        <item>广州塔</item>
-        <item>百乐广场</item>
-        <item>白云大道沿线</item>
-        <item>维多利亚广场</item>
-        <item>广州塔</item>
-        <item>百乐广场</item>
-        <item>白云大道沿线</item>
-        <item>维多利亚广场</item>
-        <item>广州塔</item>
-    </string-array>
     <string-array name="smart_order">
         <item>人气最高</item>
         <item>参与度最高</item>
+    </string-array>
+    <string-array name="category">
+        <item>女装</item>
+        <item>男装</item>
+        <item>内衣</item>
+        <item>女/男鞋</item>
+        <item>化妆品</item>
+        <item>数码产品</item>
+        <item>母婴玩具</item>
+        <item>家电</item>
+        <item>零食</item>
+        <item>家居建材</item>
+        <item>图书音像</item>
     </string-array>
 
 </resources>

@@ -145,6 +145,7 @@ public class NewestFragment extends BaseActionBarFragment {
 	private void addItem(JSONObject object) throws JSONException {
 
 		int project_id = object.getInt("project_id");
+		int favorites = object.getInt("favorites");
 		String name = object.getString("name");
 		int expect_length = object.getInt("expect_length");
 		int remaining_days = object.getInt("remaining_days");
@@ -157,7 +158,7 @@ public class NewestFragment extends BaseActionBarFragment {
 		item.put("project_id", project_id + "");
 		item.put("project_img", image);
 		item.put("project_name", name);
-		item.put("like_number", "34,334");
+		item.put("like_number", favorites + "");
 		item.put("goal", "目标 " + expect_length + "天" + expect + "元");
 		item.put("achieved", percentage + "%\n已达");
 		item.put("accumulation", total_support + "元\n已融资");

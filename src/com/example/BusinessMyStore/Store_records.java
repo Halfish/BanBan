@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.BanBanBusiness.Merchant_main;
+import com.example.BanBanBusiness.localStore;
 import com.example.BusinessHttp.BitmapCache;
 import com.example.BusinessHttp.HttpUtil;
 import com.example.banban.R;
@@ -119,7 +120,7 @@ public class Store_records extends Fragment {
 			NetworkImageView networkImageView = (NetworkImageView) v.findViewById(R.id.imageView1);
 			networkImageView.setDefaultImageResId(R.drawable.touxiang); 
 			networkImageView.setErrorImageResId(R.drawable.touxiang);
-			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, new BitmapCache());  
+			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, localStore.storeCache);  
 			networkImageView.setImageUrl(lstViewItem.get(position).get("image").toString(),imageLoader);
 			return v;
 			

@@ -3,6 +3,9 @@ package com.example.BanBanBusiness;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.example.BusinessHttp.BitmapCache;
+
 /*
  * 主要用于本地存储
  */
@@ -18,5 +21,6 @@ public class localStore {
 	 public static String description=null;
 	 public static String uuri="http://omegaga.net/banban";
 	 public static ArrayList<HashMap<String, Object>> Itemlist=null;
+	 public static ImageCache storeCache= new BitmapCache();
 	 public static int position;
 }

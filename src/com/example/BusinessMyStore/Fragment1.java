@@ -7,6 +7,8 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.BBput.Compress_Save;
@@ -17,6 +19,7 @@ import com.example.BanBanBusiness.localStore;
 import com.example.BusinessHttp.BitmapCache;
 import com.example.BusinessHttp.HttpUtil;
 import com.example.banban.R;
+import com.example.newuser.LoginActivity;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -37,7 +40,11 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -46,15 +53,16 @@ import android.widget.TextView;
 import android.view.animation.TranslateAnimation;
 
 public class Fragment1 extends Fragment  {
-	private ImageView imageView;
+	private ImageView imageView,imageView2;
 	private ImageView image;
 	private Bitmap  bitmap=null;
 	private ArrayList<Fragment> fragmentList;
 	private static int RESULT_LOAD_IMAGE = 1;
-	private ViewPager mPager;
+	private static int RESULT_LOAD=2;
+	private ViewPager mPager; 
 	private int bmpW;// 横线图片宽度
 	private TextView view1, view2, view3,view4;	//页卡头标
-	private TextView tname,tdonate;
+	private TextView tname,tdonate,tfav,tcol;
 	private int currIndex;// 当前页卡编号
 	private int offset;// 图片移动的偏移量
 	private static String path="/sdcard/banban/photo/";
@@ -63,14 +71,20 @@ public class Fragment1 extends Fragment  {
 	private String  uri2="http://omegaga.net/banban/stores/update";
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
+		getActivity().getActionBar().setIcon(R.drawable.bb_back);
+		getActivity().getActionBar().setDisplayShowCustomEnabled(true);
+		getActivity().getActionBar().setHomeButtonEnabled(true);
+		setHasOptionsMenu(true);
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View parentView = inflater.inflate(R.layout.myyshop, container, false);
-		bitmap=BitmapFactory.decodeFile(path+"head.png");
+		bitmap=BitmapFactory.decodeFile(path+"store_beijing.png");
 		image=(ImageView)parentView.findViewById(R.id.cursor);
 		tname=(TextView) parentView.findViewById(R.id.tv_store_name);
 		tdonate=(TextView) parentView.findViewById(R.id.tv_product_price);
+		tfav=(TextView) parentView.findViewById(R.id.tv_store_favourite);
+		tcol=(TextView) parentView.findViewById(R.id.tv_store_collect);
 		view1 = (TextView) parentView.findViewById(R.id.tv_guid1);
 		view2 = (TextView) parentView.findViewById(R.id.tv_guid2);
 		view3 = (TextView) parentView.findViewById(R.id.tv_guid3);
@@ -81,7 +95,7 @@ public class Fragment1 extends Fragment  {
 		view4.setOnClickListener(new txListener(3));
 		mPager = (ViewPager) parentView.findViewById(R.id.viewpager);
 		imageView=(ImageView)parentView.findViewById(R.id.imageView1);
-		
+		imageView2=(ImageView)parentView.findViewById(R.id.imageView2);
 		//判断用户是否保存头像
 			if(bitmap!=null){
 				imageView.setImageBitmap(bitmap);
@@ -109,15 +123,8 @@ public class Fragment1 extends Fragment  {
 		}
 	}
 	private void Initnetwork(){
-		if(localStore.donateString_numString==null||localStore.storenameString==null){
 			String Furi=uri+localStore.store_id;
 			HttpUtil.JsonGetRequest(Furi, handler,  Merchant_main.BBQueue);
-		}
-		else{
-			tname.setText(localStore.storenameString);
-			tdonate.setText(localStore.donateString+localStore.donateString_numString);
-		}
-		
 	}
 	private class GettingHandler extends Handler{
 		
@@ -144,14 +151,12 @@ public class Fragment1 extends Fragment  {
 						localStore.phoneString=phoneString;
 						String description=jsonObj.getString("description");
 						localStore.description=description;
-						
-						if(bitmap==null){
-							ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, new BitmapCache()); 
-							ImageListener listener = ImageLoader.getImageListener(imageView, 
-									R.drawable.moren, R.drawable.moren);
-							imageLoader.get(picURI,listener);
-						}
-								
+						String favourite=jsonObj.getString("favorites");
+						tfav.setText("关注数："+favourite);
+						ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue,localStore.storeCache); 
+						ImageListener listener = ImageLoader.getImageListener(imageView2, 
+								R.drawable.touxiang, R.drawable.touxiang);
+						imageLoader.get(picURI,listener);			
 						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -168,13 +173,13 @@ public class Fragment1 extends Fragment  {
 	//初始化函数
 	private void Initimage(){
 		
-			//图片长按切换头像操作
+			//图片长按切换背景操作
 		imageView.setOnLongClickListener(new OnLongClickListener() {	
 					@Override
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
 				Builder dialog=new AlertDialog.Builder(getActivity());
-				dialog.setPositiveButton("切换商家图片",new DialogInterface.OnClickListener() {
+				dialog.setPositiveButton("切换背景图片",new DialogInterface.OnClickListener() {
 							
 				@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -187,6 +192,25 @@ public class Fragment1 extends Fragment  {
 				return false;
 			}
 		});
+		imageView2.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Builder dialog=new AlertDialog.Builder(getActivity());
+				dialog.setPositiveButton("切换头像",new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						startActivityForResult(intent, RESULT_LOAD);
+					}
+					
+				});
+				dialog.show();
+			}
+		});
 	}
 	//监听长按函数
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -195,20 +219,33 @@ public class Fragment1 extends Fragment  {
 			  //这个图片的URI	
 			  Uri selectedImage =data.getData();
 			  //获得图像的绝对路径
-			  String picturePath = PhotoM.getpicture(getActivity(), selectedImage);
+			  if(selectedImage!=null){
+				    String picturePath = PhotoM.getpicture(getActivity(), selectedImage);
 			  //将图像进行压缩;
-			  Bitmap bitmap2=Compress_Save.getSmallBitmap(picturePath,imageView.getWidth(),imageView.getHeight());
-			 // 
-			  imageView.setImageBitmap(bitmap2);
+			  		Bitmap bitmap2=Compress_Save.getSmallBitmap(picturePath,imageView.getWidth(),imageView.getHeight());
+			  		imageView.setImageBitmap(bitmap2);
 			  //图片保存
-			 // SaveinSD.savephoto(bitmap2);  
+			  		SaveinSD.savephoto(bitmap2,"store_beijing.png");  
+			  }
 			  //将图片上传
-			  
-			  Map<String, String> map=new HashMap<String, String>();
-			  map.put("image", PhotoM.imgToBase64(bitmap2));
-			  HttpUtil.NormalPostRequest(map, uri2, handler, Merchant_main.BBQueue);
 	        }
+		 else if(requestCode==RESULT_LOAD){
+			 //这个图片的URI	
+			  Uri selectedImage =data.getData();
+			  //获得图像的绝对路径
+			  if(selectedImage!=null){
+			 	String picturePath = PhotoM.getpicture(getActivity(), selectedImage);
+			  //将图像进行压缩;
+			 	Bitmap bitmap2=Compress_Save.getSmallBitmap(picturePath,imageView2.getWidth(),imageView2.getHeight());
+			 	imageView2.setImageBitmap(bitmap2);
+			 
+			 	Map<String, String> map=new HashMap<String, String>();
+			 	map.put("image", PhotoM.imgToBase64(bitmap2));
+			 	HttpUtil.NormalPostRequest(map, uri2, handler, Merchant_main.BBQueue);
+			  }
+		 }
 	}
+	
 	/*
 	 * 动画操作
 	 */
@@ -238,6 +275,7 @@ public class Fragment1 extends Fragment  {
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
 	}
+	
 	/*
 	 * 监听函数
 	 */
@@ -290,4 +328,6 @@ public class Fragment1 extends Fragment  {
 		}
 		
 	}
+	
 }
+

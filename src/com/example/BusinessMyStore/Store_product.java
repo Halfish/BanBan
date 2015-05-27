@@ -123,7 +123,7 @@ public class Store_product extends Fragment {
 			NetworkImageView networkImageView = (NetworkImageView) v.findViewById(R.id.itemImage3);
 			networkImageView.setDefaultImageResId(R.drawable.moren); 
 			networkImageView.setErrorImageResId(R.drawable.moren); 
-			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, new BitmapCache());  
+			ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue, localStore.storeCache);  
 			networkImageView.setImageUrl(lstImageItem.get(position).get("image").toString(),imageLoader);
 			return v;
 			

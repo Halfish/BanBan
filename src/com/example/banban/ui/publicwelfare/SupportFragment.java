@@ -45,7 +45,7 @@ public class SupportFragment extends BaseActionBarFragment {
 	private RequestQueue m_queue;
 	private Button m_fundButton;
 	private int m_balance = 0;
-	private int m_totalSupport = 0;
+	private int m_userSupport = 0;
 	private int m_donateMoney = 0;
 	private TextView m_donateTextView;
 
@@ -55,12 +55,13 @@ public class SupportFragment extends BaseActionBarFragment {
 		m_queue = Volley.newRequestQueue(getActivity());
 		initHandler();
 	}
-	
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-		
+
 		if (isVisibleToUser && isAdded()) {
-			HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/projects/detail/"
+			HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+					+ "/projects/detail/"
 					+ getActivity().getIntent().getIntExtra("projectId", -1),
 					m_detailHandler, m_queue);
 		}
@@ -113,7 +114,7 @@ public class SupportFragment extends BaseActionBarFragment {
 				super.handleMessage(msg);
 			}
 		};
-		
+
 		m_detailHandler = new Handler(getActivity().getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -145,9 +146,8 @@ public class SupportFragment extends BaseActionBarFragment {
 		switch (ret_code) {
 		case 0:
 			infoString = "成功投入公益基金" + m_donateMoney + "元";
-			m_totalSupport += m_donateMoney;
-			m_donateTextView.setText("已投入公益资金：" + m_totalSupport + "元");
-			m_donateTextView.setVisibility(View.VISIBLE);
+			m_userSupport += m_donateMoney;
+			m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
 			break;
 
 		case 1:
@@ -203,29 +203,26 @@ public class SupportFragment extends BaseActionBarFragment {
 						} catch (Exception e) {
 							m_donateMoney = -1;
 						}
-						
-						Log.v(LOG_TAG, "I want to donate money " + m_donateMoney);
-						if(m_donateMoney > 0 && m_donateMoney < 99999) {
+
+						Log.v(LOG_TAG, "I want to donate money "
+								+ m_donateMoney);
+						if (m_donateMoney > 0 && m_donateMoney < 99999) {
 							beginAddSupportRequest(m_donateMoney);
-						} 
+						}
 					}
 				}).show();
 
 	}
-	
-	private void parseProjectDetailFromServer(JSONObject jsonObject) throws JSONException {
+
+	private void parseProjectDetailFromServer(JSONObject jsonObject)
+			throws JSONException {
 		int ret_code = jsonObject.getInt("ret_code");
 		String infoString = "";
 		switch (ret_code) {
 		case 0:
 			infoString = "Succeed";
-			m_totalSupport = jsonObject.getInt("total_support");
-			if(m_totalSupport != 0) {
-				m_donateTextView.setText("已投入公益资金：" + m_totalSupport + "元");
-				m_donateTextView.setVisibility(View.VISIBLE);
-			} else {
-				m_donateTextView.setVisibility(View.GONE);
-			}
+			m_userSupport = jsonObject.getInt("user_support");
+			m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
 			break;
 
 		case 1:
@@ -245,16 +242,16 @@ public class SupportFragment extends BaseActionBarFragment {
 		View view = getActivity().getLayoutInflater().inflate(
 				R.layout.bb_fragment_publicwelfare_support, container, false);
 
-		m_donateTextView = (TextView)view.findViewById(R.id.tv_donate);
+		m_donateTextView = (TextView) view.findViewById(R.id.tv_donate);
 		m_fundButton = (Button) view.findViewById(R.id.btn_fund);
 		m_fundButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// 查询剩余公益基金，等查到数据再启动AlertDialog
-				HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
-						m_balanceHandler, m_queue);
+				HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
+						+ "/users/balance", m_balanceHandler, m_queue);
 			}
 		});
-		
+
 		return view;
 	}
 

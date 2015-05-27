@@ -28,7 +28,7 @@
             android:layout_alignBottom="@+id/address"
             android:layout_marginLeft="26dp"
             android:layout_toRightOf="@+id/address"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -56,7 +56,7 @@
             android:layout_alignBottom="@+id/phone"
             android:layout_marginLeft="26dp"
             android:layout_toRightOf="@+id/phone"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -84,7 +84,7 @@
             android:layout_below="@+id/store_description"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -66,6 +66,9 @@ public class ProjectActivity extends FragmentActivity {
 	private TextView m_achieve; // 已经筹资：元
 	private TextView m_accumulate; // 达成：100%
 	private ImageView m_image;
+	
+	private boolean m_isFavorited = false; // 赞过此商家
+	private boolean m_isCollected = false; // 收藏过此商家
 
 	private Handler m_handler;
 	private Handler m_likeHandler;
@@ -210,6 +213,11 @@ public class ProjectActivity extends FragmentActivity {
 		int percentage = response.getInt("percentage");
 		// String description = response.getString("description");
 		// String feedback = response.getString("");
+		int bookmarked = response.getInt("bookmarked");
+		int favorited = response.getInt("favorited");
+		
+		m_isFavorited = favorited == 1 ? true : false;
+		m_isCollected = bookmarked == 1 ? true : false;
 
 		m_projectName.setText("项目名称：" + name);
 		m_goal.setText("目标：" + expect + "元");
@@ -228,9 +236,11 @@ public class ProjectActivity extends FragmentActivity {
 		int ret_code = response.getInt("ret_code");
 		switch (ret_code) {
 		case 0:
+			m_isFavorited = true;
 		case 1:
 		case 2:
 		case 3:
+		case 4:
 			String message = response.getString("message");
 			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
 					.show();
@@ -246,6 +256,7 @@ public class ProjectActivity extends FragmentActivity {
 		int ret_code = response.getInt("ret_code");
 		switch (ret_code) {
 		case 0:
+			m_isCollected = true;
 		case 1:
 		case 2:
 			String message = response.getString("message");
@@ -371,8 +382,22 @@ public class ProjectActivity extends FragmentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem zanItem = menu.getItem(0);
-		Log.v(LOG_TAG, zanItem.getTitle().toString());
-		// TODO
+		if (m_isFavorited) {
+			zanItem.setTitle("已经点赞");
+			zanItem.setEnabled(false);
+		} else {
+			zanItem.setTitle("点个赞");
+			zanItem.setEnabled(true);
+		}
+		
+		MenuItem collectItem = menu.getItem(1);
+		if (m_isCollected) {
+			collectItem.setTitle("已收藏此商家");
+			collectItem.setEnabled(false);
+		} else {
+			collectItem.setTitle("收藏此商家");
+			collectItem.setEnabled(true);
+		}
 		return true;
 	}
 

@@ -28,14 +28,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity {
+public class BLoginActivity extends Activity {
 
 	private Context m_context;
-	private static final String LOG_TAG = LoginActivity.class.getName();
+	private static final String LOG_TAG = BLoginActivity.class.getName();
 
 	private Button m_loginButton;
-	private Button m_registerButton;
-	private Button m_visitorButton;
 	private EditText m_usernameEditText;
 	private EditText m_passwordEditText;
 
@@ -49,7 +47,7 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.bb_activity_login);
+		setContentView(R.layout.bb_activity_blogin);
 		m_context = getBaseContext();
 
 		initNetwork();
@@ -61,35 +59,13 @@ public class LoginActivity extends Activity {
 		m_passwordEditText = (EditText) findViewById(R.id.et_passwd);
 
 		m_loginButton = (Button) findViewById(R.id.btn_login);
-		m_registerButton = (Button) findViewById(R.id.btn_register);
-		m_visitorButton = (Button) findViewById(R.id.btn_visitor);
 
 		m_loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				m_username = m_usernameEditText.getText().toString().trim();
 				m_password = m_passwordEditText.getText().toString().trim();
-				BBConfigue.IS_VISITOR = false;
+
 				beginDataRequest();
-			}
-		});
-
-		m_registerButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(LoginActivity.this,
-						RegisterActivity.class);
-				startActivity(intent);
-				finish();
-			}
-		});
-
-		m_visitorButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				clearAccount();
-				BBConfigue.IS_VISITOR = true;
-				Intent intent = new Intent(LoginActivity.this,
-						BBMainActivity.class);
-				startActivity(intent);
-				finish();
 			}
 		});
 	}
@@ -99,7 +75,7 @@ public class LoginActivity extends Activity {
 		params.put("username", m_username);
 		params.put("password", m_password);
 		HttpUtil.NormalPostRequest(params, BBConfigue.SERVER_HTTP
-				+ "/users/login", m_handler, m_queue);
+				+ "/users/stores/login", m_handler, m_queue);
 	}
 
 	private void initNetwork() {
@@ -139,38 +115,31 @@ public class LoginActivity extends Activity {
 		pref.edit().putString("username", m_username).commit();
 		pref.edit().putString("password", m_password).commit();
 		pref.edit().putInt("user_id", m_userId).commit();
-		pref.edit().putString("type", "user").commit();
-	}
-
-	private void clearAccount() {
-		BBConfigue.USER_NAME = "";
-		BBConfigue.PASSWORD = "";
-
-		SharedPreferences pref = getSharedPreferences("account",
-				Context.MODE_PRIVATE);
-		pref.edit().clear().commit();
 	}
 
 	private void handleResponse(JSONObject response) throws JSONException {
 		Log.v(LOG_TAG, response.toString());
 		int retCode = response.getInt("ret_code");
+		int is_store = response.getInt("is_store");
 
 		switch (retCode) {
 		case 0:
 			// success
 
-			int duration = response.getInt("duration");
-			BBConfigue.DURATION = duration;
-
 			String token = response.getString("token");
 			BBConfigue.TOKEN = token;
-
-			m_userId = response.getInt("user_id");
-			BBConfigue.USER_ID = m_userId;
-
-			saveAccount();
-			Intent intent = new Intent(LoginActivity.this, BBMainActivity.class);
-			startActivity(intent);
+			SharedPreferences pref = getSharedPreferences("account",
+					Context.MODE_PRIVATE);
+			pref.edit().putString("type", "store").commit();
+			Intent intent = new Intent(BLoginActivity.this, Merchant_main.class);
+			localStore.store_id = response.getInt("store_id") + "";
+			Log.v("ll", localStore.store_id);
+			localStore.USER_NAME = m_username;
+			localStore.PASSWORD = m_password;	
+			pref.edit().putString("username", m_username).commit();
+			pref.edit().putString("password", m_password).commit();
+			pref.edit().putString("store_id", localStore.store_id ).commit();
+			startActivity(intent);	
 			finish();
 			break;
 
@@ -178,7 +147,10 @@ public class LoginActivity extends Activity {
 			String message = response.getString("message");
 			Toast.makeText(m_context, message, Toast.LENGTH_SHORT).show();
 			break;
-
+		case 4:
+			String message1 = response.getString("message");
+			Toast.makeText(m_context, message1, Toast.LENGTH_SHORT).show();
+			break;
 		default:
 			break;
 		}

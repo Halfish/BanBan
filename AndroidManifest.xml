@@ -64,6 +64,8 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- 客户版 -->
+        <activity android:name="com.example.newuser.BLoginActivity" />
+        <activity android:name="com.example.newuser.ChooseLoginActivity" />
         <activity android:name="com.example.newuser.LoginActivity" />
         <activity android:name="com.example.newuser.RegisterActivity" />
         <activity android:name="com.example.sortlistview.AlphabetaContactActicity" />

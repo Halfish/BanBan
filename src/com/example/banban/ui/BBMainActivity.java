@@ -122,6 +122,9 @@ public class BBMainActivity extends FragmentActivity {
 			//	resultCode, data);
 	}
 
+	/*
+	 * 防止按返回键不小心退出
+	 */
 	private static final long INTERVAL_MS_TIME = 2000;
 	private static long back_pressed;
 
