@@ -181,6 +181,7 @@ public class Fragment2 extends Fragment   {
 							double total=temp.getDouble("donate");
 							int numbers1=temp.getInt("amount_spec");	
 							int numbers2=temp.getInt("amount_random");
+							int numbers3=temp.getInt("category_id");
 							String description=temp.getString("description");
 							map.put("product_id", id);   
 							map.put("name", name);
@@ -193,6 +194,7 @@ public class Fragment2 extends Fragment   {
 							map.put("amount_spec", numbers1);
 							map.put("amount_random", numbers2);
 							map.put("image", pic_uri);
+							map.put("category_id",numbers3);
 							lstImageItem.add(map);
 							saImageItems.notifyDataSetChanged();
 							

@@ -79,11 +79,11 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private int bmpW;// 横线图片宽度
 	private int offset;// 图片移动的偏移量
 	private static int RESULT_LOAD_IMAGE = 1;
-	private static int RESULT_LOAD=2;
-	private static String m_uri=BBConfigue.SERVER_HTTP+"/users/update";
-	private ThisHandler handler=new ThisHandler();
-	private static String path="/sdcard/banban/photo/";
-	
+	private static int RESULT_LOAD = 2;
+	private static String m_uri = BBConfigue.SERVER_HTTP + "/users/update";
+	private ThisHandler handler = new ThisHandler();
+	private static String path = "/sdcard/banban/photo/";
+
 	private Activity m_activity;
 	private TextView m_donateTextView;
 	private TextView m_balanceTextView;
@@ -111,10 +111,10 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_queue = Volley.newRequestQueue(m_activity);
 		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
-		
+
 		Log.v(LOG_TAG, "onCreate called");
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
@@ -127,7 +127,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		super.onStart();
 	}
 
-	
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {
 			@Override
@@ -161,7 +160,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					Log.v(LOG_TAG, response.toString());
+					Log.v(LOG_TAG, "head and background" + response.toString());
 					break;
 
 				default:
@@ -176,14 +175,12 @@ public class MyAccountFragment extends BaseActionBarFragment {
 
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
 				m_handler, m_queue);
-		Bitmap bitmap=BitmapFactory.decodeFile(path+"user_beijing.png");
-		if(bitmap!=null){
+		Bitmap bitmap = BitmapFactory.decodeFile(path + "user_beijing.png");
+		if (bitmap != null) {
 			m_back_veiw.setImageBitmap(bitmap);
 		}
-		else{
-			HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
+		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
 				+ BBConfigue.USER_ID, m_handler2, m_queue);
-		}
 		Log.v(LOG_TAG, "user id: " + BBConfigue.USER_ID);
 	}
 
@@ -194,11 +191,17 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			return;
 		}
 		String image = jsonObject.getString("image");
-		
+		String background = jsonObject.getString("background");
+
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
 				R.drawable.default_head, R.drawable.default_head);
 		m_imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 		
+		Bitmap bitmap = BitmapFactory.decodeFile(path + "user_beijing.png");
+		if (bitmap == null) {
+			m_imageLoader.get(BBConfigue.SERVER_HTTP + background, listener);
+		}
+
 		String username = jsonObject.getString("username");
 		m_nickName.setText(username);
 	}
@@ -234,7 +237,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_followButton = (Button) view.findViewById(R.id.btn_following);
 		m_followingsButton = (Button) view.findViewById(R.id.btn_followings);
 
-		m_back_veiw=(ImageView) view.findViewById(R.id.img_beijing);
+		m_back_veiw = (ImageView) view.findViewById(R.id.img_beijing);
 		initButtons();
 
 		InitTextView(view);
@@ -253,26 +256,31 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		m_userPic.setOnClickListener(listener);
 		m_back_veiw.setOnLongClickListener(listener2);
 	}
-	
-	private OnLongClickListener listener2=new OnLongClickListener() {
-		
+
+	private OnLongClickListener listener2 = new OnLongClickListener() {
+
 		@Override
 		public boolean onLongClick(View v) {
 			// TODO Auto-generated method stub
-			switch (v.getId()){
-				case R.id.img_beijing:
-					Builder dialog=new AlertDialog.Builder(getActivity());
-					dialog.setPositiveButton("切换背景",new DialogInterface.OnClickListener(){
+			switch (v.getId()) {
+			case R.id.img_beijing:
+				Builder dialog = new AlertDialog.Builder(getActivity());
+				dialog.setPositiveButton("切换背景",
+						new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-							startActivityForResult(intent, RESULT_LOAD_IMAGE);
-						}
-						
-					});
-					dialog.show();
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										Intent.ACTION_PICK,
+										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								startActivityForResult(intent,
+										RESULT_LOAD_IMAGE);
+							}
+
+						});
+				dialog.show();
 				break;
 			}
 			return false;
@@ -285,37 +293,45 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			switch (v.getId()) {
 			case R.id.btn_stores:
 				// 切换到一个新的activity;
+				// 收藏的商家
 				Intent intent = new Intent(m_activity,
 						CollectedStoresActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.btn_projects:
+				// 收藏的项目
 				Intent intent1 = new Intent(m_activity,
 						CollectedProjectsActivity.class);
 				startActivity(intent1);
 				break;
 			case R.id.btn_following:
+				// 我关注的人
 				Intent intent2 = new Intent(m_activity,
 						FollowingOtherPeopleActivity.class);
 				startActivity(intent2);
 				break;
 
 			case R.id.btn_followings:
+				// 我的粉丝
 				Intent intent3 = new Intent(m_activity, MyFansActivity.class);
 				startActivity(intent3);
 				break;
 			case R.id.btn_nickname:
-				Builder dialog=new AlertDialog.Builder(getActivity());
-				dialog.setPositiveButton("切换头像",new DialogInterface.OnClickListener(){
+				Builder dialog = new AlertDialog.Builder(getActivity());
+				dialog.setPositiveButton("切换头像",
+						new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						Intent intent=new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-						startActivityForResult(intent, RESULT_LOAD);
-					}
-					
-				});
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										Intent.ACTION_PICK,
+										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								startActivityForResult(intent, RESULT_LOAD);
+							}
+
+						});
 				dialog.show();
 				break;
 			default:
@@ -323,74 +339,84 @@ public class MyAccountFragment extends BaseActionBarFragment {
 			}
 		}
 	};
+
 	/*
-	 *	头像上传 
+	 * 头像和背景图片上传
 	 */
-	public void onActivityResult(int requestCode, int resultCode, Intent data){
-		Log.v("requestCode", ""+requestCode);
-		 if(requestCode==RESULT_LOAD_IMAGE && resultCode==-1 && data!=null)
-	        {
-			  //这个图片的URI	
-			  Uri selectedImage =data.getData();
-			  //获得图像的绝对路径
-			  String picturePath = PhotoM.getpicture(getActivity(), selectedImage);
-			  //将图像进行压缩;
-			  Bitmap bitmap2=Compress_Save.getSmallBitmap(picturePath, m_back_veiw.getWidth(), m_back_veiw.getHeight());
-			 // 
-			  Log.v("haha", "dod");
-			  m_back_veiw.setImageBitmap(bitmap2);
-			  //图片保存
-			  SaveinSD.savephoto(bitmap2,"user_beijing.png");  
-			  Map<String, String> map=new HashMap<String, String>();
-			  map.put("image", PhotoM.imgToBase64(bitmap2));
-			  //将图片上传
-			  HttpUtil.NormalPostRequest(map, m_uri, handler, m_queue);
-	        }
-		 else if(requestCode==RESULT_LOAD){
-			 //这个图片的URI	
-			  Uri selectedImage =data.getData();
-			  //获得图像的绝对路径
-			  String picturePath = PhotoM.getpicture(getActivity(), selectedImage);
-			  //将图像进行压缩;
-			  Bitmap bitmap2=Compress_Save.getSmallBitmap(picturePath,m_userPic.getWidth(),m_userPic.getHeight());
-			  m_userPic.setImageBitmap(bitmap2);
-			  Map<String, String> map=new HashMap<String, String>();
-			  map.put("image", PhotoM.imgToBase64(bitmap2));
-			  HttpUtil.NormalPostRequest(map, m_uri, handler, m_queue);
-		 }
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.v("requestCode", "" + requestCode);
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == -1
+				&& data != null) {
+			// 背景
+			
+			// 这个图片的URI
+			Uri selectedImage = data.getData();
+			// 获得图像的绝对路径
+			String picturePath = PhotoM
+					.getpicture(getActivity(), selectedImage);
+			// 将图像进行压缩;
+			Bitmap bitmap2 = Compress_Save.getSmallBitmap(picturePath,
+					m_back_veiw.getWidth(), m_back_veiw.getHeight());
+			//
+			Log.v("haha", "dod");
+			m_back_veiw.setImageBitmap(bitmap2);
+			// 图片保存
+			SaveinSD.savephoto(bitmap2, "user_beijing.png");
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("background", PhotoM.imgToBase64(bitmap2));
+			// 将图片上传
+			HttpUtil.NormalPostRequest(map, m_uri, handler, m_queue);
+		} else if (requestCode == RESULT_LOAD && resultCode == -1
+				&& data != null) {
+			// 头像
+			
+			// 这个图片的URI
+			Uri selectedImage = data.getData();
+			// 获得图像的绝对路径
+			String picturePath = PhotoM
+					.getpicture(getActivity(), selectedImage);
+			// 将图像进行压缩;
+			Bitmap bitmap2 = Compress_Save.getSmallBitmap(picturePath,
+					m_userPic.getWidth(), m_userPic.getHeight());
+			m_userPic.setImageBitmap(bitmap2);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("image", PhotoM.imgToBase64(bitmap2));
+			HttpUtil.NormalPostRequest(map, m_uri, handler, m_queue);
+		}
 	}
+
 	/*
 	 * handler
 	 */
-	 public class ThisHandler extends Handler{
-		 public void dispatchMessage(Message msg) {
-			 switch (msg.what) {
-			
-			 	case HttpUtil.SUCCESS_CODE:
-			 		 JSONObject response = (JSONObject) msg.obj;
+	public class ThisHandler extends Handler {
+		public void dispatchMessage(Message msg) {
+			switch (msg.what) {
+
+			case HttpUtil.SUCCESS_CODE:
+				JSONObject response = (JSONObject) msg.obj;
 				int ret_code;
 				try {
 					ret_code = response.getInt("ret_code");
-					if(ret_code==0){
-						Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT)
-							.show();
-					}
-					else {
-						Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT)
-						.show();
+					if (ret_code == 0) {
+						Toast.makeText(getActivity(), "上传成功",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(getActivity(), "上传失败",
+								Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			 			
-			 		break;
-			 	case HttpUtil.FAILURE_CODE:
-					Toast.makeText(getActivity(), "网络错误！", Toast.LENGTH_SHORT)
-							.show();
-			 }
-		 }
-	 }
+
+				break;
+			case HttpUtil.FAILURE_CODE:
+				Toast.makeText(getActivity(), "网络错误！", Toast.LENGTH_SHORT)
+						.show();
+			}
+		}
+	}
+
 	/*
 	 * 初始化标签名0
 	 */

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
 import kankan.wheel.widget.OnWheelScrollListener;
@@ -24,6 +27,7 @@ public class TigerMathine {
 	private List<WheelView> m_wheelViews;
 
 	private List<Boolean> m_isWheelFinished;
+	private Handler m_handler;
 
 	private boolean isWheelScrolling = false; // 车轮滚动标志
 
@@ -46,6 +50,21 @@ public class TigerMathine {
 			wheelView.setEnabled(false); // TODO ?
 			wheelView.addScrollingListener(scrolledListener);
 		}
+		
+		m_handler = new Handler(Looper.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case 0:
+					m_tigerAnimFinishedCallBack.onTigerAnimFinished();
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
 	}
 
 	public void startAnim(boolean flag) {
@@ -64,17 +83,19 @@ public class TigerMathine {
 			wheelView.setCurrentItem(resetIndex, false);
 		}
 
+		m_handler.sendEmptyMessageDelayed(0, 12 * 1000);
+		
 		if (flag) {
 			for (int i = 0; i < m_wheelViews.size(); i++) {
 				WheelView wheelView = m_wheelViews.get(i);
 				wheelView.scroll(wheelView.getVisibleItems() * 5,
-						(i + 4) * 1000);
+						(i + 3) * 1000);
 			}
 		} else {
 			for (int i = 0; i < m_wheelViews.size(); i++) {
 				WheelView wheelView = m_wheelViews.get(i);
 				wheelView.scroll(wheelView.getVisibleItems() * 5 + i,
-						(3 * i + 3) * 1000);
+						(i + 3) * 1000);
 			}
 		}
 
@@ -101,13 +122,12 @@ public class TigerMathine {
 			// }
 			// m_tigerAnimFinishedCallBack.onTigerAnimFinished();
 
-			/*
-			 * 只要最后两个中有停下来的，就暴力的表示全部停了
-			 */
-			if (wheel.getCurrentItem() == (m_wheelViews.size() - 1)
-					|| wheel.getCurrentItem() == (m_wheelViews.size() - 2)) {
-				m_tigerAnimFinishedCallBack.onTigerAnimFinished();
-			}
+//			/*
+//			 * 只要最后两个中有停下来的，就暴力的表示全部停了
+//			 */
+//			if (wheel.getCurrentItem() == (m_wheelViews.size() - 1)) {
+//				m_tigerAnimFinishedCallBack.onTigerAnimFinished();
+//			}
 
 		}
 	};

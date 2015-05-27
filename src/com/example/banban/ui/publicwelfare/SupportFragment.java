@@ -20,7 +20,9 @@ import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -48,11 +50,13 @@ public class SupportFragment extends BaseActionBarFragment {
 	private int m_userSupport = 0;
 	private int m_donateMoney = 0;
 	private TextView m_donateTextView;
+	private Activity m_activity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_queue = Volley.newRequestQueue(getActivity());
+		m_activity = getActivity();
 		initHandler();
 	}
 
@@ -246,6 +250,12 @@ public class SupportFragment extends BaseActionBarFragment {
 		m_fundButton = (Button) view.findViewById(R.id.btn_fund);
 		m_fundButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(m_activity);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
 				// 查询剩余公益基金，等查到数据再启动AlertDialog
 				HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 						+ "/users/balance", m_balanceHandler, m_queue);

@@ -51,7 +51,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_login);
 		m_context = getBaseContext();
-
+		BBConfigue.IS_VISITOR = false;
 		initNetwork();
 		initWidgets();
 	}
@@ -86,6 +86,8 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				clearAccount();
 				BBConfigue.IS_VISITOR = true;
+				BBConfigue.USER_NAME = "guest";
+				BBConfigue.PASSWORD = "guest";
 				Intent intent = new Intent(LoginActivity.this,
 						BBMainActivity.class);
 				startActivity(intent);

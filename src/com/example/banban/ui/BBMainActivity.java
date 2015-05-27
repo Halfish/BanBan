@@ -58,6 +58,8 @@ public class BBMainActivity extends FragmentActivity {
 		m_actionBar.setDisplayShowHomeEnabled(true);
 		m_actionBar.setHomeButtonEnabled(true);
 
+		BBConfigue.CURRENT_CITY = getResources().getString(R.string.guangzhou);
+		
 		SharedPreferences pref = getSharedPreferences("location",
 				Context.MODE_PRIVATE);
 		String location = pref.getString("location", "");
@@ -117,6 +119,13 @@ public class BBMainActivity extends FragmentActivity {
 			SharedPreferences pref = getSharedPreferences("location",
 					Context.MODE_PRIVATE);
 			pref.edit().putString("location", location).commit();
+			BBConfigue.CURRENT_CITY = location;
+			
+			int tab = m_tabAdapter.getCurrentTab();
+			if (tab == 1) {
+				SpecificBuyFragment fragment = (SpecificBuyFragment) m_tabAdapter.getCurrentFragment();
+				fragment.beginDataRequest();
+			}
 		}
 		//m_tabAdapter.getCurrentFragment().onActivityResult(requestCode,
 			//	resultCode, data);

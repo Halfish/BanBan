@@ -237,6 +237,12 @@ public class ProductActivity extends BaseActionBarActivity {
 		int amount_spec = response.getInt("amount_spec");
 		int favorites = response.getInt("favorites");
 		String image = response.getString("image");
+		int purchased = response.getInt("purchased");
+		boolean isPurchased = purchased == 1 ? true : false;
+		if (isPurchased) {
+			m_buyButton.setText("已购买");
+			m_buyButton.setEnabled(false);
+		}
 
 		m_likeNum = favorites;
 		m_zan.setText(favorites + "");

@@ -61,6 +61,7 @@ public class ThingPutting extends Activity {
 	private Bitmap smallmap;
 	private Spinner m_spinner;
 	private PuttingHandler handler = new PuttingHandler();
+	private int selectid;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		Volley.newRequestQueue(ThingPutting.this);
@@ -151,6 +152,7 @@ public class ThingPutting extends Activity {
 				map.put("amount_random", editText1.getText().toString());
 				map.put("amount_spec", editText2.getText().toString());
 				map.put("description", editText5.getText().toString());
+				map.put("category_id", ""+selectid);
 				if (smallmap != null)
 					map.put("image", PhotoM.imgToBase64(smallmap));
 				Log.v("haha", map + "");
@@ -161,16 +163,22 @@ public class ThingPutting extends Activity {
 
 			}
 		});
-		/*m_spinner.setOnItemClickListener(new OnItemClickListener(){
+		m_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
+			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-					
+				selectid=position+1;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
 			}
 			
-		});*/
+		});
 	}
 	
 	public class PuttingHandler extends Handler {

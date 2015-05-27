@@ -51,7 +51,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 	private Activity m_activity;
 	private SearchView m_searchView;
-	private Spinner m_citySpinner;
+	private Spinner m_categorySpinner;
 	private Spinner m_districtSpinner;
 	private Spinner m_smartOrderSpinner;
 	private TextView m_infoTextView;
@@ -59,11 +59,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private ListView m_listView;
 	private StoreBaseAdapter m_adapter;
 	private List<Map<String, Object>> m_listItems;
-	private List<Map<String, Object>> m_citiesItems;
 	private List<Map<String, Object>> m_districtsItems;
-	private SimpleAdapter m_citiesSimpleAdapter;
 	private SimpleAdapter m_districtsSimpleAdapter;
 	private Map<String, Object> item;
+	private Map<String, String> m_cityId;
 	private RequestQueue m_queue;
 	private ImageLoader m_imageLoader;
 	private Handler m_handler;
@@ -72,6 +71,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private String m_orderBy = "favorite";
 	private String m_city = BBConfigue.CURRENT_CITY;
 	private String m_district = "";
+	private String m_category = "";
 
 	private ProgressDialog m_progDiag;
 
@@ -83,8 +83,18 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_queue = Volley.newRequestQueue(m_activity);
 		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		m_listItems = new ArrayList<Map<String, Object>>();
+		initArray();
 		initHandler();
 		Log.v(LOG_TAG, "onCreate called");
+	}
+
+	private void initArray() {
+		m_cityId = new HashMap<String, String>();
+		String[] cities = getResources().getStringArray(R.array.city_id_key);
+		String[] ids = getResources().getStringArray(R.array.city_id_value);
+		for (int i = 0; i < cities.length; i++) {
+			m_cityId.put(cities[i], ids[i]);
+		}
 	}
 
 	private void initHandler() {
@@ -98,28 +108,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 					JSONObject response = (JSONObject) msg.obj;
 					try {
 						updataDataFromServer(response);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					Log.v(LOG_TAG, response.toString());
-					break;
-
-				default:
-					break;
-				}
-				super.handleMessage(msg);
-			}
-		};
-
-		m_citiesHandler = new Handler(m_activity.getMainLooper()) {
-			@Override
-			public void handleMessage(Message msg) {
-				m_progDiag.dismiss();
-				switch (msg.what) {
-				case HttpUtil.SUCCESS_CODE:
-					JSONObject response = (JSONObject) msg.obj;
-					try {
-						updateCitiesSpinner(response);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -156,16 +144,12 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		};
 	}
 
-	private void beginDataRequest() {
+	public void beginDataRequest() {
 
-		// HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-		// + "/stores/list?order_by=" + "favorite", m_handler, m_queue);
-		//
+		String id = m_cityId.get(BBConfigue.CURRENT_CITY);
+		
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/locations/regions?id=440000", m_citiesHandler, m_queue);
-
-		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/locations/regions?id=440100", m_districtHandler, m_queue);
+				+ "/locations/regions?id=" + id, m_districtHandler, m_queue);
 
 		Log.v(LOG_TAG, "beginDataRequest");
 	}
@@ -221,27 +205,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_adapter.notifyDataSetChanged();
 	}
 
-	private void updateCitiesSpinner(JSONObject response) throws JSONException {
-		JSONArray jsonArray = response.getJSONArray("result").getJSONArray(0);
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject city = jsonArray.getJSONObject(i);
-			int id = city.getInt("id");
-			String fullname = city.getString("fullname");
-			String name = city.getString("name");
-			if (name.equals(BBConfigue.CURRENT_CITY)) {
-				HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-						+ "/locations/regions?id=" + id, m_districtHandler,
-						m_queue);
-			}
-
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("city", fullname);
-			map.put("city_id", id);
-			m_citiesItems.add(map);
-			m_citiesSimpleAdapter.notifyDataSetChanged();
-		}
-	}
-
 	private void updateDistrictSpinner(JSONObject response)
 			throws JSONException {
 		m_districtsItems.clear();
@@ -271,12 +234,12 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 					container, false);
 
 			m_searchView = (SearchView) view.findViewById(R.id.sv_store);
-			m_citySpinner = (Spinner) view.findViewById(R.id.sp_city);
+			m_categorySpinner = (Spinner) view.findViewById(R.id.sp_city);
 			m_districtSpinner = (Spinner) view.findViewById(R.id.sp_district);
 			m_smartOrderSpinner = (Spinner) view
 					.findViewById(R.id.sp_smart_order);
 			m_listView = (ListView) view.findViewById(R.id.lv_stores);
-			m_infoTextView = (TextView)view.findViewById(R.id.tv_info_nostore);
+			m_infoTextView = (TextView) view.findViewById(R.id.tv_info_nostore);
 
 			initSearchView();
 			initSpinners();
@@ -321,39 +284,32 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	}
 
 	private void initSpinners() {
-		m_citiesItems = new ArrayList<Map<String, Object>>();
 		m_districtsItems = new ArrayList<Map<String, Object>>();
-
-		m_citiesSimpleAdapter = new SimpleAdapter(m_activity, m_citiesItems,
-				R.layout.bb_item_spinner, new String[] { "city" },
-				new int[] { R.id.tv_text });
 
 		m_districtsSimpleAdapter = new SimpleAdapter(m_activity,
 				m_districtsItems, R.layout.bb_item_spinner,
 				new String[] { "district" }, new int[] { R.id.tv_text });
 
-		m_citySpinner.setAdapter(m_citiesSimpleAdapter);
 		m_districtSpinner.setAdapter(m_districtsSimpleAdapter);
 
-		m_citySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO
-				Log.v(LOG_TAG, "city selected: "
-						+ m_citiesItems.get(position).get("city").toString());
-				int city_id = (Integer) m_citiesItems.get(position).get(
-						"city_id");
-				HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-						+ "/locations/regions?id=" + city_id,
-						m_districtHandler, m_queue);
-				Log.v("Halfish", "Halfish id " + city_id);
+		m_categorySpinner
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+					public void onItemSelected(AdapterView<?> parent,
+							View view, int position, long id) {
+						// TODO
+						Log.v(LOG_TAG, "category selected: " + position);
+						m_category = (position + 1) + "";
+						String url = BBConfigue.SERVER_HTTP
+								+ "/stores/list?order_by=" + m_orderBy
+								+ "&city=" + m_city + "&district=" + m_district
+								+ "&category=" + m_category;
+						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+						Log.v(LOG_TAG, "category spinner");
+					}
 
-				m_city = m_citiesItems.get(position).get("city").toString();
-			}
-
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
+					public void onNothingSelected(AdapterView<?> parent) {
+					}
+				});
 
 		m_districtSpinner
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -366,11 +322,12 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						Log.v(LOG_TAG, "district is selected: " + m_district);
 						String url = BBConfigue.SERVER_HTTP
 								+ "/stores/list?order_by=" + m_orderBy
-								+ "&city=" + m_city + "&district=" + m_district;
+								+ "&city=" + m_city + "&district=" + m_district
+								+ "&category=" + m_category;
 						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
-						Log.v(LOG_TAG, "district url is " + url);
-						//m_progDiag.setMessage("正在搜寻");
-						//m_progDiag.show();
+						Log.v(LOG_TAG, "district spinner ");
+						// m_progDiag.setMessage("正在搜寻");
+						// m_progDiag.show();
 					}
 
 					@Override
@@ -398,10 +355,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						}
 						String url = BBConfigue.SERVER_HTTP
 								+ "/stores/list?order_by=" + m_orderBy
-								+ "&city=" + m_city + "&district=" + m_district;
+								+ "&city=" + m_city + "&district=" + m_district
+								+ "&category=" + m_category;
 						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
-						//m_progDiag.setMessage("正在搜寻");
-						//m_progDiag.show();
+						Log.v(LOG_TAG, "order spinner");
 					}
 
 					@Override

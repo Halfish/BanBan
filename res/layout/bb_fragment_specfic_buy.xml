@@ -24,6 +24,7 @@
             android:id="@+id/sp_city"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:entries="@array/category"
             android:prompt="@string/bb_spinner_all_category"
             android:layout_weight="1" />
 
@@ -31,6 +32,7 @@
             android:id="@+id/sp_district"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:entries="@array/category"
             android:prompt="@string/bb_spiiner_all_city"
             android:layout_weight="1" />
 

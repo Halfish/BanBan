@@ -14,9 +14,10 @@ import com.example.banban.ui.BBUIUtil;
 import com.example.newuser.ChooseLoginActivity;
 import com.example.newuser.LoginActivity;
 import com.example.newuser.RegisterActivity;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -48,17 +49,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		Log.v(LOG_TAG, "onCreate called");
-	}
-	
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		if(BBConfigue.IS_VISITOR) {
-			m_visitorRly.setVisibility(View.VISIBLE);
-		} else {
-			m_visitorRly.setVisibility(View.GONE);
-		}
-		super.setUserVisibleHint(isVisibleToUser);
+
 	}
 
 	@Override
@@ -82,8 +73,8 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		if (view == null) {
 			view = inflater.inflate(R.layout.bb_fragment_more_info, container,
 					false);
-			m_visitorRly = (RelativeLayout)view.findViewById(R.id.rly_visitor);
-			
+			m_visitorRly = (RelativeLayout) view.findViewById(R.id.rly_visitor);
+
 			m_aboutButton = (Button) view.findViewById(R.id.btn_about_banban);
 			m_inviteButton = (Button) view.findViewById(R.id.btn_invite);
 			m_feedBackButton = (Button) view.findViewById(R.id.btn_feedback);
@@ -93,8 +84,8 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 			m_checkUpdateButton = (Button) view
 					.findViewById(R.id.btn_check_update);
 			m_logoutButton = (Button) view.findViewById(R.id.btn_logout);
-			m_loginButton = (Button)view.findViewById(R.id.btn_login);
-			m_registerButton = (Button)view.findViewById(R.id.btn_register);
+			m_loginButton = (Button) view.findViewById(R.id.btn_login);
+			m_registerButton = (Button) view.findViewById(R.id.btn_register);
 			initButtons(view);
 		}
 		// 缓存的view需要判断是否已经被加过parent，
@@ -138,6 +129,13 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 	}
 
 	private void initButtons(View view) {
+
+		if (BBConfigue.IS_VISITOR) {
+			m_visitorRly.setVisibility(View.VISIBLE);
+		} else {
+			m_visitorRly.setVisibility(View.GONE);
+		}
+
 		m_aboutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				BBUIUtil.getInfoDialog(m_activity, null, "半半公益是一款公益软件").show();
@@ -185,12 +183,16 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 
 		m_logoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), ChooseLoginActivity.class);
+				SharedPreferences pref = m_activity.getSharedPreferences(
+						"account", Context.MODE_PRIVATE);
+				pref.edit().clear().commit();
+				Intent intent = new Intent(getActivity(),
+						ChooseLoginActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}
 		});
-		
+
 		m_loginButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -198,10 +200,11 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 				getActivity().finish();
 			}
 		});
-		
+
 		m_registerButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), RegisterActivity.class);
+				Intent intent = new Intent(getActivity(),
+						RegisterActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}

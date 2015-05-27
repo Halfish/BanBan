@@ -23,9 +23,11 @@ import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.TigerMathine;
 import com.example.banban.ui.TigerMathine.TigerAnimFinishedCallBack;
+import com.example.banban.ui.randombuy.ChooseCategoryActivity;
 import com.example.banban.ui.randombuy.ProductInfoActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +35,9 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -91,7 +96,8 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					Log.v(LOG_TAG, response.toString());
+					Log.v(LOG_TAG,
+							"random generate products: " + response.toString());
 					break;
 
 				default:
@@ -187,6 +193,14 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_randomBuyBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(m_activity);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
+
 				m_lucky = false;
 				beginDataRequest();
 				m_randomTimes--;
@@ -201,27 +215,52 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_2));
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_3));
 		m_wheelViewList.add((WheelView) view.findViewById(R.id.slot_4));
-		m_tigerMathine = new TigerMathine(m_activity, m_wheelViewList, new TigerAnimFinishedCallBack() {
-			public void onTigerAnimFinished() {
-				Log.v(LOG_TAG, "anim finished");
-				if (m_lucky) {
-					Intent intent = new Intent(m_activity, ProductInfoActivity.class);
-					startActivity(intent);
-				}
-			}
-		});
+		m_tigerMathine = new TigerMathine(m_activity, m_wheelViewList,
+				new TigerAnimFinishedCallBack() {
+					public void onTigerAnimFinished() {
+						Log.v(LOG_TAG, "anim finished");
+						if (m_lucky) {
+							Intent intent = new Intent(m_activity,
+									ProductInfoActivity.class);
+							startActivity(intent);
+						}
+					}
+				});
 	}
 
 	private void beginDataRequest() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("city", 440100 + "");
+		map.put("city", BBConfigue.CURRENT_CITY);
+		map.put("category_id", BBConfigue.CATEGORY + "");
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/products/generate/random", m_handler, m_queue);
+		Log.v(LOG_TAG, "generate random and CITY is " + BBConfigue.CURRENT_CITY);
+		Log.v(LOG_TAG, "generate random and CATEGORY is " + BBConfigue.CATEGORY);
 	}
 
 	private void beginTimeDataRequest() {
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/random_times",
 				m_randomTimeHandler, m_queue);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.bb_menu_fragment_random_buy, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_category:
+			Intent intent = new Intent(m_activity, ChooseCategoryActivity.class);
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+		return false;
 	}
 
 }

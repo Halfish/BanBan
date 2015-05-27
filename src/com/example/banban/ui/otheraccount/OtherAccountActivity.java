@@ -75,6 +75,16 @@ public class OtherAccountActivity extends FragmentActivity {
 		 */
 		m_userId = getIntent().getIntExtra("user_id", -1);
 
+		initWidgets();
+		
+		m_queue = Volley.newRequestQueue(this);
+		initHandler();
+		initView();
+		beginDataRequest();
+		initActionBar();
+	}
+	
+	private void initWidgets() {
 		m_nickName = (TextView) findViewById(R.id.tv_nickname);
 		m_donateTextView = (TextView) findViewById(R.id.tv_total_donate);
 		m_userPic = (ImageView) findViewById(R.id.btn_nickname);
@@ -90,11 +100,10 @@ public class OtherAccountActivity extends FragmentActivity {
 		foucus_people.setOnClickListener(listener);
 		fans_people.setOnClickListener(listener);
 
-		m_queue = Volley.newRequestQueue(this);
-		initHandler();
-		initView();
-		beginDataRequest();
-		initActionBar();
+		if (m_userId == BBConfigue.USER_ID) {
+			m_followButton.setVisibility(View.GONE);
+		}
+		
 	}
 
 	@SuppressLint("InflateParams") 

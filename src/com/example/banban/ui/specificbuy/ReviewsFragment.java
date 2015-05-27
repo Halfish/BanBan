@@ -22,6 +22,7 @@ import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -159,6 +160,12 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		if (BBConfigue.IS_VISITOR) {
+			ProgressDialog dialog = new ProgressDialog(m_activity);
+			dialog.setMessage("游客用户无权限，请登录或注册");
+			dialog.show();
+			return;
+		}
 		Intent intent = new Intent(getActivity(), WritingReviewActivity.class);
 		intent.putExtra("store_id", m_storeId);
 		startActivity(intent);

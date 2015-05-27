@@ -10,8 +10,8 @@
         android:layout_height="80dp"
         android:contentDescription="@string/cont_descrip"
         android:scaleType="fitXY"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:background="#eee" />
 
     <LinearLayout

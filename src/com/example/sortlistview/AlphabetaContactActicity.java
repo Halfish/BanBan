@@ -86,7 +86,7 @@ public class AlphabetaContactActicity extends Activity {
 			}
 		});
 		
-		SourceDateList = filledData(getResources().getStringArray(R.array.cities));
+		SourceDateList = filledData(getResources().getStringArray(R.array.city_id_key));
 		
 		// 根据a-z进行排序源数据
 		Collections.sort(SourceDateList, pinyinComparator);

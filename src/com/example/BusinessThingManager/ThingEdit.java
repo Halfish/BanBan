@@ -39,9 +39,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,8 @@ public class ThingEdit extends Activity {
 	private AlertDialog mDialog;
 	private Bitmap smallmap;
 	private PuttingHandler handler = new PuttingHandler();
+	private Spinner m_spinner;
+	private int selectid;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +85,8 @@ public class ThingEdit extends Activity {
 		editText2 = (EditText) findViewById(R.id.editText2);
 		editText3 = (EditText) findViewById(R.id.editText3);
 		editText5 = (EditText) findViewById(R.id.editText5);
+		m_spinner=(Spinner) findViewById(R.id.spinner1);
+		
 		final HashMap<String, Object> tmap = localStore.Itemlist
 				.get(localStore.position);
 		itTextView.setText(tmap.get("name").toString());
@@ -88,6 +94,8 @@ public class ThingEdit extends Activity {
 		editText2.setText(tmap.get("amount_spec").toString());
 		editText3.setText(tmap.get("o_price").toString());
 		editText5.setText(tmap.get("description").toString());
+		int temp= (Integer) tmap.get("category_id");
+		m_spinner.setSelection(temp-1);
 		// 获取图片
 		ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue,
 				localStore.storeCache);
@@ -163,6 +171,7 @@ public class ThingEdit extends Activity {
 				map.put("amount_random", editText1.getText().toString());
 				map.put("amount_spec", editText2.getText().toString());
 				map.put("description", editText5.getText().toString());
+				map.put("category_id", ""+selectid);
 				if (smallmap != null)
 					map.put("image", PhotoM.imgToBase64(smallmap));
 				Log.v("haha", map + "");
@@ -170,6 +179,22 @@ public class ThingEdit extends Activity {
 						Merchant_main.BBQueue);
 				showRoundProcessDialog(ThingEdit.this, R.layout.loading_process);
 			}
+		});
+		m_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				selectid=position+1;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 
 	}

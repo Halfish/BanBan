@@ -23,8 +23,10 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
+import com.example.banban.ui.otheraccount.OtherAccountActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +35,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -97,8 +101,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 	private void beginDataGetRequest() {
 		int project_id = getActivity().getIntent().getIntExtra("projectId", -1);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/projects/supporters/" + project_id, m_handler,
-				m_queue);
+				+ "/projects/supporters/" + project_id, m_handler, m_queue);
 	}
 
 	private void parseDataFromServer(JSONObject response) throws JSONException {
@@ -130,7 +133,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 			return;
 		}
 
-		// int user_id = response.getInt("user_id");
+		int user_id = jsonObject.getInt("user_id");
 		String image = jsonObject.getString("image");
 		String username = jsonObject.getString("username");
 		int amount = jsonObject.getInt("amount");
@@ -138,6 +141,7 @@ public class SupporterFragment extends BaseActionBarFragment {
 		int total_projects = jsonObject.getInt("total_projects");
 
 		item = new HashMap<String, Object>();
+		item.put("user_id", user_id);
 		item.put("supporter_img", image);
 		item.put("nickname", username);
 		item.put("date", time);
@@ -158,7 +162,17 @@ public class SupporterFragment extends BaseActionBarFragment {
 		m_listView = (ListView) rootView.findViewById(R.id.lv_supporter);
 		m_adapter = new SupporterAdapter();
 		m_listView.setAdapter(m_adapter);
-		// TODO
+		m_listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(m_activity,
+						OtherAccountActivity.class);
+				int user_id = (Integer) m_listItems.get(position)
+						.get("user_id");
+				intent.putExtra("user_id", user_id);
+				startActivity(intent);
+			}
+		});
 
 		beginDataGetRequest();
 		Log.v(LOG_TAG, "onCreateView called");

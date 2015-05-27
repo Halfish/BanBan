@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_category"
         android:orderInCategory="100"
-        android:showAsAction="never|withText"
+        android:showAsAction="ifRoom"
         android:title="@string/bb_menu_category"/>
 
 </menu>

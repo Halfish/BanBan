@@ -19,7 +19,7 @@ public class SaveinSD {
 			 FileOutputStream b = null;
 			 File file=new File(path);
 			 file.mkdirs();
-			 String fileName =path + "head.png";
+			 String fileName =path + name;
 			try {
 				b = new FileOutputStream(fileName);
 				bitmap.compress(Bitmap.CompressFormat.PNG, 100, b);// 把数据写入文件

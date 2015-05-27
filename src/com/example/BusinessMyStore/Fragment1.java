@@ -153,6 +153,8 @@ public class Fragment1 extends Fragment  {
 						localStore.description=description;
 						String favourite=jsonObj.getString("favorites");
 						tfav.setText("关注数："+favourite);
+						String bookmark=jsonObj.getString("bookmarks");
+						tcol.setText("被收藏数： "+bookmark);
 						ImageLoader imageLoader = new ImageLoader(Merchant_main.BBQueue,localStore.storeCache); 
 						ImageListener listener = ImageLoader.getImageListener(imageView2, 
 								R.drawable.touxiang, R.drawable.touxiang);

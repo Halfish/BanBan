@@ -72,6 +72,7 @@
         <activity android:name=".ui.BBMainActivity" />
         <activity android:name=".ui.BBSearchUserActivity" />
         <activity android:name=".ui.randombuy.ProductInfoActivity" />
+        <activity android:name=".ui.randombuy.ChooseCategoryActivity" />
         <activity android:name=".ui.specificbuy.StoreActivity" />
         <activity android:name=".ui.specificbuy.WritingReviewActivity" />
         <activity android:name=".ui.specificbuy.ProductActivity" />
