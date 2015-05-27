@@ -116,6 +116,7 @@ public class ShoppingCarFragment extends Fragment {
 
 		// else retCode == 0
 		m_listItems = new ArrayList<Map<String, Object>>();
+		m_adapter.notifyDataSetChanged();
 		JSONArray jsonArray = jsonObject.getJSONArray("purchases");
 		if (jsonArray == null) {
 			return;
