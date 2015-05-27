@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 public class ProductInfoActivity extends BaseActionBarActivity {
 	private Handler m_handler;
+	private Handler m_purchaseHandler;
 	private RequestQueue m_queue;
 	private static final String LOG_TAG = ProductInfoActivity.class.getName();
 
@@ -73,7 +74,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		m_nameTextView = (TextView) findViewById(R.id.tv_product_name);
 		m_priceTextView = (TextView) findViewById(R.id.tv_product_price);
 		m_storeNameTextView = (TextView) findViewById(R.id.tv_store_name);
-		m_donateTextView = (TextView)findViewById(R.id.tv_donate);
+		m_donateTextView = (TextView) findViewById(R.id.tv_donate);
 		m_image = (ImageView) findViewById(R.id.img_product);
 		m_image.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -113,6 +114,11 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 	private void beginDataRequest() {
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/products/show/random", m_handler, m_queue);
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("product_id", m_productId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/products/purchases/random", m_purchaseHandler, m_queue);
 	}
 
 	private void initHandler() {
@@ -124,6 +130,45 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 					JSONObject response = (JSONObject) msg.obj;
 					try {
 						updataDataFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+		
+		m_purchaseHandler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						int retCode = response.getInt("ret_code");
+						switch (retCode) {
+						case 0:
+							// success
+							break;
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+							String message = response.getString("message");
+							Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
+									.show();
+							break;
+
+						default:
+							break;
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}

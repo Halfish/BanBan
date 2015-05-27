@@ -71,7 +71,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private String m_orderBy = "favorite";
 	private String m_city = BBConfigue.CURRENT_CITY;
 	private String m_district = "";
-	private String m_category = "";
+	private String m_category = "1";
 
 	private ProgressDialog m_progDiag;
 

@@ -83,7 +83,7 @@ public class TigerMathine {
 			wheelView.setCurrentItem(resetIndex, false);
 		}
 
-		m_handler.sendEmptyMessageDelayed(0, 12 * 1000);
+		m_handler.sendEmptyMessageDelayed(0, 6 * 1000);
 		
 		if (flag) {
 			for (int i = 0; i < m_wheelViews.size(); i++) {

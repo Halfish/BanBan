@@ -231,7 +231,10 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private void beginDataRequest() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("city", BBConfigue.CURRENT_CITY);
-		map.put("category_id", BBConfigue.CATEGORY + "");
+		if (BBConfigue.CATEGORY != 0) {
+			map.put("category_id", BBConfigue.CATEGORY + "");
+		}
+		
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/products/generate/random", m_handler, m_queue);
 		Log.v(LOG_TAG, "generate random and CITY is " + BBConfigue.CURRENT_CITY);

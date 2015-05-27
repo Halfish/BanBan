@@ -23,6 +23,7 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,11 +59,19 @@ public class ShareProductFragment extends Fragment {
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue,
-				new BitmapCache());
+		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		initHandler();
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// 可见时刷新数据
+		if (isVisibleToUser) {
+			beginDataRequest();
+		}
+		super.setUserVisibleHint(isVisibleToUser);
+	}
+
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
@@ -94,12 +103,14 @@ public class ShareProductFragment extends Fragment {
 	}
 
 	private void beginDataRequest() {
-		int userId = getActivity().getIntent().getIntExtra("user_id", -1);
-		if(userId == -1) {
-			userId = BBConfigue.USER_ID;
+
+		int user_id = m_activity.getIntent().getIntExtra("user_id", -1);
+		if (user_id == -1) {
+			user_id = BBConfigue.USER_ID;
 		}
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/users/purchases/shares/" + userId, m_handler, m_queue);
+				+ "/users/purchases/shares/" + user_id, m_handler, m_queue);
+
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -248,8 +259,8 @@ public class ShareProductFragment extends Fragment {
 			String distance = (String) m_listItems.get(position).get("price");
 			String remains = (String) m_listItems.get(position).get("remains");
 
-			viewHolder.productImg.setImageUrl(
-					BBConfigue.SERVER_HTTP + productImg, m_imageLoader);
+			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP
+					+ productImg, m_imageLoader);
 
 			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);

@@ -62,6 +62,15 @@ public class ShoppingCarFragment extends Fragment {
 				new BitmapCache());
 		initHandler();
 	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// 可见时刷新数据
+		if (isVisibleToUser) {
+			beginDataRequest();
+		}
+		super.setUserVisibleHint(isVisibleToUser);
+	}
 
 	private void initHandler() {
 		m_handler = new Handler(m_activity.getMainLooper()) {

@@ -118,7 +118,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 								Log.v(LOG_TAG, "purchaseCode is " + m_purchaseCode);
 								HttpUtil.NormalPostRequest(map,
 										BBConfigue.SERVER_HTTP
-												+ "/products/purchases/share/revoke",
+												+ "/products/purchases/transfer",
 										m_keepHandler, m_queue);
 							}
 						}).setNegativeButton("取消", new OnClickListener() {

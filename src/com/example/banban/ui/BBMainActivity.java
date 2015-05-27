@@ -8,6 +8,7 @@ package com.example.banban.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.MoreInfoFragment;
@@ -59,7 +60,7 @@ public class BBMainActivity extends FragmentActivity {
 		m_actionBar.setHomeButtonEnabled(true);
 
 		BBConfigue.CURRENT_CITY = getResources().getString(R.string.guangzhou);
-		
+
 		SharedPreferences pref = getSharedPreferences("location",
 				Context.MODE_PRIVATE);
 		String location = pref.getString("location", "");
@@ -120,15 +121,16 @@ public class BBMainActivity extends FragmentActivity {
 					Context.MODE_PRIVATE);
 			pref.edit().putString("location", location).commit();
 			BBConfigue.CURRENT_CITY = location;
-			
+
 			int tab = m_tabAdapter.getCurrentTab();
 			if (tab == 1) {
-				SpecificBuyFragment fragment = (SpecificBuyFragment) m_tabAdapter.getCurrentFragment();
+				SpecificBuyFragment fragment = (SpecificBuyFragment) m_tabAdapter
+						.getCurrentFragment();
 				fragment.beginDataRequest();
 			}
 		}
-		//m_tabAdapter.getCurrentFragment().onActivityResult(requestCode,
-			//	resultCode, data);
+		// m_tabAdapter.getCurrentFragment().onActivityResult(requestCode,
+		// resultCode, data);
 	}
 
 	/*

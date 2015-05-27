@@ -88,6 +88,7 @@ public class LoginActivity extends Activity {
 				BBConfigue.IS_VISITOR = true;
 				BBConfigue.USER_NAME = "guest";
 				BBConfigue.PASSWORD = "guest";
+				BBConfigue.USER_ID = -1;
 				Intent intent = new Intent(LoginActivity.this,
 						BBMainActivity.class);
 				startActivity(intent);
