@@ -296,8 +296,9 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_progDiag.setMessage("正在搜寻");
 		m_progDiag.show();
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/stores/search?string=" + query, m_handler, m_queue);
-
+				+ "/stores/list?search=" + query + "&order_by="
+						+ m_orderBy + "&city=" + BBConfigue.CURRENT_CITY + "&district="
+						+ m_district + "&category=" + m_category, m_handler, m_queue);
 		return false;
 	}
 
