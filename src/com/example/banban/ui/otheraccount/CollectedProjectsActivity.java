@@ -32,10 +32,9 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.example.banban.ui.publicwelfare.ProjectActivity;
@@ -57,6 +56,7 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_other_list);
 		setActionBarCenterTitle("收藏的项目");
+		m_queue = BBApplication.getQueue();
 		initUser();
 		initListView();
 		initHandlers();
@@ -112,7 +112,6 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(this);
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/users/bookmarks/projects/" + m_userId, m_userInfoHandler,
 				m_queue);
@@ -209,8 +208,7 @@ public class CollectedProjectsActivity extends BaseActionBarActivity {
 			String name = (String) m_listItems.get(position).get("name");
 			String image = (String) m_listItems.get(position).get("image");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue,
-					new BitmapCache());
+			ImageLoader imageLoader = BBApplication.getImageLoader();
 			viewHolder.head.setImageUrl(BBConfigue.SERVER_HTTP + image,
 					imageLoader);
 

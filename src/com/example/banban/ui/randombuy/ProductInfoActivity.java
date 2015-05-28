@@ -16,10 +16,9 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 
@@ -61,7 +60,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_product_info);
 		getActionBar().hide();
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 
 		initWidgets();
 		initHandler();
@@ -274,7 +273,7 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 	}
 
 	private void updateImage(String image) {
-		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_image,
 				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);

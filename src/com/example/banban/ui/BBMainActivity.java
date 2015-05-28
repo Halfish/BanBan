@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.banban.R;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.MoreInfoFragment;
 import com.example.banban.ui.fragments.MyAccountFragment;
@@ -44,7 +45,7 @@ public class BBMainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_main);
-
+		
 		initActionBar();
 		initFragments();
 	}
@@ -146,6 +147,7 @@ public class BBMainActivity extends FragmentActivity {
 	public void onBackPressed() {
 		if (back_pressed + INTERVAL_MS_TIME > System.currentTimeMillis()) {
 			super.onBackPressed();
+			BBApplication.getQueue().stop();
 			android.os.Process.killProcess(android.os.Process.myPid()); // 完全退出程序
 		} else {
 			Toast.makeText(getBaseContext(),

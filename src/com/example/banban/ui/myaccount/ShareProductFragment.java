@@ -17,13 +17,11 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,15 +56,15 @@ public class ShareProductFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
-		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		m_queue = BBApplication.getQueue();
+		m_imageLoader = BBApplication.getImageLoader();
 		initHandler();
 	}
 	
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		// 可见时刷新数据
-		if (isVisibleToUser) {
+		if (isVisibleToUser && isAdded()) {
 			beginDataRequest();
 		}
 		super.setUserVisibleHint(isVisibleToUser);

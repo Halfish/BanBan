@@ -17,9 +17,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.TigerMathine;
 import com.example.banban.ui.TigerMathine.TigerAnimFinishedCallBack;
@@ -67,7 +67,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
-		m_queue = Volley.newRequestQueue(m_activity);
+		m_queue = BBApplication.getQueue();
 		m_category = getResources().getStringArray(R.array.category);
 		initHandler();
 		beginTimeDataRequest();

@@ -9,9 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 
@@ -36,7 +36,7 @@ public class DetailFragment extends BaseActionBarFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		m_queue = Volley.newRequestQueue(getActivity());
+		m_queue = BBApplication.getQueue();
 		initHandler();
 	}
 	

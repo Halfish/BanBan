@@ -40,11 +40,10 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 
 public class ProjectActivity extends FragmentActivity {
@@ -121,7 +120,7 @@ public class ProjectActivity extends FragmentActivity {
 	}
 
 	private void beginDataGetRequest() {
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/projects/detail/"
 				+ m_projectId, m_handler, m_queue);
 	}
@@ -224,7 +223,7 @@ public class ProjectActivity extends FragmentActivity {
 		m_achieve.setText("已筹资：" + total_support + "元");
 		m_accumulate.setText("达成：" + percentage + "%");
 
-		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_image,
 				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + imageUrl, listener);

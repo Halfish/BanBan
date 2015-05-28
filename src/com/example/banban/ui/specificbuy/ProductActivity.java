@@ -1,5 +1,10 @@
 package com.example.banban.ui.specificbuy;
 
+/*
+ * @author: BruceZhang
+ * @description: 特定抢下的某一个商家的某一个商品，可抢
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,11 +13,10 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 
@@ -47,12 +51,14 @@ public class ProductActivity extends BaseActionBarActivity {
 	private Handler m_zanHandler;
 	private int m_productId;
 	private int m_likeNum;
+	private int m_remainAmount;
+	private int m_donate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_specificbuy_product);
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 
 		m_productId = getIntent().getIntExtra("product_id", -1);
 		Log.v(LOG_TAG, "productId is: " + m_productId);
@@ -231,6 +237,11 @@ public class ProductActivity extends BaseActionBarActivity {
 		case 0:
 			Toast.makeText(getBaseContext(), "已抢到商品！", Toast.LENGTH_SHORT)
 					.show();
+			m_remains.setText("剩余" + (m_remainAmount - 1) + "个");
+			m_buyButton.setText("已购买");
+			m_buyButton.setEnabled(false);
+			m_fund.setText("已获得 " + m_donate + "元 公益资金");
+			// TODO
 			break;
 
 		case 1:
@@ -254,15 +265,13 @@ public class ProductActivity extends BaseActionBarActivity {
 		int original_price = response.getInt("original_price");
 		int price = response.getInt("price");
 		int donate = response.getInt("donate");
+		m_donate = donate;
 		int amount_spec = response.getInt("amount_spec");
+		m_remainAmount = amount_spec;
 		int favorites = response.getInt("favorites");
 		String image = response.getString("image");
 		int purchased = response.getInt("purchased");
 		boolean isPurchased = purchased == 1 ? true : false;
-		if (isPurchased) {
-			m_buyButton.setText("已购买");
-			m_buyButton.setEnabled(false);
-		}
 
 		m_likeNum = favorites;
 		m_zan.setText(favorites + "");
@@ -272,10 +281,17 @@ public class ProductActivity extends BaseActionBarActivity {
 		m_remains.setText("剩余" + amount_spec + "个");
 		m_fund.setText("将获得" + donate + "元公益资金");
 		updateImage(image);
+
+		if (isPurchased) {
+			m_buyButton.setText("已购买");
+			m_buyButton.setEnabled(false);
+			m_fund.setText("已获得" + donate + "元公益资金");
+		}
+
 	}
 
 	private void updateImage(String image) {
-		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_image,
 				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);

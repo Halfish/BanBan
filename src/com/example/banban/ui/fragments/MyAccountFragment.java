@@ -14,15 +14,13 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.BBput.Compress_Save;
 import com.example.BBput.PhotoM;
 import com.example.BBput.SaveinSD;
-import com.example.BanBanBusiness.Merchant_main;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBSearchUserActivity;
 import com.example.banban.ui.myaccount.ProjectFragment;
@@ -33,6 +31,7 @@ import com.example.banban.ui.otheraccount.CollectedStoresActivity;
 import com.example.banban.ui.otheraccount.FollowingOtherPeopleActivity;
 import com.example.banban.ui.otheraccount.MyFansActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -43,6 +42,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -82,7 +82,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 	private static int RESULT_LOAD = 2;
 	private static String m_uri = BBConfigue.SERVER_HTTP + "/users/update";
 	private ThisHandler handler = new ThisHandler();
-	private static String path = "/sdcard/banban/photo/";
 
 	private Activity m_activity;
 	private TextView m_donateTextView;
@@ -108,8 +107,8 @@ public class MyAccountFragment extends BaseActionBarFragment {
 
 		m_activity = getActivity();
 		m_actionBar = m_activity.getActionBar();
-		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		m_queue = BBApplication.getQueue();
+		m_imageLoader = BBApplication.getImageLoader();
 		initHandler();
 
 		Log.v(LOG_TAG, "onCreate called");
@@ -175,15 +174,20 @@ public class MyAccountFragment extends BaseActionBarFragment {
 
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/balance",
 				m_handler, m_queue);
-		Bitmap bitmap = BitmapFactory.decodeFile(path + "user_beijing.png");
-		if (bitmap != null) {
-			m_back_veiw.setImageBitmap(bitmap);
-		}
+		// Bitmap bitmap = BitmapFactory.decodeFile(Environment
+		// .getExternalStorageDirectory().getPath()
+		// + "/banban/photo/user_beijing.png");
+		// if (bitmap != null) {
+		// m_back_veiw.setImageBitmap(bitmap);
+		// }
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/"
 				+ BBConfigue.USER_ID, m_handler2, m_queue);
 		Log.v(LOG_TAG, "user id: " + BBConfigue.USER_ID);
 	}
 
+	/*
+	 * 从服务器更新用户名，用户头像，用户背景(有本地默认存储)
+	 */
 	private void updateUserDetail(JSONObject jsonObject) throws JSONException {
 		int retCode = jsonObject.getInt("ret_code");
 		if (retCode == 1) {
@@ -193,13 +197,21 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		String image = jsonObject.getString("image");
 		String background = jsonObject.getString("background");
 
-		ImageListener listener = ImageLoader.getImageListener(m_userPic,
+		ImageListener headListener = ImageLoader.getImageListener(m_userPic,
 				R.drawable.default_head, R.drawable.default_head);
-		m_imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
-		
-		Bitmap bitmap = BitmapFactory.decodeFile(path + "user_beijing.png");
+		m_imageLoader.get(BBConfigue.SERVER_HTTP + image, headListener);
+
+		Bitmap bitmap = BitmapFactory.decodeFile(Environment
+				.getExternalStorageDirectory().getPath()
+				+ "/banban/photo/" + BBConfigue.USER_NAME + "/user_beijing.png");
 		if (bitmap == null) {
-			m_imageLoader.get(BBConfigue.SERVER_HTTP + background, listener);
+			ImageListener backgroundList = ImageLoader.getImageListener(
+					m_back_veiw, R.drawable.default_head,
+					R.drawable.default_head);
+			m_imageLoader.get(BBConfigue.SERVER_HTTP + background,
+					backgroundList);
+		} else {
+			m_back_veiw.setImageBitmap(bitmap);
 		}
 
 		String username = jsonObject.getString("username");
@@ -261,7 +273,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 
 		@Override
 		public boolean onLongClick(View v) {
-			// TODO Auto-generated method stub
 			switch (v.getId()) {
 			case R.id.img_beijing:
 				Builder dialog = new AlertDialog.Builder(getActivity());
@@ -271,7 +282,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								Intent intent = new Intent(
 										Intent.ACTION_PICK,
 										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -324,7 +334,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
 								Intent intent = new Intent(
 										Intent.ACTION_PICK,
 										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -348,7 +357,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		if (requestCode == RESULT_LOAD_IMAGE && resultCode == -1
 				&& data != null) {
 			// 背景
-			
+
 			// 这个图片的URI
 			Uri selectedImage = data.getData();
 			// 获得图像的绝对路径
@@ -369,7 +378,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		} else if (requestCode == RESULT_LOAD && resultCode == -1
 				&& data != null) {
 			// 头像
-			
+
 			// 这个图片的URI
 			Uri selectedImage = data.getData();
 			// 获得图像的绝对路径
@@ -385,9 +394,7 @@ public class MyAccountFragment extends BaseActionBarFragment {
 		}
 	}
 
-	/*
-	 * handler
-	 */
+	@SuppressLint("HandlerLeak")
 	public class ThisHandler extends Handler {
 		public void dispatchMessage(Message msg) {
 			switch (msg.what) {
@@ -405,7 +412,6 @@ public class MyAccountFragment extends BaseActionBarFragment {
 								Toast.LENGTH_SHORT).show();
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 

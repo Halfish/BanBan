@@ -16,9 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
@@ -61,7 +61,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		m_activity = getActivity();
 		m_storeId = m_activity.getIntent().getIntExtra("store_id", -1);
 		m_listItems = new ArrayList<Map<String, Object>>();
-		m_queue = Volley.newRequestQueue(getActivity());
+		m_queue = BBApplication.getQueue();
 
 		initHandler();
 	}

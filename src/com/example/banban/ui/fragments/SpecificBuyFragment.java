@@ -17,10 +17,9 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.specificbuy.StoreActivity;
 
@@ -78,8 +77,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_progDiag = new ProgressDialog(m_activity);
-		m_queue = Volley.newRequestQueue(m_activity);
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		m_queue = BBApplication.getQueue();
+		m_imageLoader = BBApplication.getImageLoader();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		initArray();
 		initHandler();

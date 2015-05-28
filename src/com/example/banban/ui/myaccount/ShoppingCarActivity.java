@@ -31,11 +31,10 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.example.banban.ui.specificbuy.StoreActivity;
@@ -79,7 +78,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		}
 		Log.v(LOG_TAG, "m_productId is " + m_productId);
 		Log.v(LOG_TAG, "m_purchase_code is " + m_purchaseCode);
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 		initHandler();
 		initWidgets();
 		beginDataRequest();
@@ -324,7 +323,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		m_fund.setText("将获得" + donate + "元公益资金");
 		m_storeNameBtn.setText(store_name);
 
-		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_imageView,
 				R.drawable.loading_01,
 				R.drawable.loading_01);

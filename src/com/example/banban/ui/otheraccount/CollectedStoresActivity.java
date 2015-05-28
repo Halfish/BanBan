@@ -32,10 +32,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.example.banban.ui.specificbuy.StoreActivity;
@@ -114,7 +113,7 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/users/bookmarks/stores/" + m_userId, m_userInfoHandler,
 				m_queue);
@@ -211,8 +210,7 @@ public class CollectedStoresActivity extends BaseActionBarActivity {
 			String name = (String) m_listItems.get(position).get("name");
 			String image = (String) m_listItems.get(position).get("image");
 
-			ImageLoader imageLoader = new ImageLoader(m_queue,
-					new BitmapCache());
+			ImageLoader imageLoader = BBApplication.getImageLoader();
 			viewHolder.head.setImageUrl(BBConfigue.SERVER_HTTP + image,
 					imageLoader);
 

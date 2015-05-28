@@ -15,10 +15,9 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.myaccount.ShareProductFragment;
 
@@ -77,7 +76,7 @@ public class OtherAccountActivity extends FragmentActivity {
 
 		initWidgets();
 		
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 		initHandler();
 		initView();
 		beginDataRequest();
@@ -258,7 +257,7 @@ public class OtherAccountActivity extends FragmentActivity {
 			return;
 		}
 		String image = jsonObject.getString("image");
-		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_userPic,
 				R.drawable.default_head, R.drawable.default_head);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);

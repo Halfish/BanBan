@@ -1,5 +1,10 @@
 package com.example.banban.ui.randombuy;
 
+/*
+ * @author: BruceZhang
+ * @description: 选择商品种类界面，简单的ListView
+ */
+
 import java.util.ArrayList;
 
 import com.example.banban.R;

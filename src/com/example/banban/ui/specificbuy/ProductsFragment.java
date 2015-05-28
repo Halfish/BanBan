@@ -17,10 +17,9 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
-import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 
 import android.app.Activity;
@@ -57,10 +56,16 @@ public class ProductsFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
-		m_queue = Volley.newRequestQueue(getActivity());
-		m_imageLoader = new ImageLoader(m_queue, new BitmapCache());
+		m_queue = BBApplication.getQueue();
+		m_imageLoader = BBApplication.getImageLoader();
 		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); 
 		initHandler();
+	}
+	
+	@Override
+	public void onResume() {
+		beginDataRequest();
+		super.onResume();
 	}
 	
 	@Override

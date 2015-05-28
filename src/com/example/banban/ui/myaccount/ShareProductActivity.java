@@ -28,9 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.example.banban.ui.specificbuy.StoreActivity;
@@ -71,7 +71,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		Log.v(LOG_TAG, "m_purchase_code is " + m_purchaseCode);
 
 		initHandler();
-		m_queue = Volley.newRequestQueue(this);
+		m_queue = BBApplication.getQueue();
 		initWidgets();
 		beginDataRequest();
 	}

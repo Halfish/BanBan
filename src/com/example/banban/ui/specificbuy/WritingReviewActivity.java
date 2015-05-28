@@ -12,9 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
 
@@ -50,7 +50,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		setContentView(R.layout.bb_activity_writing_review);
 
 		m_storeId = getIntent().getIntExtra("store_id", -1);
-
+		m_queue = BBApplication.getQueue();
 		initWidgets();
 		initHandler();
 	}
@@ -80,7 +80,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 	}
 
 	private void beginDataRequest(String review) {
-		m_queue = Volley.newRequestQueue(this);
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("store_id", m_storeId + "");
 		map.put("rating", m_rating + "");
@@ -131,7 +131,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 			break;
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

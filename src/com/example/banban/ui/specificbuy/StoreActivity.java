@@ -14,11 +14,11 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 
 import android.annotation.SuppressLint;
@@ -79,12 +79,11 @@ public class StoreActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_store);
-
-		initWidgets();
-
+		m_queue = BBApplication.getQueue();
 		m_storeId = getIntent().getIntExtra("store_id", -1);
 		Log.v(LOG_TAG, "m_storeId is: " + m_storeId);
-
+		
+		initWidgets();
 		initHandler();
 		beginDataRequest();
 
@@ -225,7 +224,7 @@ public class StoreActivity extends FragmentActivity {
 	}
 
 	private void beginDataRequest() {
-		m_queue = Volley.newRequestQueue(this);
+		
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/detail/"
 				+ m_storeId, m_handler, m_queue);
 	}
