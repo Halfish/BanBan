@@ -66,10 +66,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private RequestQueue m_queue;
 	private ImageLoader m_imageLoader;
 	private Handler m_handler;
-	private Handler m_citiesHandler;
 	private Handler m_districtHandler;
 	private String m_orderBy = "favorite";
-	private String m_city = BBConfigue.CURRENT_CITY;
 	private String m_district = "";
 	private String m_category = "1";
 
@@ -86,6 +84,25 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		initArray();
 		initHandler();
 		Log.v(LOG_TAG, "onCreate called");
+	}
+
+	@Override
+	public void onResume() {
+		beginUpdateDistrictRequest();
+		Log.v(LOG_TAG, "onResume called");
+		super.onResume();
+	}
+
+	@Override
+	public void onStart() {
+		Log.v(LOG_TAG, "onStart called");
+		super.onStart();
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		Log.v(LOG_TAG, "setUserVisibleHint: " + isVisibleToUser);
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	private void initArray() {
@@ -144,14 +161,21 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		};
 	}
 
-	public void beginDataRequest() {
+	public void beginUpdateDistrictRequest() {
 
 		String id = m_cityId.get(BBConfigue.CURRENT_CITY);
-		
+
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/locations/regions?id=" + id, m_districtHandler, m_queue);
 
 		Log.v(LOG_TAG, "beginDataRequest");
+	}
+
+	private void beginSearchWithParamRequest() {
+		String url = BBConfigue.SERVER_HTTP + "/stores/list?order_by="
+				+ m_orderBy + "&city=" + BBConfigue.CURRENT_CITY + "&district="
+				+ m_district + "&category=" + m_category;
+		HttpUtil.JsonGetRequest(url, m_handler, m_queue);
 	}
 
 	private void updataDataFromServer(JSONObject jsonObject)
@@ -160,7 +184,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		int retCode = jsonObject.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			m_listItems.clear(); // TODO
+			m_listItems.clear();
 			m_adapter.notifyDataSetChanged();
 			JSONArray jsonArray = jsonObject.getJSONArray("stores");
 			if (jsonArray.length() == 0) {
@@ -208,7 +232,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private void updateDistrictSpinner(JSONObject response)
 			throws JSONException {
 		m_districtsItems.clear();
-
+		// also research after get new districts
+		beginSearchWithParamRequest();
 		JSONArray jsonArray = response.getJSONArray("result").getJSONArray(0);
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject city = jsonArray.getJSONObject(i);
@@ -244,7 +269,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			initSearchView();
 			initSpinners();
 			initListView();
-			beginDataRequest();
+			beginUpdateDistrictRequest();
 		}
 
 		// 缓存的view需要判断是否已经被加过parent，
@@ -268,7 +293,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-
+		// TODO
 		m_progDiag.setMessage("正在搜寻");
 		m_progDiag.show();
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
@@ -296,14 +321,9 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent,
 							View view, int position, long id) {
-						// TODO
 						Log.v(LOG_TAG, "category selected: " + position);
 						m_category = (position + 1) + "";
-						String url = BBConfigue.SERVER_HTTP
-								+ "/stores/list?order_by=" + m_orderBy
-								+ "&city=" + m_city + "&district=" + m_district
-								+ "&category=" + m_category;
-						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+						beginSearchWithParamRequest();
 						Log.v(LOG_TAG, "category spinner");
 					}
 
@@ -320,14 +340,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						m_district = m_districtsItems.get(position)
 								.get("district").toString();
 						Log.v(LOG_TAG, "district is selected: " + m_district);
-						String url = BBConfigue.SERVER_HTTP
-								+ "/stores/list?order_by=" + m_orderBy
-								+ "&city=" + m_city + "&district=" + m_district
-								+ "&category=" + m_category;
-						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+						beginSearchWithParamRequest();
 						Log.v(LOG_TAG, "district spinner ");
-						// m_progDiag.setMessage("正在搜寻");
-						// m_progDiag.show();
 					}
 
 					@Override
@@ -353,11 +367,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						default:
 							break;
 						}
-						String url = BBConfigue.SERVER_HTTP
-								+ "/stores/list?order_by=" + m_orderBy
-								+ "&city=" + m_city + "&district=" + m_district
-								+ "&category=" + m_category;
-						HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+						beginSearchWithParamRequest();
 						Log.v(LOG_TAG, "order spinner");
 					}
 

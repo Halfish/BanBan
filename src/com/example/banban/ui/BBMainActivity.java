@@ -8,7 +8,6 @@ package com.example.banban.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.android.volley.toolbox.Volley;
 import com.example.banban.R;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.MoreInfoFragment;
@@ -122,11 +121,15 @@ public class BBMainActivity extends FragmentActivity {
 			pref.edit().putString("location", location).commit();
 			BBConfigue.CURRENT_CITY = location;
 
+			/*
+			 * 这样子只要在MainActivity里，就算不在SpecificBuy里改变LOCATION，
+			 * 也可以更新城市区级（District）
+			 */
 			int tab = m_tabAdapter.getCurrentTab();
 			if (tab == 1) {
 				SpecificBuyFragment fragment = (SpecificBuyFragment) m_tabAdapter
 						.getCurrentFragment();
-				fragment.beginDataRequest();
+				fragment.beginUpdateDistrictRequest();
 			}
 		}
 		// m_tabAdapter.getCurrentFragment().onActivityResult(requestCode,

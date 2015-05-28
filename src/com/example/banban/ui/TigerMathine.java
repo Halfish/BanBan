@@ -1,5 +1,8 @@
 package com.example.banban.ui;
-
+/*
+ * @author: BruceZhang
+ * @description: 老虎机
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,8 +11,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
-
 import kankan.wheel.widget.OnWheelScrollListener;
 import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.SlotMachineAdapter;
@@ -83,6 +84,9 @@ public class TigerMathine {
 			wheelView.setCurrentItem(resetIndex, false);
 		}
 
+		/*
+		 * 6秒以后停止！
+		 */
 		m_handler.sendEmptyMessageDelayed(0, 6 * 1000);
 		
 		if (flag) {
@@ -106,13 +110,11 @@ public class TigerMathine {
 		public void onScrollingStarted(WheelView wheel) {
 			isWheelScrolling = true;
 			m_isWheelFinished.set(wheel.getCurrentItem(), false);
-			Log.v(LOG_TAG, "wheel started with " + wheel.getCurrentItem());
 		}
 
 		public void onScrollingFinished(WheelView wheel) {
 			isWheelScrolling = false;
 			m_isWheelFinished.set(wheel.getCurrentItem(), true);
-			Log.v(LOG_TAG, "wheel finished with " + wheel.getCurrentItem());
 
 			// 用的代码写的不靠谱，所以不一定能完全停下来，先注释掉，用下面的方法 TODO
 			// for (int i = 0; i < m_isWheelFinished.size(); i++) {

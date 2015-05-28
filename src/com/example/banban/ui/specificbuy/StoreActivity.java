@@ -23,6 +23,7 @@ import com.example.banban.other.BBConfigue;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -71,7 +72,7 @@ public class StoreActivity extends FragmentActivity {
 	private ImageButton m_likeButton;
 	private ImageButton m_collectButton;
 	private ImageView m_storeImageView;
-	
+
 	private ActionBar m_actionBar;
 
 	@Override
@@ -95,13 +96,22 @@ public class StoreActivity extends FragmentActivity {
 	private void initWidgets() {
 		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
 		m_storeName = (TextView) findViewById(R.id.tv_store_name);
-		m_storeImageView = (ImageView)findViewById(R.id.img_store);
+		m_storeImageView = (ImageView) findViewById(R.id.img_store);
 
 		m_likeButton = (ImageButton) findViewById(R.id.img_like);
 		m_collectButton = (ImageButton) findViewById(R.id.img_collect);
 
 		m_likeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(
+							StoreActivity.this);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
+
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("store_id", m_storeId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
@@ -111,18 +121,28 @@ public class StoreActivity extends FragmentActivity {
 
 		m_collectButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(
+							StoreActivity.this);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
+
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("store_id", m_storeId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-						+ "/users/bookmarks/stores/add", m_collectHandler, m_queue);
+						+ "/users/bookmarks/stores/add", m_collectHandler,
+						m_queue);
 			}
 		});
-		
+
 		initActionBar();
 
 	}
 
-	@SuppressLint("InflateParams") 
+	@SuppressLint("InflateParams")
 	private void initActionBar() {
 		m_actionBar = getActionBar();
 
@@ -136,9 +156,9 @@ public class StoreActivity extends FragmentActivity {
 		m_actionBar.setDisplayShowCustomEnabled(true);
 		m_actionBar.setDisplayShowTitleEnabled(false);
 		m_actionBar.setHomeButtonEnabled(true);
-		m_actionBar.setIcon(R.drawable.bb_back);	
+		m_actionBar.setIcon(R.drawable.bb_back);
 	}
-	
+
 	private void initHandler() {
 		m_handler = new Handler(getMainLooper()) {
 			@Override
@@ -274,10 +294,10 @@ public class StoreActivity extends FragmentActivity {
 		String image = response.getString("image");
 		String name = response.getString("name");
 		m_totalDonate.setText("累计捐款：" + total_donate + " 元");
-		m_storeName.setText(name); //TODO
+		m_storeName.setText(name); // TODO
 		updateImage(image);
 	}
-	
+
 	private void updateImage(String image) {
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
 		ImageListener listener = ImageLoader.getImageListener(m_storeImageView,
@@ -388,13 +408,13 @@ public class StoreActivity extends FragmentActivity {
 			return list.get(arg0);
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			break;	
+			break;
 
 		default:
 			break;

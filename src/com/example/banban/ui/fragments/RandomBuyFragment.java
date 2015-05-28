@@ -59,6 +59,8 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Handler m_randomTimeHandler;
 	private int m_randomTimes = 0;
 	private boolean m_lucky = false;
+	private MenuItem m_categoryMenuItem;
+	private String[] m_category;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
 		m_queue = Volley.newRequestQueue(m_activity);
+		m_category = getResources().getStringArray(R.array.category);
 		initHandler();
 		beginTimeDataRequest();
 		Log.v(LOG_TAG, "onCreate called");
@@ -79,8 +82,21 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 
 	@Override
 	public void onResume() {
-		Log.v(LOG_TAG, "onResume called");
+		Log.v(LOG_TAG, "onResume called" + "category is " + BBConfigue.CATEGORY);
 		super.onResume();
+		/*
+		 * 让类别菜单更新为当前选择的菜单
+		 */
+		if (m_categoryMenuItem == null) {
+			return;
+		}
+
+		if (BBConfigue.CATEGORY == 0) {
+			m_categoryMenuItem.setTitle("所有类别");
+			// TODO
+		} else {
+			m_categoryMenuItem.setTitle(m_category[BBConfigue.CATEGORY - 1]);
+		}
 	}
 
 	private void initHandler() {
@@ -234,7 +250,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		if (BBConfigue.CATEGORY != 0) {
 			map.put("category_id", BBConfigue.CATEGORY + "");
 		}
-		
+
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/products/generate/random", m_handler, m_queue);
 		Log.v(LOG_TAG, "generate random and CITY is " + BBConfigue.CURRENT_CITY);
@@ -249,6 +265,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.bb_menu_fragment_random_buy, menu);
+		m_categoryMenuItem = menu.getItem(0);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

@@ -15,6 +15,8 @@ import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -73,6 +75,15 @@ public class ProductActivity extends BaseActionBarActivity {
 		m_buyButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(
+							ProductActivity.this);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
+
 				if (m_productId != -1) {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("product_id", m_productId + "");
@@ -84,6 +95,15 @@ public class ProductActivity extends BaseActionBarActivity {
 
 		m_likeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+				if (BBConfigue.IS_VISITOR) {
+					ProgressDialog dialog = new ProgressDialog(
+							ProductActivity.this);
+					dialog.setMessage("游客用户无权限，请登录或注册");
+					dialog.show();
+					return;
+				}
+
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("product_id", m_productId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP

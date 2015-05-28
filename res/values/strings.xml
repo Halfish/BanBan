@@ -18,7 +18,7 @@
     <string name="guangzhou">广州市</string>
 
     <!-- 菜单 -->
-    <string name="bb_menu_category">类别</string>
+    <string name="bb_menu_category">所有类别</string>
     <string name="bb_menu_like">点个赞</string>
     <string name="bb_menu_collect">收藏此商家</string>
 
