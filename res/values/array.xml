@@ -740,6 +740,7 @@
         <item>参与度最高</item>
     </string-array>
     <string-array name="category">
+        <item>所有类别</item>
         <item>图书</item>
         <item>母婴</item>
         <item>数码</item>

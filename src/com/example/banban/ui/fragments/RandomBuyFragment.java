@@ -91,12 +91,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			return;
 		}
 
-		if (BBConfigue.CATEGORY == 0) {
-			m_categoryMenuItem.setTitle("所有类别");
-			// TODO
-		} else {
-			m_categoryMenuItem.setTitle(m_category[BBConfigue.CATEGORY - 1]);
-		}
+		m_categoryMenuItem.setTitle(m_category[BBConfigue.CATEGORY]);
 	}
 
 	private void initHandler() {

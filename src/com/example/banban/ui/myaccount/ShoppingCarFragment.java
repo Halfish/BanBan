@@ -184,7 +184,6 @@ public class ShoppingCarFragment extends Fragment {
 		TextView productNameTV;
 		TextView likeNumberTV;
 		TextView priceTV;
-		TextView remainsTV;
 	}
 
 	private class StoreInfoAdapter extends BaseAdapter {
@@ -216,7 +215,7 @@ public class ShoppingCarFragment extends Fragment {
 			ViewHolder viewHolder;
 			if (convertView == null) {
 				convertView = m_activity.getLayoutInflater().inflate(
-						R.layout.bb_cell_product, parent, false);
+						R.layout.bb_cell_product_show, parent, false);
 				/*
 				 * initialize viewHolder;
 				 */
@@ -229,8 +228,6 @@ public class ShoppingCarFragment extends Fragment {
 						.findViewById(R.id.tv_like_number);
 				viewHolder.priceTV = (TextView) convertView
 						.findViewById(R.id.tv_product_price);
-				viewHolder.remainsTV = (TextView) convertView
-						.findViewById(R.id.tv_remains);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -245,14 +242,12 @@ public class ShoppingCarFragment extends Fragment {
 			String likeNumber = (String) m_listItems.get(position).get(
 					"like_number");
 			String distance = (String) m_listItems.get(position).get("price");
-			String remains = (String) m_listItems.get(position).get("remains");
 			String image = (String) m_listItems.get(position).get("image");
 
 			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
-			viewHolder.remainsTV.setText(remains);
 
 			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image,
 					m_imageLoader);

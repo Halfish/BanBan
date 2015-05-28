@@ -269,7 +269,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 						int retCode = response.getInt("ret_code");
 						switch (retCode) {
 						case 0:
-							Toast.makeText(getApplicationContext(), "放弃分享！",
+							Toast.makeText(getApplicationContext(), "已放弃商品！",
 									Toast.LENGTH_LONG).show();
 							finish();
 							break;

@@ -5,6 +5,8 @@ package com.example.banban.ui.fragments;
  * @description: 特定抢 fragment
  */
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +70,8 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private Handler m_districtHandler;
 	private String m_orderBy = "favorite";
 	private String m_district = "";
-	private String m_category = "1";
+	private String m_category = "";
+	private String m_search = "";
 
 	private ProgressDialog m_progDiag;
 
@@ -78,10 +81,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_activity = getActivity();
 		m_progDiag = new ProgressDialog(m_activity);
 		m_queue = BBApplication.getQueue();
+		initHandler();
 		m_imageLoader = BBApplication.getImageLoader();
 		m_listItems = new ArrayList<Map<String, Object>>();
 		initArray();
-		initHandler();
 		Log.v(LOG_TAG, "onCreate called");
 	}
 
@@ -170,10 +173,25 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		Log.v(LOG_TAG, "beginDataRequest");
 	}
 
+	@SuppressWarnings("deprecation")
 	private void beginSearchWithParamRequest() {
+		String categoryUrl = "";
+		if (!m_category.equals("0")) {
+			categoryUrl = "&category=" + m_category;
+		}
+
+		String searchUrl = "";
+		if (!m_search.equals("")) {
+			searchUrl = "&search=" + URLEncoder.encode(m_search);
+		}
+
 		String url = BBConfigue.SERVER_HTTP + "/stores/list?order_by="
-				+ m_orderBy + "&city=" + BBConfigue.CURRENT_CITY + "&district="
-				+ m_district + "&category=" + m_category;
+				+ m_orderBy + "&city="
+				+ URLEncoder.encode(BBConfigue.CURRENT_CITY) + "&district="
+				+ URLEncoder.encode(m_district) + categoryUrl + searchUrl;
+
+		Log.v(LOG_TAG, "url is: " + url);
+
 		HttpUtil.JsonGetRequest(url, m_handler, m_queue);
 	}
 
@@ -295,10 +313,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		// TODO
 		m_progDiag.setMessage("正在搜寻");
 		m_progDiag.show();
-		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
-				+ "/stores/list?search=" + query + "&order_by="
-						+ m_orderBy + "&city=" + BBConfigue.CURRENT_CITY + "&district="
-						+ m_district + "&category=" + m_category, m_handler, m_queue);
+		beginSearchWithParamRequest();
 		return false;
 	}
 
@@ -322,7 +337,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 					public void onItemSelected(AdapterView<?> parent,
 							View view, int position, long id) {
 						Log.v(LOG_TAG, "category selected: " + position);
-						m_category = (position + 1) + "";
+						m_category = position + "";
 						beginSearchWithParamRequest();
 						Log.v(LOG_TAG, "category spinner");
 					}
