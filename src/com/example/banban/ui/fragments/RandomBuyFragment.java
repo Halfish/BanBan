@@ -6,6 +6,7 @@ package com.example.banban.ui.fragments;
  * 查看商品的信息
  */
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,6 @@ import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.TigerMathine;
 import com.example.banban.ui.TigerMathine.TigerAnimFinishedCallBack;
-import com.example.banban.ui.randombuy.ChooseCategoryActivity;
 import com.example.banban.ui.randombuy.ProductInfoActivity;
 
 import android.app.Activity;
@@ -35,9 +35,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -59,8 +56,6 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Handler m_randomTimeHandler;
 	private int m_randomTimes = 0;
 	private boolean m_lucky = false;
-	private MenuItem m_categoryMenuItem;
-	private String[] m_category;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +63,6 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 		setHasOptionsMenu(true);
 		m_activity = getActivity();
 		m_queue = BBApplication.getQueue();
-		m_category = getResources().getStringArray(R.array.category);
 		initHandler();
 		beginTimeDataRequest();
 		Log.v(LOG_TAG, "onCreate called");
@@ -82,16 +76,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 
 	@Override
 	public void onResume() {
-		Log.v(LOG_TAG, "onResume called" + "category is " + BBConfigue.CATEGORY);
 		super.onResume();
-		/*
-		 * 让类别菜单更新为当前选择的菜单
-		 */
-		if (m_categoryMenuItem == null) {
-			return;
-		}
-
-		m_categoryMenuItem.setTitle(m_category[BBConfigue.CATEGORY]);
 	}
 
 	private void initHandler() {
@@ -239,43 +224,18 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				});
 	}
 
+	@SuppressWarnings("deprecation")
 	private void beginDataRequest() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("city", BBConfigue.CURRENT_CITY);
-		if (BBConfigue.CATEGORY != 0) {
-			map.put("category_id", BBConfigue.CATEGORY + "");
-		}
+		map.put("city", URLEncoder.encode(BBConfigue.CURRENT_CITY));
 
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/products/generate/random", m_handler, m_queue);
 		Log.v(LOG_TAG, "generate random and CITY is " + BBConfigue.CURRENT_CITY);
-		Log.v(LOG_TAG, "generate random and CATEGORY is " + BBConfigue.CATEGORY);
 	}
 
 	private void beginTimeDataRequest() {
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/users/random_times",
 				m_randomTimeHandler, m_queue);
 	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.bb_menu_fragment_random_buy, menu);
-		m_categoryMenuItem = menu.getItem(0);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_category:
-			Intent intent = new Intent(m_activity, ChooseCategoryActivity.class);
-			startActivity(intent);
-			break;
-
-		default:
-			break;
-		}
-		return false;
-	}
-
 }

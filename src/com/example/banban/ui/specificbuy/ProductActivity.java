@@ -53,6 +53,7 @@ public class ProductActivity extends BaseActionBarActivity {
 	private int m_likeNum;
 	private int m_remainAmount;
 	private int m_donate;
+	private boolean m_favorited = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +111,17 @@ public class ProductActivity extends BaseActionBarActivity {
 					return;
 				}
 
+				String action = "";
+				if (m_favorited) {
+					action = "remove";
+				} else {
+					action = "add";
+				}
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("product_id", m_productId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-						+ "/products/favorites/add", m_zanHandler, m_queue);
+						+ "/products/favorites/" + action, m_zanHandler,
+						m_queue);
 			}
 		});
 
@@ -195,16 +203,16 @@ public class ProductActivity extends BaseActionBarActivity {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			m_zan.setText((m_likeNum + 1) + "");
-			m_likeNum++;
-			Toast.makeText(getApplicationContext(), "您赞了这个项目！",
-					Toast.LENGTH_SHORT).show();
+			if (m_favorited) {
+				m_likeNum--;
+			} else {
+				m_likeNum++;
+			}
+			m_zan.setText(m_likeNum + "");
+			m_favorited = !m_favorited;
 			break;
 
-		case 1:
-		case 2:
-		case 3:
-		case 4:
+		default:
 			String message = response.getString("message");
 			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
 					.show();
@@ -244,15 +252,10 @@ public class ProductActivity extends BaseActionBarActivity {
 			// TODO
 			break;
 
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
+		default:
 			String message = response.getString("message");
 			Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
 					.show();
-		default:
 			break;
 		}
 
@@ -271,7 +274,22 @@ public class ProductActivity extends BaseActionBarActivity {
 		int favorites = response.getInt("favorites");
 		String image = response.getString("image");
 		int purchased = response.getInt("purchased");
+
 		boolean isPurchased = purchased == 1 ? true : false;
+		// 购买过此商品，就不能再次购买
+		if (isPurchased) {
+			m_buyButton.setText("已购买");
+			m_buyButton.setEnabled(false);
+			m_fund.setText("已获得" + donate + "元公益资金");
+		}
+		// 如果还剩0个，就抢不了了
+		if (amount_spec == 0) {
+			m_buyButton.setText("没有商品了");
+			m_buyButton.setEnabled(false);
+		}
+
+		int favorited = response.getInt("favorited");
+		m_favorited = (favorited == 1) ? true : false;
 
 		m_likeNum = favorites;
 		m_zan.setText(favorites + "");
@@ -281,12 +299,6 @@ public class ProductActivity extends BaseActionBarActivity {
 		m_remains.setText("剩余" + amount_spec + "个");
 		m_fund.setText("将获得" + donate + "元公益资金");
 		updateImage(image);
-
-		if (isPurchased) {
-			m_buyButton.setText("已购买");
-			m_buyButton.setEnabled(false);
-			m_fund.setText("已获得" + donate + "元公益资金");
-		}
 
 	}
 

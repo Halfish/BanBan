@@ -56,6 +56,7 @@ public class ShareProductActivity extends BaseActionBarActivity {
 
 	private ImageButton m_zanButton;
 	private int m_zanNum = 0;
+	private boolean m_isFavorited = false; // 是否点过赞了
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +84,16 @@ public class ShareProductActivity extends BaseActionBarActivity {
 				if (m_productId != -1) {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("product_id", m_productId + "");
+
+					String action = "";
+					if (m_isFavorited) {
+						action = "remove";
+					} else {
+						action = "add";
+					}
 					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-							+ "/products/favorites/add", m_zanHandler, m_queue);
+							+ "/products/favorites/" + action, m_zanHandler,
+							m_queue);
 				}
 			}
 		});
@@ -115,8 +124,10 @@ public class ShareProductActivity extends BaseActionBarActivity {
 									int which) {
 								Map<String, String> map = new HashMap<String, String>();
 								map.put("purchase_code", m_purchaseCode);
-								Log.v(LOG_TAG, "purchaseCode is " + m_purchaseCode);
-								HttpUtil.NormalPostRequest(map,
+								Log.v(LOG_TAG, "purchaseCode is "
+										+ m_purchaseCode);
+								HttpUtil.NormalPostRequest(
+										map,
 										BBConfigue.SERVER_HTTP
 												+ "/products/purchases/transfer",
 										m_keepHandler, m_queue);
@@ -230,8 +241,11 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		int price = response.getInt("price");
 		int donate = response.getInt("donate");
 		String store_name = response.getString("store_name");
+		int favorited = response.getInt("favorited");
 
-		m_zan.setText(favorites + "");
+		m_isFavorited = favorited == 0 ? false : true;
+		m_zanNum = favorites;
+		m_zan.setText(m_zanNum + "");
 		m_productName.setText(name);
 		m_originPrice.setText("原价：" + original_price + "元");
 		m_currentPrice.setText("现价：" + price + "元");
@@ -244,26 +258,19 @@ public class ShareProductActivity extends BaseActionBarActivity {
 		int retCode = jsonObject.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			m_zan.setText((m_zanNum + 1) + "");
-			m_zanNum++;
-			Toast.makeText(getApplicationContext(), "点赞 成功！", Toast.LENGTH_LONG)
-					.show();
-			break;
-
-		case 1:
-		case 2:
-		case 3:
-			String message = jsonObject.getString("message");
-			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
-					.show();
-			break;
-
-		case 4:
-			Toast.makeText(getApplicationContext(), "您已经点过赞了！",
-					Toast.LENGTH_LONG).show();
+			if (m_isFavorited) {
+				m_zanNum--;
+			} else {
+				m_zanNum++;
+			}
+			m_isFavorited = !m_isFavorited;
+			m_zan.setText(m_zanNum + "");
 			break;
 
 		default:
+			String message = jsonObject.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
 			break;
 		}
 	}

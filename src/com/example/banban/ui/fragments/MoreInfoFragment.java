@@ -187,7 +187,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 						"account", Context.MODE_PRIVATE);
 				pref.edit().clear().commit();
 				Intent intent = new Intent(getActivity(),
-						ChooseLoginActivity.class);
+						LoginActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}

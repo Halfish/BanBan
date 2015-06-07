@@ -17,6 +17,18 @@
             android:contentDescription="@string/cont_descrip"
             android:scaleType="fitXY"
             android:src="#eee" />
+        
+        <!-- 更新小红点 -->
+        <ImageView 
+            android:id="@+id/img_refresh"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@string/cont_descrip"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/bb_fresh"/>
 
         <!-- 点赞图标和点赞数 -->
 
@@ -37,7 +49,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
                 android:layout_toEndOf="@id/img_like"
+                android:layout_toRightOf="@id/img_like"
                 android:gravity="center"
                 android:text="@string/bb_zero"
                 android:textColor="#777"

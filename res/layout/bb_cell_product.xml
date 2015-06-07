@@ -11,6 +11,15 @@
         android:contentDescription="@string/cont_descrip"
         android:src="#eee" />
 
+    <ImageView 
+        android:id="@+id/img_gray"
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/cont_descrip"
+        android:visibility="invisible"
+        android:src="@drawable/bb_gray"/>
+    
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="20dp"
@@ -28,7 +37,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="6dp"
+            android:layout_marginLeft="6dp"
             android:layout_toEndOf="@id/img_like"
+            android:layout_toRightOf="@id/img_like"
             android:gravity="center"
             android:text="@string/bb_zero"
             android:textColor="#777"

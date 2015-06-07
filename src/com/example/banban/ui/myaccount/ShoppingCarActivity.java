@@ -65,6 +65,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 	private ImageButton m_zanButton;
 
 	private int m_zanNum = 0;
+	private boolean m_isFavorited = false; // 是否点过赞了
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +92,16 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 				if (m_productId != -1) {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("product_id", m_productId + "");
+
+					String action = "";
+					if (m_isFavorited) {
+						action = "remove";
+					} else {
+						action = "add";
+					}
 					HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-							+ "/products/favorites/add", m_zanHandler, m_queue);
+							+ "/products/favorites/" + action, m_zanHandler,
+							m_queue);
 				}
 			}
 		});
@@ -117,7 +126,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		});
 
 		m_shoppingCodeBtn.setText("消费码 " + m_purchaseCode);
-		
+
 		m_shoppingCodeBtn
 				.setOnLongClickListener(new View.OnLongClickListener() {
 					public boolean onLongClick(View v) {
@@ -314,6 +323,9 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		int donate = response.getInt("donate");
 		String store_name = response.getString("store_name");
 		String image = response.getString("image");
+		int favorited = response.getInt("favorited");
+
+		m_isFavorited = favorited == 0 ? false : true;
 
 		m_zanNum = favorites;
 		m_zan.setText(favorites + "");
@@ -325,8 +337,7 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 
 		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_imageView,
-				R.drawable.loading_01,
-				R.drawable.loading_01);
+				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 
 	}
@@ -336,26 +347,19 @@ public class ShoppingCarActivity extends BaseActionBarActivity {
 		int retCode = jsonObject.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			m_zan.setText((m_zanNum + 1) + "");
-			m_zanNum++;
-			Toast.makeText(getApplicationContext(), "点赞 成功！", Toast.LENGTH_LONG)
-					.show();
-			break;
-
-		case 1:
-		case 2:
-		case 3:
-			String message = jsonObject.getString("message");
-			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
-					.show();
-			break;
-
-		case 4:
-			Toast.makeText(getApplicationContext(), "您已经点过赞了！",
-					Toast.LENGTH_LONG).show();
+			if (m_isFavorited) {
+				m_zanNum--;
+			} else {
+				m_zanNum++;
+			}
+			m_isFavorited = !m_isFavorited;
+			m_zan.setText(m_zanNum + "");
 			break;
 
 		default:
+			String message = jsonObject.getString("message");
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+					.show();
 			break;
 		}
 	}

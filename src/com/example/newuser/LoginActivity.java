@@ -8,8 +8,6 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.BanBanBusiness.Merchant_main;
-import com.example.BanBanBusiness.localStore;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
@@ -177,12 +175,9 @@ public class LoginActivity extends Activity {
 			finish();
 			break;
 
-		case 1:
+		default:
 			String message = response.getString("message");
 			Toast.makeText(m_context, message, Toast.LENGTH_SHORT).show();
-			break;
-
-		default:
 			break;
 		}
 	}

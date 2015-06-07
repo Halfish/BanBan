@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,16 +59,16 @@ public class ProductsFragment extends Fragment {
 		m_activity = getActivity();
 		m_queue = BBApplication.getQueue();
 		m_imageLoader = BBApplication.getImageLoader();
-		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1); 
+		m_storeId = m_activity.getIntent().getIntExtra(("store_id"), 1);
 		initHandler();
 	}
-	
+
 	@Override
 	public void onResume() {
 		beginDataRequest();
 		super.onResume();
 	}
-	
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		// 可见时刷新数据
@@ -134,13 +135,13 @@ public class ProductsFragment extends Fragment {
 		item.put("price", "价格：" + price + "元");
 		item.put("remains", "剩余" + amount_spec + "个");
 		m_listItems.add(item);
-		
+
 		m_adapter.notifyDataSetChanged();
 
 	}
 
 	private void beginDataRequest() {
-		
+
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/products/"
 				+ m_storeId, m_handler, m_queue);
 	}
@@ -160,7 +161,8 @@ public class ProductsFragment extends Fragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						int productId = (Integer) m_listItems.get(position).get("product_id");
+						int productId = (Integer) m_listItems.get(position)
+								.get("product_id");
 						Intent intent = new Intent(getActivity(),
 								ProductActivity.class);
 						intent.putExtra("product_id", productId);
@@ -179,6 +181,7 @@ public class ProductsFragment extends Fragment {
 		TextView likeNumberTV;
 		TextView priceTV;
 		TextView remainsTV;
+		ImageView grayView;
 	}
 
 	private class StoreInfoAdapter extends BaseAdapter {
@@ -225,6 +228,8 @@ public class ProductsFragment extends Fragment {
 						.findViewById(R.id.tv_product_price);
 				viewHolder.remainsTV = (TextView) convertView
 						.findViewById(R.id.tv_remains);
+				viewHolder.grayView = (ImageView) convertView
+						.findViewById(R.id.img_gray);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -243,14 +248,18 @@ public class ProductsFragment extends Fragment {
 			String distance = (String) m_listItems.get(position).get("price");
 			String remains = (String) m_listItems.get(position).get("remains");
 
-			
-			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + productImg, m_imageLoader);
-			
-			//viewHolder.productImg.setImageDrawable(storeImg);
+			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP
+					+ productImg, m_imageLoader);
+
+			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
 			viewHolder.remainsTV.setText(remains);
+			
+			if (remains.equals("剩余0个")) {
+				viewHolder.grayView.setVisibility(View.VISIBLE);
+			}
 
 			return convertView;
 		}

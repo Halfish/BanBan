@@ -60,7 +60,7 @@ public class HttpUtil {
 
 				Map<String, String> headers = new HashMap<String, String>();
 				String str = BBConfigue.USER_NAME + ":" + BBConfigue.PASSWORD;
-				Log.v("HttpUtil JsonGetRequest", "str is:" + str);
+				//Log.v("HttpUtil JsonGetRequest", "str is:" + str);
 				headers.put(
 						"Authorization",
 						"Basic "
@@ -128,7 +128,7 @@ public class HttpUtil {
 		public Map<String, String> getHeaders() throws AuthFailureError {
 			Map<String, String> headers = new HashMap<String, String>();
 			String str = BBConfigue.USER_NAME + ":" + BBConfigue.PASSWORD;
-			Log.v("HttpUtil NormalPostRequest", "str is: " + str);
+			//Log.v("HttpUtil NormalPostRequest", "str is: " + str);
 			headers.put(
 					"Authorization",
 					"Basic "

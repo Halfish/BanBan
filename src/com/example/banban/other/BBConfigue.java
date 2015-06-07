@@ -12,6 +12,4 @@ public class BBConfigue {
 	
 	public static String CURRENT_CITY = "";
 	public static boolean IS_VISITOR = false;
-	public static int CATEGORY = 0;
-	
 }

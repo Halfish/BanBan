@@ -133,7 +133,6 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			m_listItems.add(m_item);
 			m_adapter.notifyDataSetChanged();
 		}
-		m_listView.smoothScrollToPosition(m_listView.getCount() - 1);
 	}
 
 	@Override

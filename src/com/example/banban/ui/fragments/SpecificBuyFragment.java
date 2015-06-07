@@ -5,7 +5,6 @@ package com.example.banban.ui.fragments;
  * @description: 特定抢 fragment
  */
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 	private String m_orderBy = "favorite";
 	private String m_district = "";
 	private String m_category = "";
-	private String m_search = "";
 
 	private ProgressDialog m_progDiag;
 
@@ -180,15 +178,15 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 			categoryUrl = "&category=" + m_category;
 		}
 
-		String searchUrl = "";
-		if (!m_search.equals("")) {
-			searchUrl = "&search=" + URLEncoder.encode(m_search);
+		String district = "";
+		if (!m_district.equals("所有区域") && !m_district.equals("")) {
+			district = "&district=" + URLEncoder.encode(m_district);
 		}
 
 		String url = BBConfigue.SERVER_HTTP + "/stores/list?order_by="
 				+ m_orderBy + "&city="
-				+ URLEncoder.encode(BBConfigue.CURRENT_CITY) + "&district="
-				+ URLEncoder.encode(m_district) + categoryUrl + searchUrl;
+				+ URLEncoder.encode(BBConfigue.CURRENT_CITY) + district
+				+ categoryUrl;
 
 		Log.v(LOG_TAG, "url is: " + url);
 
@@ -251,13 +249,21 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 		m_districtsItems.clear();
 		// also research after get new districts
 		beginSearchWithParamRequest();
+
+		// 添加所有区域
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("district", "所有区域");
+		map.put("district_id", -1);
+		m_districtsItems.add(map);
+		m_districtsSimpleAdapter.notifyDataSetChanged();
+
 		JSONArray jsonArray = response.getJSONArray("result").getJSONArray(0);
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject city = jsonArray.getJSONObject(i);
 			int id = city.getInt("id");
 			String fullname = city.getString("fullname");
 
-			Map<String, Object> map = new HashMap<String, Object>();
+			map = new HashMap<String, Object>();
 			map.put("district", fullname);
 			map.put("district_id", id);
 			m_districtsItems.add(map);
@@ -310,10 +316,17 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		// TODO
+		// 搜索框按下搜索后
 		m_progDiag.setMessage("正在搜寻");
 		m_progDiag.show();
-		beginSearchWithParamRequest();
+
+		@SuppressWarnings("deprecation")
+		String url = BBConfigue.SERVER_HTTP + "/stores/list?search=" + query
+				+ "&city=" + URLEncoder.encode(BBConfigue.CURRENT_CITY)
+				+ "&order_by=" + m_orderBy;
+		Log.v(LOG_TAG, "search url: " + url);
+		HttpUtil.JsonGetRequest(url, m_handler, m_queue);
+
 		return false;
 	}
 
@@ -332,6 +345,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 
 		m_districtSpinner.setAdapter(m_districtsSimpleAdapter);
 
+		// 类别的下拉列表
 		m_categorySpinner
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent,
@@ -339,13 +353,13 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						Log.v(LOG_TAG, "category selected: " + position);
 						m_category = position + "";
 						beginSearchWithParamRequest();
-						Log.v(LOG_TAG, "category spinner");
 					}
 
 					public void onNothingSelected(AdapterView<?> parent) {
 					}
 				});
 
+		// 区域的下拉列表
 		m_districtSpinner
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -356,7 +370,6 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 								.get("district").toString();
 						Log.v(LOG_TAG, "district is selected: " + m_district);
 						beginSearchWithParamRequest();
-						Log.v(LOG_TAG, "district spinner ");
 					}
 
 					@Override
@@ -364,6 +377,7 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 					}
 				});
 
+		// 排序方式的下拉列表
 		m_smartOrderSpinner
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -382,8 +396,10 @@ public class SpecificBuyFragment extends BaseActionBarFragment implements
 						default:
 							break;
 						}
+						Log.v(LOG_TAG, "order spinner selected: order_by"
+								+ m_orderBy);
 						beginSearchWithParamRequest();
-						Log.v(LOG_TAG, "order spinner");
+
 					}
 
 					@Override

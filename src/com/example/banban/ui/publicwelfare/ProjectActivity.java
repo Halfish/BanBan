@@ -29,14 +29,16 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import cn.sharesdk.framework.utils.Escaper;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -65,9 +67,16 @@ public class ProjectActivity extends FragmentActivity {
 	private TextView m_achieve; // 已经筹资：元
 	private TextView m_accumulate; // 达成：100%
 	private ImageView m_image;
-	
+
 	private boolean m_isFavorited = false; // 赞过此商家
 	private boolean m_isCollected = false; // 收藏过此商家
+
+	private ImageButton m_likeButton;
+	private TextView m_favoriteTextView;
+	private ImageButton m_collectButton;
+	private TextView m_collectTextView;
+	private int m_favoriteNum = 0;
+	private int m_collectNum = 0;
 
 	private Handler m_handler;
 	private Handler m_likeHandler;
@@ -100,6 +109,52 @@ public class ProjectActivity extends FragmentActivity {
 		m_achieve = (TextView) findViewById(R.id.tv_achieve);
 		m_accumulate = (TextView) findViewById(R.id.tv_accumulation);
 		m_image = (ImageView) findViewById(R.id.img_project);
+
+		m_likeButton = (ImageButton) findViewById(R.id.img_like);
+		m_favoriteTextView = (TextView) findViewById(R.id.tv_favorite);
+		m_collectButton = (ImageButton) findViewById(R.id.img_collect);
+		m_collectTextView = (TextView) findViewById(R.id.tv_collect);
+
+		m_likeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				beginLikeRequest();
+			}
+		});
+
+		m_collectButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				beginCollectRequest();
+			}
+		});
+	}
+
+	private void beginLikeRequest() {
+		String action = "";
+		if (m_isFavorited) {
+			action = "remove";
+		} else {
+			action = "add";
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("project_id", m_projectId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/projects/favorites/" + action, m_likeHandler, m_queue);
+	}
+
+	private void beginCollectRequest() {
+		String action = "";
+		if (m_isCollected) {
+			action = "remove";
+		} else {
+			action = "add";
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("project_id", m_projectId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/users/bookmarks/projects/" + action, m_collectHandler,
+				m_queue);
 	}
 
 	@SuppressLint("InflateParams")
@@ -171,7 +226,7 @@ public class ProjectActivity extends FragmentActivity {
 				super.handleMessage(msg);
 			}
 		};
-		
+
 		m_collectHandler = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -214,14 +269,23 @@ public class ProjectActivity extends FragmentActivity {
 		// String feedback = response.getString("");
 		int bookmarked = response.getInt("bookmarked");
 		int favorited = response.getInt("favorited");
-		
+		int favorites = response.getInt("favorites");
+
 		m_isFavorited = favorited == 1 ? true : false;
 		m_isCollected = bookmarked == 1 ? true : false;
+		
+		if (m_isCollected) {
+			m_collectButton.setBackgroundResource(R.drawable.heart_red);
+		} else {
+			m_collectButton.setBackgroundResource(R.drawable.heart_white);
+		}
 
 		m_projectName.setText("项目名称：" + name);
 		m_goal.setText("目标：" + expect + "元");
 		m_achieve.setText("已筹资：" + total_support + "元");
 		m_accumulate.setText("达成：" + percentage + "%");
+		m_favoriteTextView.setText(favorites + "");
+		m_favoriteNum = favorites;
 
 		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_image,
@@ -235,35 +299,43 @@ public class ProjectActivity extends FragmentActivity {
 		int ret_code = response.getInt("ret_code");
 		switch (ret_code) {
 		case 0:
-			m_isFavorited = true;
-		case 1:
-		case 2:
-		case 3:
-		case 4:
+			if (m_isFavorited) {
+				m_favoriteNum--;
+			} else {
+				m_favoriteNum++;
+			}
+			m_isFavorited = !m_isFavorited;
+			m_favoriteTextView.setText(m_favoriteNum + "");
+			break;
+
+		default:
 			String message = response.getString("message");
 			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
 					.show();
 			break;
 
-		default:
-			break;
 		}
 	}
-	
+
 	private void parseCollectDataFromServer(JSONObject response)
 			throws JSONException {
 		int ret_code = response.getInt("ret_code");
 		switch (ret_code) {
 		case 0:
-			m_isCollected = true;
-		case 1:
-		case 2:
+			if (m_isCollected) {
+				m_collectNum--;
+				m_collectButton.setBackgroundResource(R.drawable.heart_white);
+			} else {
+				m_collectNum++;
+				m_collectButton.setBackgroundResource(R.drawable.heart_red);
+			}
+			m_isCollected = !m_isCollected;
+			m_collectTextView.setText(m_collectNum + "");
+			break;
+		default:
 			String message = response.getString("message");
 			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
 					.show();
-			break;
-
-		default:
 			break;
 		}
 	}
@@ -373,46 +445,10 @@ public class ProjectActivity extends FragmentActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.bb_menu_activity_project, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem zanItem = menu.getItem(0);
-		if (m_isFavorited) {
-			zanItem.setTitle("已经点赞");
-			zanItem.setEnabled(false);
-		} else {
-			zanItem.setTitle("点个赞");
-			zanItem.setEnabled(true);
-		}
-		
-		MenuItem collectItem = menu.getItem(1);
-		if (m_isCollected) {
-			collectItem.setTitle("已收藏此商家");
-			collectItem.setEnabled(false);
-		} else {
-			collectItem.setTitle("收藏此商家");
-			collectItem.setEnabled(true);
-		}
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			break;
-
-		case R.id.menu_like:
-			beginLikeRequest();
-			break;
-
-		case R.id.menu_collect:
-			beginCollectRequest();
 			break;
 
 		default:
@@ -421,17 +457,4 @@ public class ProjectActivity extends FragmentActivity {
 		return false;
 	}
 
-	private void beginLikeRequest() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("project_id", m_projectId + "");
-		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-				+ "/projects/favorites/add", m_likeHandler, m_queue);
-	}
-
-	private void beginCollectRequest() {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("project_id", m_projectId + "");
-		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-				+ "/users/bookmarks/projects/add", m_collectHandler, m_queue);
-	}
 }

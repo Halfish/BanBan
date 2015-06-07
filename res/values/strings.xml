@@ -53,7 +53,7 @@
     <string name="bb_phone">电话：</string>
     <string name="bb_phone_num">233333333</string>
     <string name="bb_store_detail">商家详情</string>
-    <string name="bb_store_detail_zhishan">至善园就是一幢普通的宿舍楼，就坐落在中山大学东校区的生活区入口位置。至善园一共一到十楼，住着从大一到研三的所有年级的学生</string>
+    <string name="bb_store_detail_zhishan">no detail</string>
     <string name="bb_nickname">游客账户</string>
     <string name="bb_review_time">2008/08/08 20:00</string>
     <string name="bb_text">这里是正文里的非正文部分，所以不是真正的正文</string>
@@ -61,11 +61,11 @@
     <string name="bb_rating">评分</string>
     <string name="bb_post_photo">上传照片</string>
     <string name="bb_publish">发布</string>
-    <string name="bb_origin_price">原价 &#165;34,222</string>
-    <string name="bb_current_price">现价 &#165;60,000</string>
-    <string name="bb_fund">将获得22,312公益资金</string>
+    <string name="bb_origin_price">原价 &#165;0</string>
+    <string name="bb_current_price">现价 &#165;0</string>
+    <string name="bb_fund">将获得0公益资金</string>
     <string name="bb_buy">抢</string>
-    <string name="bb_product_price"> &#165;34,222</string>
+    <string name="bb_product_price"> &#165;0</string>
 
     <!-- 公益众筹页面 -->
     <string name="bb_tab_newest">最新</string>
@@ -73,14 +73,14 @@
     <string name="bb_tab_recommend">推荐</string>
     <string name="bb_tab_success">成功</string>
     <string name="bb_project_name">项目名称</string>
-    <string name="bb_project_goal">目标30天 &#165;22,232</string>
-    <string name="bb_achieve">230%\n已达</string>
+    <string name="bb_project_goal">目标0天 &#165;0</string>
+    <string name="bb_achieve">0%\n已达</string>
     <string name="bb_accumulation">&#165;22.233\n已筹资</string>
     <string name="bb_project_name1">项目名称</string>
-    <string name="bb_project_goal1">目标： &#165;11,232</string>
-    <string name="bb_achieve1">已筹资：&#165;10,000</string>
-    <string name="bb_accumulation1">达成：60%</string>
-    <string name="bb_remaining_days">20天\n剩余时间</string>
+    <string name="bb_project_goal1">目标： &#165;0</string>
+    <string name="bb_achieve1">已筹资：&#165;0</string>
+    <string name="bb_accumulation1">达成：0%</string>
+    <string name="bb_remaining_days">0天\n剩余时间</string>
 
     <!-- 公益众筹 特定某公益项目 -->
     <string name="bb_pw_detial">详情</string>
@@ -95,8 +95,8 @@
     <!-- supporter -->
     <string name="bb_supporter_nickname">不是我？</string>
     <string name="bb_supporter_date">2015/2/31</string>
-    <string name="bb_supporter_money">支持了&#165;10,000,000</string>
-    <string name="bb_supporter_project_num">我一共支持了1个项目</string>
+    <string name="bb_supporter_money">支持了&#165;0</string>
+    <string name="bb_supporter_project_num">我一共支持了0个项目</string>
 
     <!-- 我的账户 -->
     <string name="bb_store_collected">收藏的商家</string>

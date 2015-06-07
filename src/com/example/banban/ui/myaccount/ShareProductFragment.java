@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ShareProductFragment extends Fragment {
 
@@ -60,7 +61,7 @@ public class ShareProductFragment extends Fragment {
 		m_imageLoader = BBApplication.getImageLoader();
 		initHandler();
 	}
-	
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		// 可见时刷新数据
@@ -114,22 +115,27 @@ public class ShareProductFragment extends Fragment {
 	private void updataDataFromServer(JSONObject jsonObject)
 			throws JSONException {
 		int retCode = jsonObject.getInt("ret_code");
-		if (retCode == 1) {
-			Log.v(LOG_TAG, "Missing order condition");
-			return;
+		switch (retCode) {
+		case 0:
+			// else retCode == 0
+			m_listItems.clear();
+			m_adapter.notifyDataSetChanged();
+			JSONArray jsonArray = jsonObject.getJSONArray("purchases");
+			if (jsonArray == null) {
+				return;
+			}
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject object = jsonArray.getJSONObject(i);
+				addItem(object);
+			}
+			break;
+
+		default:
+			String message = jsonObject.getString("message");
+			Toast.makeText(m_activity, message, Toast.LENGTH_LONG).show();
+			break;
 		}
 
-		// else retCode == 0
-		m_listItems.clear();
-		m_adapter.notifyDataSetChanged();
-		JSONArray jsonArray = jsonObject.getJSONArray("purchases");
-		if (jsonArray == null) {
-			return;
-		}
-		for (int i = 0; i < jsonArray.length(); i++) {
-			JSONObject object = jsonArray.getJSONObject(i);
-			addItem(object);
-		}
 	}
 
 	private void addItem(JSONObject object) throws JSONException {

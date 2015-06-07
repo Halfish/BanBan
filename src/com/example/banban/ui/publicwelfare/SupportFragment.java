@@ -144,6 +144,7 @@ public class SupportFragment extends BaseActionBarFragment {
 
 	}
 
+	// 投入公益资金后
 	private void parseDataFromServer(JSONObject response) throws JSONException {
 		int ret_code = response.getInt("ret_code");
 		String infoString = "";
@@ -152,16 +153,11 @@ public class SupportFragment extends BaseActionBarFragment {
 			infoString = "成功投入公益基金" + m_donateMoney + "元";
 			m_userSupport += m_donateMoney;
 			m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
-			break;
-
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-			infoString = response.getString("message");
+			m_donateTextView.setVisibility(View.VISIBLE);
 			break;
 
 		default:
+			infoString = response.getString("message");
 			break;
 		}
 
@@ -226,7 +222,13 @@ public class SupportFragment extends BaseActionBarFragment {
 		case 0:
 			infoString = "Succeed";
 			m_userSupport = jsonObject.getInt("user_support");
-			m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
+			if (m_userSupport != 0) {
+				m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
+				m_donateTextView.setVisibility(View.VISIBLE);
+			} else {
+				m_donateTextView.setVisibility(View.GONE);
+			}
+
 			break;
 
 		case 1:

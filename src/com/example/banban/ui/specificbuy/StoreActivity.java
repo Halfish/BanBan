@@ -72,6 +72,12 @@ public class StoreActivity extends FragmentActivity {
 	private ImageButton m_likeButton;
 	private ImageButton m_collectButton;
 	private ImageView m_storeImageView;
+	private TextView m_likeTextView;
+	private TextView m_collectTextView;
+	private int m_likeNum = 0; // 点赞数
+	private int m_collectNum = 0; // 收藏数
+	private boolean m_bookmarked = false; // 是否被收藏
+	private boolean m_favorited = false; // 是否点赞过
 
 	private ActionBar m_actionBar;
 
@@ -82,7 +88,7 @@ public class StoreActivity extends FragmentActivity {
 		m_queue = BBApplication.getQueue();
 		m_storeId = getIntent().getIntExtra("store_id", -1);
 		Log.v(LOG_TAG, "m_storeId is: " + m_storeId);
-		
+
 		initWidgets();
 		initHandler();
 		beginDataRequest();
@@ -96,6 +102,8 @@ public class StoreActivity extends FragmentActivity {
 		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
 		m_storeName = (TextView) findViewById(R.id.tv_store_name);
 		m_storeImageView = (ImageView) findViewById(R.id.img_store);
+		m_likeTextView = (TextView) findViewById(R.id.tv_favorite);
+		m_collectTextView = (TextView) findViewById(R.id.tv_collect);
 
 		m_likeButton = (ImageButton) findViewById(R.id.img_like);
 		m_collectButton = (ImageButton) findViewById(R.id.img_collect);
@@ -113,8 +121,14 @@ public class StoreActivity extends FragmentActivity {
 
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("store_id", m_storeId + "");
+				String action = "";
+				if (m_favorited) {
+					action = "remove";
+				} else {
+					action = "add";
+				}
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-						+ "/stores/favorites/add", m_likeHandler, m_queue);
+						+ "/stores/favorites/" + action, m_likeHandler, m_queue);
 			}
 		});
 
@@ -129,11 +143,18 @@ public class StoreActivity extends FragmentActivity {
 					return;
 				}
 
+				String action = "";
+				if (m_bookmarked) {
+					action = "remove";
+				} else {
+					action = "add";
+				}
+
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("store_id", m_storeId + "");
 				HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-						+ "/users/bookmarks/stores/add", m_collectHandler,
-						m_queue);
+						+ "/users/bookmarks/stores/" + action,
+						m_collectHandler, m_queue);
 			}
 		});
 
@@ -180,6 +201,7 @@ public class StoreActivity extends FragmentActivity {
 			}
 		};
 
+		// 点赞
 		m_likeHandler = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -201,6 +223,7 @@ public class StoreActivity extends FragmentActivity {
 			}
 		};
 
+		// 收藏
 		m_collectHandler = new Handler(getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -224,11 +247,12 @@ public class StoreActivity extends FragmentActivity {
 	}
 
 	private void beginDataRequest() {
-		
+
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/stores/detail/"
 				+ m_storeId, m_handler, m_queue);
 	}
 
+	// 更新商家基本信息
 	private void updataDataFromServer(JSONObject response) throws JSONException {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
@@ -236,12 +260,11 @@ public class StoreActivity extends FragmentActivity {
 			parseDataFromJson(response);
 			break;
 
-		case 1:
-			Toast.makeText(this, "Store not exist", Toast.LENGTH_SHORT).show();
+		default:
+			String message = response.getString("message");
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 			break;
 
-		default:
-			break;
 		}
 	}
 
@@ -250,19 +273,21 @@ public class StoreActivity extends FragmentActivity {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			Toast.makeText(this, "点赞成功！", Toast.LENGTH_SHORT).show();
+			if (m_favorited) {
+				m_likeNum--;
+			} else {
+				m_likeNum++;
+			}
+			m_likeTextView.setText(m_likeNum + "");
+			m_favorited = !m_favorited;
+
 			break;
 
-		case 1:
-		case 2:
-		case 3:
-		case 4:
+		default:
 			String message = response.getString("message");
 			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 			break;
 
-		default:
-			break;
 		}
 	}
 
@@ -271,29 +296,58 @@ public class StoreActivity extends FragmentActivity {
 		int retCode = response.getInt("ret_code");
 		switch (retCode) {
 		case 0:
-			Toast.makeText(this, "已经收藏！", Toast.LENGTH_SHORT).show();
-			m_collectButton.setBackgroundResource(R.drawable.heart_red);
-			break;
-
-		case 1:
-		case 2:
-			String message = response.getString("message");
-			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+			if (m_bookmarked) {
+				m_collectButton.setBackgroundResource(R.drawable.heart_white);
+				m_collectNum--;
+			} else {
+				m_collectButton.setBackgroundResource(R.drawable.heart_red);
+				m_collectNum++;
+			}
+			m_collectTextView.setText(m_collectNum + "");
+			m_bookmarked = !m_bookmarked;
 			break;
 
 		default:
+			String message = response.getString("message");
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
 
+	/*
+	 * 从服务器更新该商家的基本信息
+	 */
 	private void parseDataFromJson(JSONObject response) throws JSONException {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		int total_donate = response.getInt("total_donate");
 		String image = response.getString("image");
 		String name = response.getString("name");
+		int favorites = response.getInt("favorites"); // 点赞数
+		int favorited = response.getInt("favorited");
+		int bookmarks = response.getInt("bookmarks"); // 收藏数
+		int bookmarked = response.getInt("bookmarked");
+
+		m_bookmarked = bookmarked == 0 ? false : true;
+		m_favorited = favorited == 0 ? false : true;
+
 		m_totalDonate.setText("累计捐款：" + total_donate + " 元");
-		m_storeName.setText(name); // TODO
+		m_storeName.setText(name);
+
+		// 收藏的红心或者空心
+		if (m_bookmarked) {
+			m_collectButton.setBackgroundResource(R.drawable.heart_red);
+		} else {
+			m_collectButton.setBackgroundResource(R.drawable.heart_white);
+		}
+
+		// 点赞数
+		m_likeNum = favorites;
+		m_likeTextView.setText(m_likeNum + "");
+
+		m_collectNum = bookmarks;
+		m_collectTextView.setText(m_collectNum + "");
+
 		updateImage(image);
 	}
 
