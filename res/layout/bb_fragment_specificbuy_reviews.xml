@@ -18,7 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:drawableStart="@drawable/bb_edit"
+        android:drawableLeft="@drawable/bb_edit"
         android:text="@string/bb_write_reviews" />
 
 </RelativeLayout>

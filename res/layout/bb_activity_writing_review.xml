@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <EditText
         android:id="@+id/et_review"
-        android:labelFor="@id/et_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:minLines="5"
-        android:inputType="textMultiLine" >
+        android:inputType="textMultiLine"
+        android:minLines="3" >
     </EditText>
 
     <RelativeLayout
@@ -25,15 +25,16 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:text="@string/bb_rating" />
-        
+
         <RatingBar
             android:id="@+id/ratingBar_review"
-            android:layout_margin="10dp"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_margin="10dp"
             android:layout_toEndOf="@id/tv_rating"
-            style="?android:attr/ratingBarStyleSmall"
+            android:layout_toRightOf="@id/tv_rating"
             android:isIndicator="false"
             android:numStars="5"
             android:rating="3" />
@@ -42,19 +43,31 @@
             android:id="@+id/btn_post_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone"
             android:layout_alignParentEnd="true"
-            android:text="@string/bb_post_photo" />
-
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/bb_post_photo"
+            android:visibility="visible" />
     </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gridGallery"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_gravity="top"
+        android:horizontalSpacing="-15dp"
+        android:numColumns="3"
+        android:layout_margin="10dp"
+        tools:listitem="@layout/gallery_item" >
+    </GridView>
 
     <Button
         android:id="@+id/btn_publish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
         android:layout_margin="30dp"
-        android:layout_gravity="center"
         android:text="@string/bb_publish" />
 
 </LinearLayout>

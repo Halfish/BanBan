@@ -147,6 +147,10 @@
     <string name="bb_hint_confirm_passwd">再次输入密码</string>
     <string name="bb_go_to_login">已有账号，去登录 ></string>
     
+    <string name="btn_ok">OK</string>
+    <string name="btn_pick">Pick From Gallery</string>
+    <string name="btn_pick_mul">Pick From Gallery (Multiple)</string>
+    
     <!-- 商家版 -->
     <string name="action_puttings">发布宝贝</string>
 	<string name="myshop">我的商家</string>

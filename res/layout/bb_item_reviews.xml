@@ -22,6 +22,7 @@
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:isIndicator="true"
             android:numStars="5" />
@@ -31,8 +32,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:text="@string/bb_review_time" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/img_first"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:background="#eee"
+            android:contentDescription="@string/cont_descrip"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/img_second"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:background="#eee"
+            android:contentDescription="@string/cont_descrip"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/img_more"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bb_plus"
+            android:contentDescription="@string/cont_descrip"
+            android:padding="10dp"
+            android:visibility="visible" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_reviews"
@@ -51,27 +87,27 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="10dp"
-            android:visibility="gone"
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_clicked_no" />
+            android:src="@drawable/bb_clicked_no"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/img_review2"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="10dp"
-            android:visibility="gone"
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_clicked_yes" />
+            android:src="@drawable/bb_clicked_yes"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/img_review_more"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="10dp"
-            android:visibility="gone"
             android:contentDescription="@string/cont_descrip"
-            android:src="@drawable/bb_phone" />
+            android:src="@drawable/bb_phone"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

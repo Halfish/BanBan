@@ -84,6 +84,14 @@
         <activity android:name=".ui.otheraccount.CollectedProjectsActivity" />
         <activity android:name=".ui.otheraccount.FollowingOtherPeopleActivity" />
         <activity android:name=".ui.otheraccount.MyFansActivity" />
+        <activity android:name="com.luminous.pick.CustomGalleryActivity" >
+            <intent-filter>
+                <action android:name="luminous.ACTION_PICK" />
+                <action android:name="luminous.ACTION_MULTIPLE_PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- 商家版 -->
         <activity android:name="com.example.BanBanBusiness.Merchant_main" />
