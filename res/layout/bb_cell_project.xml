@@ -20,7 +20,7 @@
         
         <!-- 更新小红点 -->
         <ImageView 
-            android:id="@+id/img_refresh"
+            android:id="@+id/img_update"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:contentDescription="@string/cont_descrip"
@@ -28,6 +28,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="20dp"
+            android:visibility="invisible"
             android:background="@drawable/bb_fresh"/>
 
         <!-- 点赞图标和点赞数 -->

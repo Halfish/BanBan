@@ -40,6 +40,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RandomBuyFragment extends BaseActionBarFragment {
 	private static final String LOG_TAG = RandomBuyFragment.class.getName();
@@ -127,6 +128,12 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 
 	private void updateDataFromServer(JSONObject jsonObject)
 			throws JSONException {
+		int ret_code = jsonObject.getInt("ret_code");
+		if (ret_code != 0) {
+			String message = jsonObject.getString("message");
+			Toast.makeText(m_activity, message, Toast.LENGTH_LONG).show();
+			return;
+		}
 		int product_id = jsonObject.getInt("product_id");
 		if (product_id == -1) {
 			m_lucky = false;

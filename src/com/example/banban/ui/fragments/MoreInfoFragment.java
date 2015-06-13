@@ -5,13 +5,19 @@ package com.example.banban.ui.fragments;
  * @description: 更多信息 fragment
  */
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
+import com.android.volley.RequestQueue;
 import com.example.banban.R;
+import com.example.banban.network.HttpUtil;
+import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBUIUtil;
-import com.example.newuser.ChooseLoginActivity;
 import com.example.newuser.LoginActivity;
 import com.example.newuser.RegisterActivity;
 import android.app.Activity;
@@ -19,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,11 +53,56 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 
 	private Activity m_activity;
 
+	private RequestQueue m_queue;
+	private Handler m_handler;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
+		m_queue = BBApplication.getQueue();
+		initHandler();
+	}
 
+	private void initHandler() {
+		m_handler = new Handler(m_activity.getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HttpUtil.SUCCESS_CODE:
+					JSONObject response = (JSONObject) msg.obj;
+					try {
+						updateMessageFromServer(response);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					Log.v(LOG_TAG, response.toString());
+					break;
+
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
+
+	private void updateMessageFromServer(JSONObject response)
+			throws JSONException {
+		JSONArray notifs = response.getJSONArray("notifs");
+		boolean flag = true;
+		for (int i = 0; i < notifs.length(); i++) {
+			String content = notifs.getJSONObject(i).getString("content");
+			boolean unread = (notifs.getJSONObject(i).getInt("unread") == 0) ? false
+					: true;
+			if (unread) {
+				BBUIUtil.getInfoDialog(m_activity, "消息提醒", content).show();
+				flag = false; // 假如有新消息，则改变Flag值，就不会提醒无新消息了
+			}
+		}
+		if (flag) {
+			BBUIUtil.getInfoDialog(m_activity, "消息提醒", "无新消息！").show();
+		}
 	}
 
 	@Override
@@ -148,6 +201,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 			}
 		});
 
+		// 意见反馈
 		m_feedBackButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				BBUIUtil.getInfoDialog(m_activity, null,
@@ -155,9 +209,12 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 			}
 		});
 
+		// 消息提醒
 		m_remindButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-
+				HttpUtil.JsonGetRequest(
+						BBConfigue.SERVER_HTTP + "/notifs/show", m_handler,
+						m_queue);
 			}
 		});
 
@@ -170,7 +227,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 		m_clearButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// TODO 首先你得有缓存
-				Toast.makeText(m_activity, "已经清除", Toast.LENGTH_SHORT).show();
+				Toast.makeText(m_activity, "缓存已经清除", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -186,8 +243,7 @@ public class MoreInfoFragment extends BaseActionBarFragment {
 				SharedPreferences pref = m_activity.getSharedPreferences(
 						"account", Context.MODE_PRIVATE);
 				pref.edit().clear().commit();
-				Intent intent = new Intent(getActivity(),
-						LoginActivity.class);
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
 				startActivity(intent);
 				getActivity().finish();
 			}

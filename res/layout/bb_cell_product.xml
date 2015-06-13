@@ -57,22 +57,19 @@
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_zhao"
-            android:textColor="#ccc" />
+            android:text="@string/bb_zhao" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_product_price"
-            android:textColor="#ccc" />
+            android:text="@string/bb_product_price" />
 
         <TextView
             android:id="@+id/tv_remains"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bb_remains"
-            android:textColor="#ccc" />
+            android:text="@string/bb_remains" />
 
     </LinearLayout>
 

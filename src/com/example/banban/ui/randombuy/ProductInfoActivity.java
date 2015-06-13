@@ -154,18 +154,10 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 						case 0:
 							// success
 							break;
-						case 1:
-						case 2:
-						case 3:
-						case 4:
-						case 5:
-						case 6:
+						default:
 							String message = response.getString("message");
 							Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT)
 									.show();
-							break;
-
-						default:
 							break;
 						}
 					} catch (JSONException e) {

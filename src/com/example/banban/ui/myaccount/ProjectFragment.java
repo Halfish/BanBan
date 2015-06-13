@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProjectFragment extends Fragment {
@@ -57,7 +58,7 @@ public class ProjectFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		m_activity = getActivity();
 		m_listItems = new ArrayList<Map<String, Object>>();
-		m_queue =BBApplication.getQueue();
+		m_queue = BBApplication.getQueue();
 		m_imageLoader = BBApplication.getImageLoader();
 		initHandler();
 	}
@@ -90,11 +91,11 @@ public class ProjectFragment extends Fragment {
 		beginDataRequest();
 		super.onResume();
 	}
-	
+
 	private void beginDataRequest() {
-		
+
 		int userId = getActivity().getIntent().getIntExtra("user_id", -1);
-		if(userId == -1) {
+		if (userId == -1) {
 			userId = BBConfigue.USER_ID;
 		}
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
@@ -133,6 +134,7 @@ public class ProjectFragment extends Fragment {
 		int total_support = object.getInt("total_support");
 		int percentage = object.getInt("percentage");
 		String image = object.getString("image");
+		int updated = object.getInt("updated");
 
 		item = new HashMap<String, Object>();
 		item.put("project_id", project_id + "");
@@ -143,6 +145,7 @@ public class ProjectFragment extends Fragment {
 		item.put("achieved", percentage + "%\n已达");
 		item.put("accumulation", total_support + "元\n已融资");
 		item.put("remain", remaining_days + "天\n剩余时间");
+		item.put("updated", updated);
 		m_listItems.add(item);
 
 		m_adapter.notifyDataSetChanged();
@@ -173,7 +176,6 @@ public class ProjectFragment extends Fragment {
 					}
 				});
 
-		
 		return rootView;
 	}
 
@@ -185,6 +187,7 @@ public class ProjectFragment extends Fragment {
 		TextView achieved;
 		TextView accumulation;
 		TextView remain;
+		ImageView updateTextView;
 	}
 
 	private class ProjectInfoAdapter extends BaseAdapter {
@@ -236,6 +239,8 @@ public class ProjectFragment extends Fragment {
 						.findViewById(R.id.tv_accumulation);
 				viewHolder.remain = (TextView) convertView
 						.findViewById(R.id.tv_remaining_days);
+				viewHolder.updateTextView = (ImageView) convertView
+						.findViewById(R.id.img_update);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -258,16 +263,27 @@ public class ProjectFragment extends Fragment {
 			String accumulation = (String) m_listItems.get(position).get(
 					"accumulation");
 			String remain = (String) m_listItems.get(position).get("remain");
+			int temp = (Integer)m_listItems.get(position).get("updated");
+			boolean updated = (temp == 0) ? false : true;
 
-			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP + projectImg, m_imageLoader);
-			
-			//viewHolder.projectImg.setImageDrawable(projectImg);
+			viewHolder.projectImg.setImageUrl(BBConfigue.SERVER_HTTP
+					+ projectImg, m_imageLoader);
+
+			// viewHolder.projectImg.setImageDrawable(projectImg);
 			viewHolder.projectName.setText(projectName);
 			viewHolder.likeNumber.setText(likeNumber);
 			viewHolder.goal.setText(goal);
 			viewHolder.achieved.setText(achieved);
 			viewHolder.accumulation.setText(accumulation);
 			viewHolder.remain.setText(remain);
+			Log.v(LOG_TAG, "Halfish updated: " + updated);
+			if (updated) {
+				// 1 == true == 有红点
+				viewHolder.updateTextView.setVisibility(View.VISIBLE);
+			} else {
+				// 0 == false == 无红点
+				viewHolder.updateTextView.setVisibility(View.INVISIBLE);
+			}
 
 			return convertView;
 		}

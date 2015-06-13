@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ShoppingCarFragment extends Fragment {
@@ -60,7 +61,7 @@ public class ShoppingCarFragment extends Fragment {
 		m_imageLoader = BBApplication.getImageLoader();
 		initHandler();
 	}
-	
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		// 可见时刷新数据
@@ -92,7 +93,7 @@ public class ShoppingCarFragment extends Fragment {
 			}
 		};
 	}
-	
+
 	@Override
 	public void onResume() {
 		beginDataRequest();
@@ -135,6 +136,8 @@ public class ShoppingCarFragment extends Fragment {
 		String image = object.getString("image");
 		String amount_spec = object.getString("amount_spec");
 		int favorites = object.getInt("favorites");
+		String expire_at = object.getString("expire_at");
+		boolean purchased = (object.getInt("purchased") == 0) ? false : true;
 
 		item = new HashMap<String, Object>();
 		item.put("image", image);
@@ -144,6 +147,8 @@ public class ShoppingCarFragment extends Fragment {
 		item.put("like_number", favorites + "");
 		item.put("price", "价格：" + price + "");
 		item.put("remains", "还剩余" + amount_spec + "个");
+		item.put("expire_at", "消费期限还有\n" + expire_at);
+		item.put("purchased", purchased);
 		m_listItems.add(item);
 
 		m_adapter.notifyDataSetChanged();
@@ -184,6 +189,8 @@ public class ShoppingCarFragment extends Fragment {
 		TextView productNameTV;
 		TextView likeNumberTV;
 		TextView priceTV;
+		TextView expireTV;
+		ImageView grayImageView;
 	}
 
 	private class StoreInfoAdapter extends BaseAdapter {
@@ -228,6 +235,10 @@ public class ShoppingCarFragment extends Fragment {
 						.findViewById(R.id.tv_like_number);
 				viewHolder.priceTV = (TextView) convertView
 						.findViewById(R.id.tv_product_price);
+				viewHolder.expireTV = (TextView) convertView
+						.findViewById(R.id.tv_expire);
+				viewHolder.grayImageView = (ImageView) convertView
+						.findViewById(R.id.img_gray);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -243,11 +254,21 @@ public class ShoppingCarFragment extends Fragment {
 					"like_number");
 			String distance = (String) m_listItems.get(position).get("price");
 			String image = (String) m_listItems.get(position).get("image");
+			String expire_at = (String) m_listItems.get(position).get(
+					"expire_at");
+			boolean purchased = (Boolean) m_listItems.get(position).get(
+					"purchased");
 
 			// viewHolder.productImg.setImageDrawable(storeImg);
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
+			viewHolder.expireTV.setText(expire_at);
+			viewHolder.expireTV.setVisibility(View.VISIBLE);
+			// 设置灰色蒙层
+			if (purchased) {
+				viewHolder.grayImageView.setVisibility(View.VISIBLE);
+			}
 
 			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image,
 					m_imageLoader);
