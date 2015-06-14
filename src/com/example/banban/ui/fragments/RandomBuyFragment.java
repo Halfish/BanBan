@@ -6,6 +6,7 @@ package com.example.banban.ui.fragments;
  * 查看商品的信息
  */
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -231,14 +232,14 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 				});
 	}
 
-	@SuppressWarnings("deprecation")
 	private void beginDataRequest() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("city", URLEncoder.encode(BBConfigue.CURRENT_CITY));
-
+		map.put("city", BBConfigue.CURRENT_CITY);
+		
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/products/generate/random", m_handler, m_queue);
 		Log.v(LOG_TAG, "generate random and CITY is " + BBConfigue.CURRENT_CITY);
+		Log.v(LOG_TAG, "map is: " + map.toString());
 	}
 
 	private void beginTimeDataRequest() {

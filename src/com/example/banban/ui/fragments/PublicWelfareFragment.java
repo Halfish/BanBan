@@ -129,8 +129,8 @@ public class PublicWelfareFragment extends BaseActionBarFragment {
 		fragmentList = new ArrayList<Fragment>();
 		fragmentList.add(new NewestFragment("time"));
 		fragmentList.add(new NewestFragment("hot"));
-		fragmentList.add(new NewestFragment("completion"));
 		fragmentList.add(new NewestFragment("recommend"));
+		fragmentList.add(new NewestFragment("completion"));
 
 		// 给ViewPager设置适配器
 		mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(),

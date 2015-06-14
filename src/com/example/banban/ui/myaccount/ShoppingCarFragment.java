@@ -147,7 +147,7 @@ public class ShoppingCarFragment extends Fragment {
 		item.put("like_number", favorites + "");
 		item.put("price", "价格：" + price + "");
 		item.put("remains", "还剩余" + amount_spec + "个");
-		item.put("expire_at", "消费期限还有\n" + expire_at);
+		item.put("expire_at", "消费期限：\n" + expire_at);
 		item.put("purchased", purchased);
 		m_listItems.add(item);
 
@@ -264,10 +264,14 @@ public class ShoppingCarFragment extends Fragment {
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
 			viewHolder.expireTV.setText(expire_at);
-			viewHolder.expireTV.setVisibility(View.VISIBLE);
+			
 			// 设置灰色蒙层
 			if (purchased) {
 				viewHolder.grayImageView.setVisibility(View.VISIBLE);
+				viewHolder.expireTV.setVisibility(View.INVISIBLE);
+			} else {
+				viewHolder.grayImageView.setVisibility(View.INVISIBLE);
+				viewHolder.expireTV.setVisibility(View.VISIBLE);
 			}
 
 			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP + image,

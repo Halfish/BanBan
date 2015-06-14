@@ -29,9 +29,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
                 android:orientation="horizontal" >
 
@@ -77,40 +77,47 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:gravity="start|center_vertical"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tv_project_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
                 android:text="@string/bb_project_name1"
+                android:layout_marginBottom="10dp"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_goal"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/bb_project_goal1"
-                android:textSize="16sp" />
+                android:gravity="start|center_vertical"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/tv_achieve"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/bb_achieve1"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_goal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/bb_project_goal1"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_accumulation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/bb_accumulation1"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_achieve"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/bb_achieve1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_accumulation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/bb_accumulation1"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

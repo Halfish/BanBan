@@ -172,7 +172,7 @@ public class ProjectActivity extends FragmentActivity {
 		m_actionBar.setIcon(R.drawable.bb_back);
 	}
 
-	private void beginDataGetRequest() {
+	public void beginDataGetRequest() {
 		m_queue = BBApplication.getQueue();
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP + "/projects/detail/"
 				+ m_projectId, m_handler, m_queue);
@@ -266,6 +266,7 @@ public class ProjectActivity extends FragmentActivity {
 		// String description = response.getString("description");
 		// String feedback = response.getString("");
 		int bookmarked = response.getInt("bookmarked");
+		int bookmarks = response.getInt("bookmarks");
 		int favorited = response.getInt("favorited");
 		int favorites = response.getInt("favorites");
 
@@ -284,6 +285,8 @@ public class ProjectActivity extends FragmentActivity {
 		m_accumulate.setText("达成：" + percentage + "%");
 		m_favoriteTextView.setText(favorites + "");
 		m_favoriteNum = favorites;
+		m_collectTextView.setText(bookmarks + "");
+		m_collectNum = bookmarks;
 
 		ImageLoader imageLoader = BBApplication.getImageLoader();
 		ImageListener listener = ImageLoader.getImageListener(m_image,

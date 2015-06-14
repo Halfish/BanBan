@@ -20,7 +20,6 @@ import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.BaseActionBarFragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -50,13 +49,13 @@ public class SupportFragment extends BaseActionBarFragment {
 	private int m_userSupport = 0;
 	private int m_donateMoney = 0;
 	private TextView m_donateTextView;
-	private Activity m_activity;
+	private ProjectActivity m_activity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		m_queue = BBApplication.getQueue();
-		m_activity = getActivity();
+		m_activity = (ProjectActivity) getActivity();
 		initHandler();
 	}
 
@@ -154,6 +153,9 @@ public class SupportFragment extends BaseActionBarFragment {
 			m_userSupport += m_donateMoney;
 			m_donateTextView.setText("已投入公益资金：" + m_userSupport + " 元");
 			m_donateTextView.setVisibility(View.VISIBLE);
+			
+			// 再去更新Activity中的项目信息
+			m_activity.beginDataGetRequest();
 			break;
 
 		default:

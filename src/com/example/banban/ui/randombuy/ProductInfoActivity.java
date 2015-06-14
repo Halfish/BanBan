@@ -113,11 +113,6 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 	private void beginDataRequest() {
 		HttpUtil.JsonGetRequest(BBConfigue.SERVER_HTTP
 				+ "/products/show/random", m_handler, m_queue);
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("product_id", m_productId + "");
-		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
-				+ "/products/purchases/random", m_purchaseHandler, m_queue);
 	}
 
 	private void initHandler() {
@@ -247,6 +242,12 @@ public class ProductInfoActivity extends BaseActionBarActivity {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		m_productId = response.getInt("product_id");
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("product_id", m_productId + "");
+		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
+				+ "/products/purchases/random", m_purchaseHandler, m_queue);
+		
 		String product_name = response.getString("product_name");
 		int original_price = response.getInt("original_price");
 		int donate = response.getInt("donate");
