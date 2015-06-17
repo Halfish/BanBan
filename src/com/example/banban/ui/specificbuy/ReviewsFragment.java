@@ -16,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBApplication;
@@ -53,6 +55,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 	private Handler m_handler;
 	private Activity m_activity;
 	private RequestQueue m_queue;
+	private ImageLoader m_imageLoader;
 	private int m_storeId;
 
 	@Override
@@ -62,6 +65,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		m_storeId = m_activity.getIntent().getIntExtra("store_id", -1);
 		m_listItems = new ArrayList<Map<String, Object>>();
 		m_queue = BBApplication.getQueue();
+		m_imageLoader = BBApplication.getImageLoader();
 
 		initHandler();
 	}
@@ -69,10 +73,11 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		Log.v(LOG_TAG, "onResume called");
-		beginDataRequest(); // update data when resume from WritingReviewActivity
+		beginDataRequest(); // update data when resume from
+							// WritingReviewActivity
 		super.onResume();
 	}
-	
+
 	private void initHandler() {
 		m_handler = new Handler(getActivity().getMainLooper()) {
 			@Override
@@ -119,7 +124,7 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			String username = jsonObject.getString("username");
 			int rating = jsonObject.getInt("rating");
 			String content = jsonObject.getString("content");
-			String image = jsonObject.getString("image");
+			JSONArray image = jsonObject.getJSONArray("image");
 			String time = jsonObject.getString("time");
 
 			m_item = new HashMap<String, Object>();
@@ -127,8 +132,13 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			m_item.put("username", username);
 			m_item.put("rating", rating + "");
 			m_item.put("content", content);
-			m_item.put("image", image);
 			m_item.put("time", time);
+
+			ArrayList<String> imageUrls = new ArrayList<String>();
+			for (int j = 0; j < image.length(); j++) {
+				imageUrls.add(image.getString(j));
+			}
+			m_item.put("image_url", imageUrls);
 
 			m_listItems.add(m_item);
 			m_adapter.notifyDataSetChanged();
@@ -175,9 +185,9 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 		RatingBar mRatingBar;
 		TextView mDate;
 		TextView mContent;
-		// ImageView mFirstImg;
-		// ImageView mSecondImg;
-		// ImageView mThirdImg;
+		NetworkImageView mFirstImg;
+		NetworkImageView mSecondImg;
+		Button mMoreImg;
 	}
 
 	private class ReviewsAdapter extends BaseAdapter {
@@ -222,12 +232,12 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 						.findViewById(R.id.tv_review_time);
 				viewHolder.mContent = (TextView) convertView
 						.findViewById(R.id.tv_reviews);
-				// viewHolder.mFirstImg = (ImageView) convertView
-				// .findViewById(R.id.img_review1);
-				// viewHolder.mSecondImg = (ImageView) convertView
-				// .findViewById(R.id.img_review2);
-				// viewHolder.mThirdImg = (ImageView) convertView
-				// .findViewById(R.id.img_review3);
+				viewHolder.mFirstImg = (NetworkImageView) convertView
+						.findViewById(R.id.img_first);
+				viewHolder.mSecondImg = (NetworkImageView) convertView
+						.findViewById(R.id.img_second);
+				viewHolder.mMoreImg = (Button) convertView
+						.findViewById(R.id.img_more);
 
 				convertView.setTag(viewHolder);
 			} else {
@@ -242,7 +252,49 @@ public class ReviewsFragment extends Fragment implements OnClickListener {
 			String rating = (String) m_listItems.get(position).get("rating");
 			String content = (String) m_listItems.get(position).get("content");
 			String time = (String) m_listItems.get(position).get("time");
-			// String image = (String) m_listItems.get(position).get("image");
+
+			@SuppressWarnings("unchecked")
+			final ArrayList<String> imageUrl = (ArrayList<String>) m_listItems
+					.get(position).get("image_url");
+
+			Log.v(LOG_TAG,
+					"image size is: " + imageUrl.size() + " position is:"
+							+ position + " image_url is: "
+							+ imageUrl.toString());
+
+			if (imageUrl.size() > 0) {
+				viewHolder.mFirstImg.setImageUrl(BBConfigue.SERVER_HTTP
+						+ imageUrl.get(0), m_imageLoader);
+				viewHolder.mFirstImg.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.mFirstImg.setVisibility(View.GONE);
+			}
+
+			if (imageUrl.size() > 1) {
+				viewHolder.mSecondImg.setImageUrl(BBConfigue.SERVER_HTTP
+						+ imageUrl.get(1), m_imageLoader);
+				viewHolder.mSecondImg.setVisibility(View.VISIBLE);
+			}else {
+				viewHolder.mSecondImg.setVisibility(View.GONE);
+			}
+
+			// if the number of pictures is more than 3, then start
+			// another activity to view these pictures
+			if (imageUrl.size() > 2) {
+				viewHolder.mMoreImg.setVisibility(View.VISIBLE);
+				viewHolder.mMoreImg
+						.setOnClickListener(new View.OnClickListener() {
+							public void onClick(View v) {
+								Intent intent = new Intent(m_activity,
+										ImageViewerActivity.class);
+								intent.putStringArrayListExtra("image_url",
+										imageUrl);
+								startActivity(intent);
+							}
+						});
+			}else {
+				viewHolder.mMoreImg.setVisibility(View.GONE);
+			}
 
 			viewHolder.mUsername.setText(username);
 			viewHolder.mRatingBar.setRating(Float.parseFloat(rating));

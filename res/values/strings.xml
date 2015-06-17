@@ -61,6 +61,7 @@
     <string name="bb_rating">评分</string>
     <string name="bb_post_photo">上传照片</string>
     <string name="bb_publish">发布</string>
+    <string name="bb_more_pic">点击查看全部图片</string>
     <string name="bb_origin_price">原价 &#165;0</string>
     <string name="bb_current_price">现价 &#165;0</string>
     <string name="bb_fund">将获得0公益资金</string>

@@ -6,8 +6,6 @@ package com.example.banban.ui.fragments;
  * 查看商品的信息
  */
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,6 +103,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 			}
 		};
 
+		// 随机抢次数
 		m_randomTimeHandler = new Handler(m_activity.getMainLooper()) {
 			@Override
 			public void handleMessage(Message msg) {
@@ -205,7 +204,6 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 					return;
 				}
 
-				m_lucky = false;
 				beginDataRequest();
 				m_randomTimes--;
 				updateRandomTimes();

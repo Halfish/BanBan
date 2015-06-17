@@ -13,10 +13,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
+import com.example.BBput.Compress_Save;
+import com.example.BBput.PhotoM;
 import com.example.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
+import com.example.banban.ui.BBUIUtil;
 import com.example.banban.ui.BaseActionBarActivity;
 import com.luminous.pick.Action;
 import com.luminous.pick.CustomGallery;
@@ -29,6 +32,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -45,7 +49,8 @@ import android.widget.Toast;
 
 public class WritingReviewActivity extends BaseActionBarActivity {
 
-	private static final String LOG_TAG = null;
+	private static final String LOG_TAG = WritingReviewActivity.class.getName();
+	private Context m_context;
 	private EditText m_editText;
 	private RatingBar m_ratingBar;
 	private Button m_uploadButton;
@@ -58,17 +63,19 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 	private double m_rating;
 
 	/*
-	 * pick
+	 * pick picture
 	 */
 	private GridView gridGallery;
 	private GalleryAdapter adapter;
 	private ImageLoader imageLoader;
+	private ArrayList<CustomGallery> dataT;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bb_activity_writing_review);
 
+		m_context = getBaseContext();
 		m_storeId = getIntent().getIntExtra("store_id", -1);
 		m_queue = BBApplication.getQueue();
 		initWidgets();
@@ -99,6 +106,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		adapter = new GalleryAdapter(getApplicationContext(), imageLoader);
 		adapter.setMultiplePick(false);
 		gridGallery.setAdapter(adapter);
+		dataT = new ArrayList<CustomGallery>();
 	}
 
 	@Override
@@ -108,7 +116,7 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
 			String[] all_path = data.getStringArrayExtra("all_path");
 
-			ArrayList<CustomGallery> dataT = new ArrayList<CustomGallery>();
+			dataT.clear();
 
 			for (int i = 0; i < all_path.length && i < 9; ++i) {
 				String string = all_path[i];
@@ -153,10 +161,30 @@ public class WritingReviewActivity extends BaseActionBarActivity {
 		map.put("store_id", m_storeId + "");
 		map.put("rating", m_rating + "");
 		map.put("content", review);
-		map.put("image", ""); // TODO
+		String imageString = getImageStringFromLocal();
+		map.put("image", imageString); // TODO
 
 		HttpUtil.NormalPostRequest(map, BBConfigue.SERVER_HTTP
 				+ "/stores/reviews/add", m_handler, m_queue);
+	}
+
+	private String getImageStringFromLocal() {
+		String images = "";
+		for (int i = 0; i < dataT.size(); i++) {
+			String url = dataT.get(i).sdcardPath;
+			Bitmap bitmap = Compress_Save.getSmallBitmap(url,
+					BBUIUtil.dip2px(m_context, 80),
+					BBUIUtil.dip2px(m_context, 80));
+			Log.v(LOG_TAG, "bitmap " + i + " size is: " + bitmap.getByteCount()
+					/ 1000 + "kB, height = " + bitmap.getHeight() + " width = "
+					+ bitmap.getWidth());
+			images = images + PhotoM.imgToBase64(bitmap) + ";";
+		}
+		Log.v(LOG_TAG, "the number of pic: " + dataT.size());
+		for (int i = 0; i < dataT.size(); ++i) {
+			Log.v(LOG_TAG, "pic path is: " + dataT.get(i).sdcardPath);
+		}
+		return images;
 	}
 
 	private void initHandler() {

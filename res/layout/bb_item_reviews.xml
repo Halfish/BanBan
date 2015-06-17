@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <ImageButton
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_first"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -50,7 +50,7 @@
             android:contentDescription="@string/cont_descrip"
             android:visibility="gone" />
 
-        <ImageButton
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_second"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -59,14 +59,17 @@
             android:contentDescription="@string/cont_descrip"
             android:visibility="gone" />
 
-        <ImageButton
+        <Button
+            style="?android:attr/buttonBarStyle"
             android:id="@+id/img_more"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="10dp"
-            android:background="@drawable/bb_plus"
             android:contentDescription="@string/cont_descrip"
             android:padding="10dp"
+            android:text="@string/bb_more_pic"
+            android:background="#eee"
+            android:gravity="center"
             android:visibility="visible" />
     </LinearLayout>
 

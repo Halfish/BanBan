@@ -76,6 +76,7 @@
         <activity android:name=".ui.specificbuy.StoreActivity" />
         <activity android:name=".ui.specificbuy.WritingReviewActivity" />
         <activity android:name=".ui.specificbuy.ProductActivity" />
+        <activity android:name=".ui.specificbuy.ImageViewerActivity" />
         <activity android:name=".ui.publicwelfare.ProjectActivity" />
         <activity android:name=".ui.myaccount.ShoppingCarActivity" />
         <activity android:name=".ui.myaccount.ShareProductActivity" />

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 public class BBUIUtil {
-	@SuppressLint("InflateParams") 
+	@SuppressLint("InflateParams")
 	public static Dialog getInfoDialog(Context context, String title,
 			String info) {
 		Dialog dialog = new Dialog(context);
@@ -25,7 +25,19 @@ public class BBUIUtil {
 		} else {
 			dialog.setTitle(R.string.app_name);
 		}
-		
+
 		return dialog;
+	}
+
+	// DIP 转 PX
+	public static int dip2px(Context context, float dpValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dpValue * scale + 0.5f);
+	}
+
+	// PX 转　DIP
+	public static int px2dip(Context context, float pxValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (pxValue / scale + 0.5f);
 	}
 }
