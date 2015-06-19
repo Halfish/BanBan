@@ -66,7 +66,6 @@
             android:layout_height="80dp"
             android:layout_margin="10dp"
             android:contentDescription="@string/cont_descrip"
-            android:padding="10dp"
             android:text="@string/bb_more_pic"
             android:background="#eee"
             android:gravity="center"

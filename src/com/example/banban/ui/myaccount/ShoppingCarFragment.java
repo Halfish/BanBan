@@ -136,7 +136,7 @@ public class ShoppingCarFragment extends Fragment {
 		String image = object.getString("image");
 		String amount_spec = object.getString("amount_spec");
 		int favorites = object.getInt("favorites");
-		String expire_at = object.getString("expire_at");
+		String expire_in = object.getString("expire_in");
 		boolean purchased = (object.getInt("purchased") == 0) ? false : true;
 
 		item = new HashMap<String, Object>();
@@ -147,7 +147,7 @@ public class ShoppingCarFragment extends Fragment {
 		item.put("like_number", favorites + "");
 		item.put("price", "价格：" + price + "");
 		item.put("remains", "还剩余" + amount_spec + "个");
-		item.put("expire_at", "消费期限：\n" + expire_at);
+		item.put("expire_in", "消费期限剩余：\n" + expire_in);
 		item.put("purchased", purchased);
 		m_listItems.add(item);
 
@@ -254,8 +254,8 @@ public class ShoppingCarFragment extends Fragment {
 					"like_number");
 			String distance = (String) m_listItems.get(position).get("price");
 			String image = (String) m_listItems.get(position).get("image");
-			String expire_at = (String) m_listItems.get(position).get(
-					"expire_at");
+			String expire_in = (String) m_listItems.get(position).get(
+					"expire_in");
 			boolean purchased = (Boolean) m_listItems.get(position).get(
 					"purchased");
 
@@ -263,7 +263,7 @@ public class ShoppingCarFragment extends Fragment {
 			viewHolder.productNameTV.setText(storeName);
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
-			viewHolder.expireTV.setText(expire_at);
+			viewHolder.expireTV.setText(expire_in);
 			
 			// 设置灰色蒙层
 			if (purchased) {

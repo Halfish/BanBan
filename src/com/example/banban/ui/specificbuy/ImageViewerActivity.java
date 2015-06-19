@@ -13,13 +13,20 @@ import com.example.banban.R;
 import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BaseActionBarActivity;
+import com.example.banban.ui.SRPopupWindowWrapper;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 public class ImageViewerActivity extends BaseActionBarActivity {
 
@@ -27,6 +34,8 @@ public class ImageViewerActivity extends BaseActionBarActivity {
 	private GridView m_gridView;
 	private ImageViewBaseAdapter m_adapter;
 	private ImageLoader m_imageLoader;
+	private Context m_context;
+	private LinearLayout m_rootLinearLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +44,37 @@ public class ImageViewerActivity extends BaseActionBarActivity {
 
 		m_listItems = getIntent().getStringArrayListExtra("image_url");
 		m_imageLoader = BBApplication.getImageLoader();
+		m_context = getBaseContext();
 
 		initWidgets();
 	}
 
 	private void initWidgets() {
+		m_rootLinearLayout = (LinearLayout) findViewById(R.id.lly_root);
 		m_gridView = (GridView) findViewById(R.id.gv_images);
 		m_adapter = new ImageViewBaseAdapter();
 		m_gridView.setAdapter(m_adapter);
+		m_gridView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				SRPopupWindowWrapper pop = new SRPopupWindowWrapper(m_context,
+						m_rootLinearLayout);
+				NetworkImageView imageView = new NetworkImageView(m_context);
+				imageView.setImageUrl(
+						BBConfigue.SERVER_HTTP + m_listItems.get(position),
+						m_imageLoader);
+				WindowManager windowManager = getWindowManager();
+				Display display = windowManager.getDefaultDisplay();
+				@SuppressWarnings("deprecation")
+				int screenWidth = display.getWidth();
+				@SuppressWarnings("deprecation")
+				int screenHeight = display.getHeight();
+
+				pop.bindExpressionView(imageView, screenWidth, screenHeight);
+				pop.show(false);
+				pop.setOutsideTouchable(true);
+			}
+		});
 	}
 
 	private static class ViewHolder {
@@ -95,7 +127,8 @@ public class ImageViewerActivity extends BaseActionBarActivity {
 			}
 
 			String imageUrl = m_listItems.get(position);
-			viewHolder.image.setImageUrl(BBConfigue.SERVER_HTTP + imageUrl, m_imageLoader);
+			viewHolder.image.setImageUrl(BBConfigue.SERVER_HTTP + imageUrl,
+					m_imageLoader);
 
 			return convertView;
 		}

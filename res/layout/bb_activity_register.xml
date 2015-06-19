@@ -52,14 +52,14 @@
 
         <EditText
             android:id="@+id/et_passwd"
-             style="?android:attr/password"
-             android:inputType="textPassword"
+            style="?android:attr/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/bb_hint_password" >
+            android:hint="@string/bb_hint_password"
+            android:inputType="textPassword" >
         </EditText>
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,10 +74,11 @@
 
         <EditText
             android:id="@+id/et_confirm_passwd"
+            style="?android:attr/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             style="?android:attr/password"
-            android:hint="@string/bb_hint_confirm_passwd" >
+            android:hint="@string/bb_hint_confirm_passwd"
+            android:inputType="textPassword" >
         </EditText>
     </LinearLayout>
 
@@ -85,7 +86,7 @@
         android:id="@+id/btn_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bb_register" />   
+        android:text="@string/bb_register" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -94,10 +95,10 @@
 
         <Button
             android:id="@+id/btn_go_to_login"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/bb_go_to_login" />
     </LinearLayout>
 

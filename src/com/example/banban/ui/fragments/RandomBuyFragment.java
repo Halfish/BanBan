@@ -56,6 +56,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	private Handler m_randomTimeHandler;
 	private int m_randomTimes = 0;
 	private boolean m_lucky = false;
+	private boolean m_querying = false; // 正在播放动画的flag
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		beginTimeDataRequest();
 	}
 
 	private void initHandler() {
@@ -96,6 +98,10 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 							"random generate products: " + response.toString());
 					break;
 
+				case HttpUtil.FAILURE_CODE:
+					m_querying = false; // 网络连接失败，可以允许再抢
+					break;
+					
 				default:
 					break;
 				}
@@ -203,6 +209,13 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 					dialog.show();
 					return;
 				}
+				
+				// 从按下随机抢按钮，到动画播放完毕期间，不能有第二次请求
+				if (m_querying) {
+					return;
+				} else {
+					m_querying = true;
+				}
 
 				beginDataRequest();
 				m_randomTimes--;
@@ -226,11 +239,13 @@ public class RandomBuyFragment extends BaseActionBarFragment {
 									ProductInfoActivity.class);
 							startActivity(intent);
 						}
+						m_querying = false;
 					}
 				});
 	}
 
 	private void beginDataRequest() {
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("city", BBConfigue.CURRENT_CITY);
 		

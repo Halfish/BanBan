@@ -31,6 +31,7 @@
         android:gravity="center"
         android:text="@string/bb_zero"
         android:textSize="18sp"
+        android:textColor="@color/light_gray"
         android:visibility="invisible" />
 
     <RelativeLayout
@@ -71,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
+            android:textColor="@color/light_gray"
             android:textSize="16sp" />
 
         <TextView
@@ -78,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bb_product_price"
+            android:textColor="@color/light_gray"
             android:textSize="16sp" />
     </LinearLayout>
 

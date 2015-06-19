@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <GridView
         android:id="@+id/gv_images"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:numColumns="3" >
+        android:layout_margin="5dp"
+        android:layout_gravity="top"
+        android:horizontalSpacing="-12dp"
+        android:numColumns="2" >
     </GridView>
 
 </LinearLayout>
