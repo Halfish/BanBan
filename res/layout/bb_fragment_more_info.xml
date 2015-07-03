@@ -15,8 +15,10 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             android:contentDescription="@string/cont_descrip"
             android:src="@drawable/touxiang" />
 
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/img_head"
+            android:layout_toRightOf="@id/img_head"
             android:text="@string/bb_more_guest" />
 
         <Button
@@ -33,7 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/btn_register"
+            android:layout_toStartOf="@id/btn_register"
+            android:layout_toLeftOf="@id/btn_register"
             android:text="@string/bb_more_login" />
 
         <Button
@@ -42,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
