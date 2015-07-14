@@ -18,7 +18,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.example.BBput.Compress_Save;
 import com.example.BBput.PhotoM;
 import com.example.BBput.SaveinSD;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;

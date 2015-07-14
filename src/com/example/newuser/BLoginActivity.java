@@ -10,7 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BanBanBusiness.localStore;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBMainActivity;

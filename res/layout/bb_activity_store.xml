@@ -21,6 +21,15 @@
             android:scaleType="fitXY"
             android:src="#eee" />
 
+        <ImageView
+            android:id="@+id/img_head"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/cont_descrip"
+            android:scaleType="fitXY"
+            android:src="#eef" />
+
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="wrap_content"
@@ -61,6 +70,7 @@
             android:orientation="horizontal" >
 
             <!-- 点赞 -->
+
             <ImageButton
                 android:id="@+id/img_like"
                 android:layout_width="24dp"
@@ -77,6 +87,7 @@
                 android:textSize="20sp" />
 
             <!-- 收藏 -->
+
             <ImageButton
                 android:id="@+id/img_collect"
                 android:layout_width="24dp"
@@ -90,7 +101,7 @@
                 android:id="@+id/tv_collect"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                 android:gravity="center"
+                android:gravity="center"
                 android:text="@string/bb_zero"
                 android:textSize="20sp" />
         </LinearLayout>

@@ -2,15 +2,11 @@ package com.example.BanBanBusiness;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.BBput.ThingPutting;
 import com.example.BusinessBuyManager.Fragment3;
 import com.example.BusinessMyStore.Fragment1;
 import com.example.BusinessThingManager.Fragment2;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.newuser.ChooseLoginActivity;
-import com.example.newuser.LoginActivity;
-
-import android.R.bool;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -24,7 +20,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.TabHost.TabSpec;

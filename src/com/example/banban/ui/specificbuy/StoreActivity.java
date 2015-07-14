@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.network.BitmapCache;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBApplication;
@@ -72,6 +72,7 @@ public class StoreActivity extends FragmentActivity {
 	private ImageButton m_likeButton;
 	private ImageButton m_collectButton;
 	private ImageView m_storeImageView;
+	private ImageView m_storeHead;
 	private TextView m_likeTextView;
 	private TextView m_collectTextView;
 	private int m_likeNum = 0; // 点赞数
@@ -102,6 +103,7 @@ public class StoreActivity extends FragmentActivity {
 		m_totalDonate = (TextView) findViewById(R.id.tv_total_donate);
 		m_storeName = (TextView) findViewById(R.id.tv_store_name);
 		m_storeImageView = (ImageView) findViewById(R.id.img_store);
+		m_storeHead = (ImageView)findViewById(R.id.img_head);
 		m_likeTextView = (TextView) findViewById(R.id.tv_favorite);
 		m_collectTextView = (TextView) findViewById(R.id.tv_collect);
 
@@ -322,6 +324,7 @@ public class StoreActivity extends FragmentActivity {
 
 		int total_donate = response.getInt("total_donate");
 		String image = response.getString("image");
+		String background = response.getString("background");
 		String name = response.getString("name");
 		int favorites = response.getInt("favorites"); // 点赞数
 		int favorited = response.getInt("favorited");
@@ -348,12 +351,13 @@ public class StoreActivity extends FragmentActivity {
 		m_collectNum = bookmarks;
 		m_collectTextView.setText(m_collectNum + "");
 
-		updateImage(image);
+		updateImage(image, m_storeHead);
+		updateImage(background, m_storeImageView);
 	}
 
-	private void updateImage(String image) {
+	private void updateImage(String image, ImageView imageView) {
 		ImageLoader imageLoader = new ImageLoader(m_queue, new BitmapCache());
-		ImageListener listener = ImageLoader.getImageListener(m_storeImageView,
+		ImageListener listener = ImageLoader.getImageListener(imageView,
 				R.drawable.loading_01, R.drawable.loading_01);
 		imageLoader.get(BBConfigue.SERVER_HTTP + image, listener);
 	}

@@ -1,6 +1,6 @@
 package com.example.banban.ui;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.other.STTimer;
 import com.example.banban.other.STTimer.OnTimer;
 

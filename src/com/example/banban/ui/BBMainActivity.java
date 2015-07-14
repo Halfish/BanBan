@@ -8,7 +8,7 @@ package com.example.banban.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.fragments.MoreInfoFragment;

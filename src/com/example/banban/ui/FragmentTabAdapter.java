@@ -7,7 +7,7 @@ import android.widget.RadioGroup;
 
 import java.util.List;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 /**
  * Created with IntelliJ IDEA. Author: wangjie email:tiantian.china.2@gmail.com

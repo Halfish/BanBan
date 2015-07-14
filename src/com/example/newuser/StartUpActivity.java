@@ -2,7 +2,7 @@ package com.example.newuser;
 
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BanBanBusiness.localStore;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.other.BBConfigue;
 import com.example.banban.ui.BBMainActivity;
 

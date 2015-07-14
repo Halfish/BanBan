@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.banban"
+    package="com.halfish.banban"
     android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -58,7 +58,7 @@
 
         <!-- 微信分享回调 -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.example.banban.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -70,22 +70,22 @@
         <activity android:name="com.example.newuser.LoginActivity" />
         <activity android:name="com.example.newuser.RegisterActivity" />
         <activity android:name="com.example.sortlistview.AlphabetaContactActicity" />
-        <activity android:name=".ui.BBMainActivity" />
-        <activity android:name=".ui.BBSearchUserActivity" />
-        <activity android:name=".ui.randombuy.ProductInfoActivity" />
-        <activity android:name=".ui.randombuy.ChooseCategoryActivity" />
-        <activity android:name=".ui.specificbuy.StoreActivity" />
-        <activity android:name=".ui.specificbuy.WritingReviewActivity" />
-        <activity android:name=".ui.specificbuy.ProductActivity" />
-        <activity android:name=".ui.specificbuy.ImageViewerActivity" />
-        <activity android:name=".ui.publicwelfare.ProjectActivity" />
-        <activity android:name=".ui.myaccount.ShoppingCarActivity" />
-        <activity android:name=".ui.myaccount.ShareProductActivity" />
-        <activity android:name=".ui.otheraccount.OtherAccountActivity" />
-        <activity android:name=".ui.otheraccount.CollectedStoresActivity" />
-        <activity android:name=".ui.otheraccount.CollectedProjectsActivity" />
-        <activity android:name=".ui.otheraccount.FollowingOtherPeopleActivity" />
-        <activity android:name=".ui.otheraccount.MyFansActivity" />
+        <activity android:name="com.example.banban.ui.BBMainActivity" />
+        <activity android:name="com.example.banban.ui.BBSearchUserActivity" />
+        <activity android:name="com.example.banban.ui.randombuy.ProductInfoActivity" />
+        <activity android:name="com.example.banban.ui.randombuy.ChooseCategoryActivity" />
+        <activity android:name="com.example.banban.ui.specificbuy.StoreActivity" />
+        <activity android:name="com.example.banban.ui.specificbuy.WritingReviewActivity" />
+        <activity android:name="com.example.banban.ui.specificbuy.ProductActivity" />
+        <activity android:name="com.example.banban.ui.specificbuy.ImageViewerActivity" />
+        <activity android:name="com.example.banban.ui.publicwelfare.ProjectActivity" />
+        <activity android:name="com.example.banban.ui.myaccount.ShoppingCarActivity" />
+        <activity android:name="com.example.banban.ui.myaccount.ShareProductActivity" />
+        <activity android:name="com.example.banban.ui.otheraccount.OtherAccountActivity" />
+        <activity android:name="com.example.banban.ui.otheraccount.CollectedStoresActivity" />
+        <activity android:name="com.example.banban.ui.otheraccount.CollectedProjectsActivity" />
+        <activity android:name="com.example.banban.ui.otheraccount.FollowingOtherPeopleActivity" />
+        <activity android:name="com.example.banban.ui.otheraccount.MyFansActivity" />
         <activity android:name="com.luminous.pick.CustomGalleryActivity" >
             <intent-filter>
                 <action android:name="luminous.ACTION_PICK" />

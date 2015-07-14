@@ -7,7 +7,7 @@ package com.example.banban.ui.fragments;
 
 import java.util.ArrayList;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.ui.publicwelfare.NewestFragment;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;

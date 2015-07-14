@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import com.mob.tools.utils.R;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -22,7 +24,6 @@ import cn.sharesdk.framework.CustomPlatform;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.Platform.ShareParams;
 import cn.sharesdk.framework.ShareSDK;
-import com.mob.tools.utils.R;
 
 /**
  * ShareCore是快捷分享的实际出口，此类使用了反射的方式，配合传递进来的HashMap，

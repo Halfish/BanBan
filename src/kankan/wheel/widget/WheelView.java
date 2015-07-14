@@ -3,7 +3,7 @@ package kankan.wheel.widget;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 import kankan.wheel.widget.adapters.WheelViewAdapter;
 import android.annotation.SuppressLint;

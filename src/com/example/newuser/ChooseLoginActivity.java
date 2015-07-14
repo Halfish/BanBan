@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 public class ChooseLoginActivity extends Activity{
 	Button m_bt1,m_bt2;

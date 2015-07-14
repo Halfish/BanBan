@@ -16,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.ui.BBMainActivity;
 import com.example.sortlistview.SideBar.OnTouchingLetterChangedListener;
 

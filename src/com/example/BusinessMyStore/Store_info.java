@@ -9,7 +9,7 @@ import com.example.BBput.ThingPutting;
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BanBanBusiness.localStore;
 import com.example.BusinessHttp.HttpUtil;
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;

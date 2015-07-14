@@ -13,7 +13,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.android.volley.RequestQueue;
-import com.example.banban.R;
+import com.halfish.banban.R;
 import com.example.banban.network.HttpUtil;
 import com.example.banban.other.BBApplication;
 import com.example.banban.other.BBConfigue;

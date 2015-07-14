@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BusinessHttp.HttpUtil;
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 public class Fragment3 extends Fragment   {
 	Button bt;

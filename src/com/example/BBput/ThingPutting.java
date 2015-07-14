@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import com.android.volley.toolbox.Volley;
 import com.example.BanBanBusiness.Merchant_main;
 import com.example.BusinessHttp.HttpUtil;
-import com.example.banban.R;
+import com.halfish.banban.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
