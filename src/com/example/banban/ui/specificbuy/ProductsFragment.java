@@ -121,7 +121,7 @@ public class ProductsFragment extends Fragment {
 	private void addItem(JSONObject jsonObject) throws JSONException {
 
 		String image = jsonObject.getString("image");
-		int price = jsonObject.getInt("price");
+		double price = jsonObject.getDouble("price");
 		int product_id = jsonObject.getInt("product_id");
 		String name = jsonObject.getString("name");
 		int favorites = jsonObject.getInt("favorites");
@@ -134,6 +134,11 @@ public class ProductsFragment extends Fragment {
 		item.put("like_number", favorites + "");
 		item.put("price", "价格：" + price + "元");
 		item.put("remains", "剩余" + amount_spec + "个");
+		if (amount_spec == 0) {
+			item.put("empty", true);
+		} else {
+			item.put("empty", false);
+		}
 		m_listItems.add(item);
 
 		m_adapter.notifyDataSetChanged();
@@ -247,6 +252,7 @@ public class ProductsFragment extends Fragment {
 					"like_number");
 			String distance = (String) m_listItems.get(position).get("price");
 			String remains = (String) m_listItems.get(position).get("remains");
+			Boolean empty = (Boolean) m_listItems.get(position).get("empty");
 
 			viewHolder.productImg.setImageUrl(BBConfigue.SERVER_HTTP
 					+ productImg, m_imageLoader);
@@ -256,9 +262,11 @@ public class ProductsFragment extends Fragment {
 			viewHolder.likeNumberTV.setText(likeNumber);
 			viewHolder.priceTV.setText(distance);
 			viewHolder.remainsTV.setText(remains);
-			
-			if (remains.equals("剩余0个")) {
+
+			if (empty) {
 				viewHolder.grayView.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.grayView.setVisibility(View.INVISIBLE);
 			}
 
 			return convertView;

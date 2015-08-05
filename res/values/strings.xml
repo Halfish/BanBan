@@ -54,7 +54,8 @@
     <string name="bb_phone_num">233333333</string>
     <string name="bb_store_detail">商家详情</string>
     <string name="bb_store_detail_zhishan">no detail</string>
-    <string name="bb_nickname">游客账户</string>
+    <string name="bb_nickname">我的账户</string>
+     <string name="bb_tourist">游客账户</string>
     <string name="bb_review_time">2008/08/08 20:00</string>
     <string name="bb_text">这里是正文里的非正文部分，所以不是真正的正文</string>
     <string name="bb_write_reviews"> 写评价 </string>

@@ -39,6 +39,7 @@ public class ProductActivity extends BaseActionBarActivity {
 	private ImageView m_image;
 	private TextView m_zan;
 	private TextView m_productName;
+	private TextView m_description;
 	private TextView m_originalPrice;
 	private TextView m_currentPrice;
 	private TextView m_remains;
@@ -73,6 +74,7 @@ public class ProductActivity extends BaseActionBarActivity {
 		m_image = (ImageView) findViewById(R.id.img_product);
 		m_zan = (TextView) findViewById(R.id.tv_zan);
 		m_productName = (TextView) findViewById(R.id.tv_product_name);
+		m_description = (TextView) findViewById(R.id.tv_descrption);
 		m_originalPrice = (TextView) findViewById(R.id.tv_origin_price);
 		m_currentPrice = (TextView) findViewById(R.id.tv_current_price);
 		m_remains = (TextView) findViewById(R.id.tv_remains);
@@ -265,8 +267,9 @@ public class ProductActivity extends BaseActionBarActivity {
 		Log.v(LOG_TAG, "parseDataFromJson");
 
 		String name = response.getString("name");
-		int original_price = response.getInt("original_price");
-		int price = response.getInt("price");
+		String descrption = response.getString("description");
+		double original_price = response.getDouble("original_price");
+		double price = response.getDouble("price");
 		int donate = response.getInt("donate");
 		m_donate = donate;
 		int amount_spec = response.getInt("amount_spec");
@@ -294,6 +297,11 @@ public class ProductActivity extends BaseActionBarActivity {
 		m_likeNum = favorites;
 		m_zan.setText(favorites + "");
 		m_productName.setText(name);
+		
+		if (!descrption.equals("")) {
+			m_description.setText(descrption);
+		}
+		
 		m_originalPrice.setText("原价：" + original_price + "元");
 		m_currentPrice.setText("现价" + price + "元");
 		m_remains.setText("剩余" + amount_spec + "个");

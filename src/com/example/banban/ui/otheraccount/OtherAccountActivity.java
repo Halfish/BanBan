@@ -267,6 +267,25 @@ public class OtherAccountActivity extends FragmentActivity {
 
 		int total_donate = jsonObject.getInt("total_donate");
 		m_donateTextView.setText(total_donate + "");
+		
+		int followed = jsonObject.getInt("followed");
+		switch (followed) {
+		case -1:
+			m_followButton.setVisibility(View.INVISIBLE);
+			break;
+
+		case 0:
+			m_followButton.setText("加关注");
+			m_followButton.setClickable(true);
+			break;
+			
+		case 1:
+			m_followButton.setText("已关注");
+			m_followButton.setClickable(false);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

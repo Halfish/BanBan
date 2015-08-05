@@ -237,8 +237,8 @@ public class ShareProductActivity extends BaseActionBarActivity {
 
 		int favorites = response.getInt("favorites");
 		String name = response.getString("name");
-		int original_price = response.getInt("original_price");
-		int price = response.getInt("price");
+		double original_price = response.getDouble("original_price");
+		double price = response.getDouble("price");
 		int donate = response.getInt("donate");
 		String store_name = response.getString("store_name");
 		int favorited = response.getInt("favorited");

@@ -132,7 +132,7 @@ public class ShoppingCarFragment extends Fragment {
 		int product_id = object.getInt("product_id");
 		String product_name = object.getString("product_name");
 
-		int price = object.getInt("price");
+		double price = object.getDouble("price");
 		String image = object.getString("image");
 		String amount_spec = object.getString("amount_spec");
 		int favorites = object.getInt("favorites");

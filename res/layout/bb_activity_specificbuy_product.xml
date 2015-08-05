@@ -59,10 +59,21 @@
             android:textColor="#ccc" />
 
         <TextView
+            android:id="@+id/tv_descrption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textSize="18sp"
+            android:layout_below="@id/tv_product_name"
+            android:text="@string/bb_zero"
+            android:textColor="#ccc" />
+        
+        
+        <TextView
             android:id="@+id/tv_origin_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_product_name"
+            android:layout_below="@id/tv_descrption"
             android:layout_margin="3dp"
             android:textSize="18sp"
             android:text="@string/bb_origin_price"
@@ -72,7 +83,7 @@
             android:id="@+id/tv_current_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_product_name"
+            android:layout_below="@id/tv_descrption"
             android:layout_margin="3dp"
             android:textSize="18sp"
             android:layout_toEndOf="@id/tv_origin_price"

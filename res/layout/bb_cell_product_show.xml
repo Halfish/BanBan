@@ -17,7 +17,7 @@
         android:layout_height="210dp"
         android:scaleType="fitXY"
         android:contentDescription="@string/cont_descrip"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:src="@drawable/bb_gray"/>
     
     <!-- 消费期限 -->
